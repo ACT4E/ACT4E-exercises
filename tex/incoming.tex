@@ -130,7 +130,7 @@ The format is shown in \cref{fig:rel1}.
 \begin{exercise}[Opposite]
   Compute the opposite relation.
 
-  \methodsource{FiniteRelationOperations}{transitive_closure}
+  \methodsource{FiniteEndorelationOperations}{transitive_closure}
 
 \end{exercise}
 
@@ -150,8 +150,8 @@ The format is shown in \cref{fig:rel1}.
 
 \end{exercise}
 
-\chapter{Finite Maps}
-\chapterfirst{placeholder}{}{}
+
+\section{Finite Maps}
 
 \subsection{Interface}
 
@@ -174,7 +174,6 @@ The format is shown in \cref{fig:map1}.
 
 \end{exercise}
 
-
 \subsection{Operations}
 
 
@@ -188,7 +187,14 @@ The format is shown in \cref{fig:map1}.
 \end{exercise}
 
 
+\begin{exercise}[Obtain relation]
+  Given a FiniteMap, obtain the relation.
 
+  Interface to implement:
+%
+  \methodsource{FiniteMapOperations}{as_relation}
+
+\end{exercise}
 
 
 \chapter{Monoids and semigroups}
@@ -198,6 +204,10 @@ The format is shown in \cref{fig:map1}.
 
 \section{Semigroups}
 
+\subsection{Interface}
+
+
+\classsource{FiniteSemigroup}
 
 \subsection{Representation}
 
@@ -215,12 +225,12 @@ The format is shown in \cref{fig:sm1}.
 \end{exercise}
 
 
-
-
-
-
 \section{Monoids}
 
+\subsection{Interface}
+
+
+\classsource{FiniteMonoid}
 
 \subsection{Representation}
 
@@ -241,11 +251,14 @@ The format is shown in \cref{fig:monoid1}.
 
 \section{Equational theories}
 
+\todotext{Word problem or some such}
 
 
 \chapter{Orders}
 \chapterfirst{placeholder}{}{}
 
+
+\section{Posets}
 
 \subsection{Interface}
 
@@ -266,7 +279,6 @@ Here is the interface for posets:
   \classsource{FinitePosetRepresentation}
 
 \end{exercise}
-
 
 \subsection{Properties}
 
@@ -289,32 +301,67 @@ Here is the interface for posets:
   \methodsource{FinitePosetOperations}{opposite}
 \end{exercise}
 
-
 \subsection{Properties of subsets}
 
 
 \begin{exercise}
   Check if a subset is a chain.
-  \methodsource{FinitePosetSubsetProperties}{chain}
+  \methodsource{FinitePosetSubsetProperties}{is_chain}
 \end{exercise}
 
 \begin{exercise}
   Check if a subset is an antichain.
-  \methodsource{FinitePosetSubsetProperties}{antichain}
+  \methodsource{FinitePosetSubsetProperties}{is_antichain}
 \end{exercise}
 
-
-\subsection{Operations on subset}
+\subsection{Operations on subsets of posets}
 
 \begin{exercise}
-  Compute upper and lower closure of a subset.
+  Compute the upper closure of a subset.
   \methodsource{FinitePosetSubsetOperations}{upperclosure}
+
+\end{exercise}
+
+
+\begin{exercise}
+  Compute the lower closure of a subset, reducing to
+  using the function \funcname{upperclosure} that you
+  already defined.
   \methodsource{FinitePosetSubsetOperations}{lowerclosure}
+
 \end{exercise}
 
 
 
-\subsection{Lower/upper sets }
+\begin{exercise}
+  Compute the minimal elements of a subset.
+
+  \methodsource{FinitePosetSubsetOperations}{minimal}
+
+\end{exercise}
+
+
+\begin{exercise}
+  Compute the maximal elements of a subset, reducing
+  to use the function \funcname{minimal} already defined.
+
+  \methodsource{FinitePosetSubsetOperations}{maximal}
+
+\end{exercise}
+
+
+\begin{exercise}
+  Compute the infimum/supremum/meet/join of a subset.
+  In case one does not exist, return None.
+
+  \methodsource{FinitePosetSubsetOperations}{infimum}
+  \methodsource{FinitePosetSubsetOperations}{supremum}
+  \methodsource{FinitePosetSubsetOperations}{meet}
+  \methodsource{FinitePosetSubsetOperations}{join}
+
+\end{exercise}
+
+\subsection{Lower/upper sets}
 \begin{exercise}
   Given a set, return the power set, a poset ordered by inclusion.
 
@@ -333,8 +380,6 @@ Here is the interface for posets:
 \end{exercise}
 
 
-
-
 \begin{exercise}
   Given two posets, return their product poset.
   \methodsource{FinitePosetOperations}{product}
@@ -346,7 +391,10 @@ Here is the interface for posets:
 \end{exercise}
 
 
-\subsection{Monotone maps}
+\section{Monotone maps}
+
+
+
 
 
 \begin{exercise}
@@ -361,9 +409,22 @@ Here is the interface for posets:
   \methodsource{FinitePosetMapProperties}{is_antitone}
 \end{exercise}
 
+
+
+\section{Lattices}
+
+
+\classsource{FiniteMeetSemilattice}
+
+\classsource{FiniteJoinSemilattice}
+
+\classsource{FiniteLattice}
+
+Note that in a join/meet semilattice there is always a top/bottom.
+
+
 \chapter{Categories}
 \chapterfirst{placeholder}{}{}
-
 
 \section{Categories}
 
@@ -379,9 +440,23 @@ Here is the interface for posets:
 
 \section{Functors}
 
+\subsection{Interface}
 \classsource{FiniteFunctor}
 
+\subsection{Representation}
+The format is shown in \cref{fig:set1}.
+
 \datafilefig{fun1}{fun1.functor.yaml}{fig:fun1}
+
+
+\datafilefig{set1code}{set1.finset.yaml}{fig:set1}
+
+\begin{exercise}
+  Create a function to load the data.
+  Interface to implement:
+%
+  \classsource{FiniteFunctorRepresentation}
+\end{exercise}
 
 
 \chapter{Natural transformations and adjuctions}
@@ -390,19 +465,58 @@ Here is the interface for posets:
 
 \section{Natural transformations}
 
+\subsection{Interface}
 \classsource{FiniteNaturalTransformation}
+
+\subsection{Representation}
+The format is shown in \cref{fig:nat1}.
 
 \datafilefig{nat1}{nat1.nat.yaml}{fig:nat1}
 
 
+\begin{exercise}
+  Create a function to load the data.
+  Interface to implement:
+%
+  \classsource{FiniteNaturalTransformationRepresentation}
+\end{exercise}
+
+
 \section{Adjunctions}
 
+\subsection{Interface}
+\classsource{FiniteAdjunction}
+
+\subsection{Representation}
+
+The format is shown in \cref{fig:nat1}.
+
+\datafilefig{adj1}{adj1.adjunction.yaml}{fig:adj1}
+
+
+\begin{exercise}
+  Create a function to load the data.
+  Interface to implement:
+%
+  \classsource{FiniteAdjunctionRepresentation}
+\end{exercise}
+
+\subsection{Operations}
 \begin{exercise}
   Given two functors, compute if they are an adjunction.
+
+  \methodsource{FiniteAdjunctionsOperations}{is_adjunction}
 \end{exercise}
 
 \begin{exercise}
   Given a relation, return the induced adjunction.
+  \methodsource{FiniteAdjunctionsOperations}{from_relation}
+\end{exercise}
+
+
+\begin{exercise}
+  Compose two compatible adjunctions.
+  \methodsource{FiniteAdjunctionsOperations}{compose}
 \end{exercise}
 
 
@@ -410,37 +524,50 @@ Here is the interface for posets:
 \chapterfirst{placeholder}{}{}
 
 
-\section{DP}
+\section{DP}\label{sec:exercises-DP}
 
 \datafilefig{dp1}{dp1.dp.yaml}{fig:dp1}
 
 
-\section{Profunctors}
+\section{Profunctors}\label{sec:exercises-profunctors}
 
-\datafilefig{prof1}{prof1.poset.yaml}{fig:prof1}
+\datafilefig{prof1}{prof1.profunctor.yaml}{fig:prof1}
 
 
 \chapter{Legos}
+\label{ch:exercises-legos}
 \chapterfirst{placeholder}{}{}
 
 
 \section{Legos}
 
+\subsection{Representation}
+
+\subsection{Assemblies}
+
 \begin{exercise}
   Given a set of Lego blocks, find out if they are rigidly connected.
 \end{exercise}
+
 \begin{exercise}
   Given a set of Lego blocks, find out if they are stable.
 \end{exercise}
+
 \begin{exercise}
   Given a set of Lego blocks, find a stable assembly of them.
 \end{exercise}
+
 \begin{exercise}
   Given a set of Lego blocks, find a plan to assembled them using 1 robot hand.
 \end{exercise}
+
 \begin{exercise}
   Given a set of Lego blocks, find a plan to assemble them using n robot hands.
 \end{exercise}
+
+\subsection{Planning}
+
+\todotext{planning problems with legos}
 
 
 \chapter{Computation}

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Tuple
+from typing import Optional, Set, Tuple
 
 from .types import Element, Morphism, Object
 
@@ -201,7 +201,6 @@ class FiniteMapOperations(ABC):
         """ Load the data  """
 
 
-
 class FiniteSemigroup(ABC):
 
     @abstractmethod
@@ -242,7 +241,6 @@ class FiniteMonoidRepresentation(ABC):
     @abstractmethod
     def save(cls, m: FiniteMonoid) -> str:
         """ Save the data  """
-
 
 
 # TODO: equational theotires
@@ -320,19 +318,59 @@ class FinitePosetSubsetProperties(ABC):
 class FinitePosetSubsetOperations(ABC):
     @classmethod
     @abstractmethod
-    def upperclosure(cls, fp: FinitePoset, s: FiniteSet) -> FiniteSet:
+    def upperclosure(cls, fp: FinitePoset, s: Set[Element]) -> Set[Element]:
         """ Computes the upper closure of an element"""
 
     @classmethod
     @abstractmethod
-    def lowerclosure(cls, fp: FinitePoset, s: FiniteSet) -> FiniteSet:
+    def lowerclosure(cls, fp: FinitePoset, s: Set[Element]) -> Set[Element]:
         """ Computes the lower closure of an element"""
+
+    @classmethod
+    @abstractmethod
+    def maximal(cls, fp: FinitePoset, s: Set[Element]) -> Set[Element]:
+        """ Computes the maximal elements in a subset of the poset"""
+
+    @classmethod
+    @abstractmethod
+    def minimal(cls, fp: FinitePoset, s: Set[Element]) -> Set[Element]:
+        """ Computes the minimal elements in a subset of the poset"""
+
+    @classmethod
+    @abstractmethod
+    def infimum(cls, fp: FinitePoset, s: Set[Element]) -> Optional[Element]:
+        """ Computes the infimum for the subset, or None if one does not exist. """
+
+    @classmethod
+    @abstractmethod
+    def supremum(cls, fp: FinitePoset, s: Set[Element]) -> Optional[Element]:
+        """ Computes the supremum for the subset, or None if one does not exist. """
+
+    @classmethod
+    @abstractmethod
+    def meet(cls, fp: FinitePoset, s: Set[Element]) -> Optional[Element]:
+        """ Computes the meet for the subset, or None if one does not exist. """
+
+    @classmethod
+    @abstractmethod
+    def join(cls, fp: FinitePoset, s: Set[Element]) -> Optional[Element]:
+        """ Computes the join for the subset, or None if one does not exist. """
 
 
 class FinitePosetOperations(ABC):
     @classmethod
     @abstractmethod
     def opposite(cls, s: str) -> FinitePoset:
+        ...
+
+    @classmethod
+    @abstractmethod
+    def product(cls, p1: FinitePoset, p2: FinitePoset) -> FinitePoset:
+        ...
+
+    @classmethod
+    @abstractmethod
+    def disjoint_union(cls, p1: FinitePoset, p2: FinitePoset) -> FinitePoset:
         ...
 
 
@@ -348,27 +386,28 @@ class FinitePosetMapProperties(ABC):
         """ Check if a map is antitone. """
 
 
-class FiniteMonotoneMap(FiniteMap, ABC):
-
-    @abstractmethod
-    def source(self) -> FinitePoset:
-        """ Returns a finite set"""
-
-    @abstractmethod
-    def target(self) -> FinitePoset:
-        """ Returns a finite set"""
-
-
-class FiniteLattice(ABC):
-    """ Implementation of finite posets. """
-
+class FiniteMeetSemilattice:
     @abstractmethod
     def meet(self, x: Element, y: Element) -> Element:
         ...
 
     @abstractmethod
+    def top(self) -> Element:
+        ...
+
+
+class FiniteJoinSemilattice:
+    @abstractmethod
     def join(self, x: Element, y: Element) -> Element:
         ...
+
+    @abstractmethod
+    def bottom(self) -> Element:
+        ...
+
+
+class FiniteLattice(FiniteMeetSemilattice, FiniteJoinSemilattice, ABC):
+    ...
 
 
 class FiniteCategory(ABC):
@@ -382,7 +421,7 @@ class FiniteCategory(ABC):
         ...
 
     @abstractmethod
-    def morphism_legs(self, m: Morphism) -> Tuple[Object, Object]:
+    def legs(self, m: Morphism) -> Tuple[Object, Object]:
         """ Return source and target of the morphism """
 
 
@@ -405,6 +444,18 @@ class FiniteFunctor(ABC):
         """ Effect on morphisms """
 
 
+class FiniteFunctorRepresentation(ABC):
+
+    @classmethod
+    @abstractmethod
+    def load(cls, yaml_data: str) -> FiniteFunctor:
+        """ Load a functor from given YAML data"""
+
+    @classmethod
+    @abstractmethod
+    def save(cls, f: FiniteFunctor) -> str:
+        ...
+
 class FiniteNaturalTransformation(ABC):
 
     @abstractmethod
@@ -420,3 +471,66 @@ class FiniteNaturalTransformation(ABC):
         """ Returns the component for a particular object in the first category.
             This is a morphism in the second category.
         """
+
+
+class FiniteNaturalTransformationRepresentation(ABC):
+
+    @classmethod
+    @abstractmethod
+    def load(cls, yaml_data: str) -> FiniteNaturalTransformation:
+        """ Load a natural transformation from given YAML data"""
+
+    @classmethod
+    @abstractmethod
+    def save(cls, f: FiniteNaturalTransformation) -> str:
+        ...
+
+
+class FiniteAdjunction(ABC):
+
+    def cat1(self) -> FiniteCategory:
+        ...
+    def cat2(self) -> FiniteCategory:
+        ...
+    def left(self) -> FiniteFunctor:
+        pass
+
+    def right(self) -> FiniteFunctor:
+        pass
+
+
+class FiniteAdjunctionRepresentation(ABC):
+
+    @classmethod
+    @abstractmethod
+    def load(cls, yaml_data: str) -> FiniteAdjunction:
+        """ Load a natural transformation from given YAML data"""
+
+    @classmethod
+    @abstractmethod
+    def save(cls, f: FiniteAdjunction) -> str:
+        ...
+
+
+
+
+
+class FiniteAdjunctionsOperations(ABC):
+
+    @classmethod
+    @abstractmethod
+    def is_adjunction(cls, left: FiniteFunctor,
+                      right: FiniteFunctor) -> bool:
+        """ check the pair is an adjunction """
+
+    @classmethod
+    @abstractmethod
+    def compose(cls, adj1: FiniteAdjunction,
+                adj2: FiniteAdjunction) -> FiniteAdjunction:
+
+        """ compose two compatible adjunctions"""
+
+    @classmethod
+    @abstractmethod
+    def from_relation(cls, f: FiniteRelation) -> FiniteAdjunction:
+        ...
