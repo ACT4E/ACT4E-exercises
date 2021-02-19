@@ -1,0 +1,13 @@
+objects:
+  elements: [ a, b, c ]
+morphisms:
+  - f: [ a, b ]
+  - g: [ a, b ]
+  - h: [ a, c ]
+  - i: [ a, c ]
+
+equations:
+  - from: [f, g]
+    to: [h]
+
+

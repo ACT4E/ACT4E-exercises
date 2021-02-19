@@ -1,0 +1,6 @@
+carrier:
+  elements: [ a,b,c,d ]
+hasse:
+  - [a, b]
+  - [b, c]
+  - [c, d]
