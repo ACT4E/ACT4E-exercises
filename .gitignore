@@ -63,3 +63,4 @@ tex/snippets/*.rc
 _minted*
 tex/snippets/compmake
 tex/main.pdf
+dist
