@@ -8,7 +8,7 @@ class Setoid(ABC):
     """ A set is something to which elements may belong. """
 
     @abstractmethod
-    def belongs(self, x: Element) -> bool:
+    def contains(self, x: Element) -> bool:
         ...
 
     @abstractmethod

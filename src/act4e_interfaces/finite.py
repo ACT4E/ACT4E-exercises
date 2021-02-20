@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Collection, Optional, Set, Tuple
+from typing import Callable, Collection, Optional, Set, Tuple
 
 from .types import Element, Morphism, Object
 
@@ -12,7 +12,7 @@ class FiniteSet(ABC):
         """ Return the size of the finite set. """
 
     @abstractmethod
-    def belongs(self, x: Element) -> bool:
+    def contains(self, x: Element) -> bool:
         ...
 
     @abstractmethod
@@ -58,13 +58,24 @@ class FiniteSetOperations(ABC):
     def intersection(self, s1: FiniteSet, s2: FiniteSet) -> FiniteSet:
         ...
 
+
+class FiniteSetOperations2(ABC):
+
     @abstractmethod
     def product(self, s1: FiniteSet, s2: FiniteSet) -> FiniteSet:
         ...
 
     @abstractmethod
+    def projections(self) -> Tuple[Callable[[Element], Element], Callable[[Element], Element]]:
+        """ Returns the two projection functions. """
+
+    @abstractmethod
     def disjoint_union(self, s1: FiniteSet, s2: FiniteSet) -> FiniteSet:
         ...
+
+    @abstractmethod
+    def injections(self) -> Tuple[Callable[[Element], Element], Callable[[Element], Element]]:
+        """ Returns the two injection functions. """
 
 
 class FiniteRelation(ABC):
