@@ -17,7 +17,6 @@ class Setoid(ABC):
 
 
 class Relation(ABC):
-
     @abstractmethod
     def source(self) -> Setoid:
         """ Returns a setoid """
@@ -40,7 +39,6 @@ class EnumerableSet(Setoid, ABC):
 
 
 class Poset(ABC):
-
     @abstractmethod
     def carrier(self) -> Setoid:
         ...
@@ -51,7 +49,6 @@ class Poset(ABC):
 
 
 class SetoidOperations(ABC):
-
     @classmethod
     @abstractmethod
     def union_setoids(cls, a: Setoid, b: Setoid) -> Setoid:
@@ -64,12 +61,11 @@ class SetoidOperations(ABC):
 
 
 class EnumerableSetsOperations(ABC):
-
     @classmethod
     @abstractmethod
     def make_set_sequence(cls, f: Callable[[int], object]):
-        """ Creates an EnumerableSet from a function that gives the
-            i-th element. """
+        """Creates an EnumerableSet from a function that gives the
+        i-th element."""
 
     @classmethod
     @abstractmethod

@@ -29,11 +29,10 @@ class InvalidFormat(Exception):
 
 
 class FiniteSetRepresentation(ABC):
-
     @abstractmethod
     def load(self, yaml_data: str) -> FiniteSet:
-        """ Load a finite set from given YAML data.
-            Throw InvalidFormat if the format is incorrect.
+        """Load a finite set from given YAML data.
+        Throw InvalidFormat if the format is incorrect.
         """
 
     @abstractmethod
@@ -42,14 +41,12 @@ class FiniteSetRepresentation(ABC):
 
 
 class FiniteSetProperties(ABC):
-
     @abstractmethod
     def is_subset(self, a: FiniteSet, b: FiniteSet) -> bool:
         ...
 
 
 class FiniteSetOperations(ABC):
-
     @abstractmethod
     def union(self, s1: FiniteSet, s2: FiniteSet) -> FiniteSet:
         ...
@@ -60,13 +57,14 @@ class FiniteSetOperations(ABC):
 
 
 class FiniteSetOperations2(ABC):
-
     @abstractmethod
     def product(self, s1: FiniteSet, s2: FiniteSet) -> FiniteSet:
         ...
 
     @abstractmethod
-    def projections(self) -> Tuple[Callable[[Element], Element], Callable[[Element], Element]]:
+    def projections(
+        self,
+    ) -> Tuple[Callable[[Element], Element], Callable[[Element], Element]]:
         """ Returns the two projection functions. """
 
     @abstractmethod
@@ -74,12 +72,13 @@ class FiniteSetOperations2(ABC):
         ...
 
     @abstractmethod
-    def injections(self) -> Tuple[Callable[[Element], Element], Callable[[Element], Element]]:
+    def injections(
+        self,
+    ) -> Tuple[Callable[[Element], Element], Callable[[Element], Element]]:
         """ Returns the two injection functions. """
 
 
 class FiniteRelation(ABC):
-
     @abstractmethod
     def source(self) -> FiniteSet:
         """ Returns a finite set"""
@@ -94,7 +93,6 @@ class FiniteRelation(ABC):
 
 
 class FiniteRelationRepresentation(ABC):
-
     @abstractmethod
     def load(self, yaml_data: str) -> FiniteRelation:
         """ Load a finite set from given YAML data"""
@@ -105,7 +103,6 @@ class FiniteRelationRepresentation(ABC):
 
 
 class FiniteRelationProperties(ABC):
-
     @abstractmethod
     def is_surjective(self, fr: FiniteRelation) -> bool:
         """ Return True if the relation is surjective. """
@@ -124,14 +121,12 @@ class FiniteRelationProperties(ABC):
 
 
 class FiniteRelationOperations(ABC):
-
     @abstractmethod
     def transpose(self, fr: FiniteRelation) -> FiniteRelation:
         """ Create the transposed of a relation """
 
 
 class FiniteEndorelationProperties(ABC):
-
     @abstractmethod
     def is_reflexive(self, fr: FiniteRelation) -> bool:
         """ Return True if the relation is reflexive. """
@@ -158,14 +153,12 @@ class FiniteEndorelationProperties(ABC):
 
 
 class FiniteEndorelationOperations(ABC):
-
     @abstractmethod
     def transitive_closure(self, fr: FiniteRelation) -> FiniteRelation:
         """ Returns transitive closure """
 
 
 class FiniteMap(ABC):
-
     @abstractmethod
     def source(self) -> FiniteSet:
         """ Returns a finite set"""
@@ -180,7 +173,6 @@ class FiniteMap(ABC):
 
 
 class FiniteMapRepresentation(ABC):
-
     @abstractmethod
     def load(self, s: str) -> FiniteMap:
         """ Load the data  """
@@ -191,7 +183,6 @@ class FiniteMapRepresentation(ABC):
 
 
 class FiniteMapOperations(ABC):
-
     @abstractmethod
     def compose(self, f: FiniteMap, g: FiniteMap) -> FiniteMap:
         """ compose two functions"""
@@ -202,7 +193,6 @@ class FiniteMapOperations(ABC):
 
 
 class FiniteSemigroup(ABC):
-
     @abstractmethod
     def carrier(self) -> FiniteSet:
         ...
@@ -213,7 +203,6 @@ class FiniteSemigroup(ABC):
 
 
 class FiniteSemigroupRepresentation(ABC):
-
     @abstractmethod
     def load(self, s: str) -> FiniteSemigroup:
         """ Load the data  """
@@ -224,21 +213,18 @@ class FiniteSemigroupRepresentation(ABC):
 
 
 class FiniteSemigroupConstruct(ABC):
-
     @abstractmethod
     def free(self, fs: FiniteSet) -> FiniteSemigroup:
         """ Construct the free semigroup on a set. """
 
 
 class FiniteMonoid(FiniteSemigroup, ABC):
-
     @abstractmethod
     def identity(self) -> Element:
         ...
 
 
 class FiniteMonoidRepresentation(ABC):
-
     @abstractmethod
     def load(self, s: str) -> FiniteMonoid:
         """ Load the data  """
@@ -249,6 +235,7 @@ class FiniteMonoidRepresentation(ABC):
 
 
 # TODO: equational theotires
+
 
 class FinitePoset(ABC):
     """ Implementation of finite posets. """
@@ -263,7 +250,6 @@ class FinitePoset(ABC):
 
 
 class FinitePosetRepresentation(ABC):
-
     @abstractmethod
     def load(self, s: str) -> FinitePoset:
         """ Load the data  """
@@ -274,7 +260,6 @@ class FinitePosetRepresentation(ABC):
 
 
 class FinitePosetProperties(ABC):
-
     @abstractmethod
     def width(self, fp: FinitePoset) -> int:
         """ Return the width of the poset. """
@@ -285,7 +270,6 @@ class FinitePosetProperties(ABC):
 
 
 class FinitePosetConstructors(ABC):
-
     @abstractmethod
     def discrete(self, s: FiniteSet) -> FinitePoset:
         """ Creates the discrete poset from any set. """
@@ -316,7 +300,6 @@ class FinitePosetConstructors(ABC):
 
 
 class FinitePosetSubsetProperties(ABC):
-
     @abstractmethod
     def is_chain(self, fp: FinitePoset, s: FiniteSet) -> bool:
         """ Computes if the subset is a chain. """
@@ -327,7 +310,6 @@ class FinitePosetSubsetProperties(ABC):
 
 
 class FinitePosetSubsetOperations(ABC):
-
     @abstractmethod
     def upperclosure(self, fp: FinitePoset, s: Set[Element]) -> Set[Element]:
         """ Computes the upper closure of an element"""
@@ -362,7 +344,6 @@ class FinitePosetSubsetOperations(ABC):
 
 
 class FinitePosetOperations(ABC):
-
     @abstractmethod
     def opposite(self, s: str) -> FinitePoset:
         ...
@@ -385,7 +366,6 @@ class FiniteMonotoneMap(ABC):
 
 
 class FiniteMonotoneMapProperties(ABC):
-
     @abstractmethod
     def is_monotone(self, p1: FinitePoset, p2: FinitePoset, m: FiniteMap) -> bool:
         """ Check if a map is monotone. """
@@ -440,7 +420,6 @@ class FiniteLattice(FiniteMeetSemilattice, FiniteJoinSemilattice, ABC):
 
 
 class FiniteSemiCategory(ABC):
-
     @abstractmethod
     def objects(self) -> FiniteSet:
         ...
@@ -455,14 +434,12 @@ class FiniteSemiCategory(ABC):
 
 
 class FiniteCategory(FiniteSemiCategory, ABC):
-
     @abstractmethod
     def identity(self, ob: Object) -> Morphism:
         """ Identity for the object """
 
 
 class FiniteCategoryOperations:
-
     @abstractmethod
     def product(self, c1: FiniteCategory, c2: FiniteCategory) -> FiniteCategory:
         """ Product of two categories. """
@@ -481,7 +458,6 @@ class FiniteCategoryOperations:
 
 
 class FiniteFunctor(ABC):
-
     @abstractmethod
     def source(self) -> FiniteCategory:
         ...
@@ -500,7 +476,6 @@ class FiniteFunctor(ABC):
 
 
 class FiniteFunctorRepresentation(ABC):
-
     @abstractmethod
     def load(self, yaml_data: str) -> FiniteFunctor:
         """ Load a functor from given YAML data"""
@@ -511,7 +486,6 @@ class FiniteFunctorRepresentation(ABC):
 
 
 class FiniteMonoidalCategory(FiniteCategory, ABC):
-
     @abstractmethod
     def monoidal_unit(self) -> Object:
         """ Return the product functor. """
@@ -522,7 +496,6 @@ class FiniteMonoidalCategory(FiniteCategory, ABC):
 
 
 class FiniteNaturalTransformation(ABC):
-
     @abstractmethod
     def cat1(self) -> FiniteCategory:
         ...
@@ -533,13 +506,12 @@ class FiniteNaturalTransformation(ABC):
 
     @abstractmethod
     def component(self, ob: Object) -> Morphism:
-        """ Returns the component for a particular object in the first category.
-            This is a morphism in the second category.
+        """Returns the component for a particular object in the first category.
+        This is a morphism in the second category.
         """
 
 
 class FiniteNaturalTransformationRepresentation(ABC):
-
     @abstractmethod
     def load(self, yaml_data: str) -> FiniteNaturalTransformation:
         """ Load a natural transformation from given YAML data"""
@@ -550,7 +522,6 @@ class FiniteNaturalTransformationRepresentation(ABC):
 
 
 class FiniteAdjunction(ABC):
-
     @abstractmethod
     def source(self) -> FiniteCategory:
         ...
@@ -569,7 +540,6 @@ class FiniteAdjunction(ABC):
 
 
 class FiniteAdjunctionRepresentation(ABC):
-
     @abstractmethod
     def load(self, yaml_data: str) -> FiniteAdjunction:
         ...
@@ -580,15 +550,14 @@ class FiniteAdjunctionRepresentation(ABC):
 
 
 class FiniteAdjunctionsOperations(ABC):
-
     @abstractmethod
-    def is_adjunction(self, left: FiniteFunctor,
-                      right: FiniteFunctor) -> bool:
+    def is_adjunction(self, left: FiniteFunctor, right: FiniteFunctor) -> bool:
         """ check the pair is an adjunction """
 
     @abstractmethod
-    def compose(self, adj1: FiniteAdjunction,
-                adj2: FiniteAdjunction) -> FiniteAdjunction:
+    def compose(
+        self, adj1: FiniteAdjunction, adj2: FiniteAdjunction
+    ) -> FiniteAdjunction:
         """ compose two compatible adjunctions"""
 
     @abstractmethod
@@ -601,7 +570,6 @@ class FiniteDP(ABC):
 
 
 class FiniteDPRepresentation(ABC):
-
     @abstractmethod
     def load(self, yaml_data: str) -> FiniteDP:
         ...
@@ -612,7 +580,6 @@ class FiniteDPRepresentation(ABC):
 
 
 class FiniteDPConstructors(ABC):
-
     @abstractmethod
     def companion(self, f: FiniteMonotoneMap) -> FiniteDP:
         pass
@@ -623,7 +590,6 @@ class FiniteDPConstructors(ABC):
 
 
 class FiniteDPOperations(ABC):
-
     @abstractmethod
     def series(self, dp1: FiniteDP, dp2: FiniteDP) -> FiniteDP:
         pass
@@ -653,7 +619,6 @@ class FiniteProfunctor(ABC):
 
 
 class FiniteProfunctorRepresentation(ABC):
-
     @abstractmethod
     def load(self, yaml_data: str) -> FiniteProfunctor:
         """ Load a natural transformation from given YAML data"""
@@ -664,7 +629,6 @@ class FiniteProfunctorRepresentation(ABC):
 
 
 class FiniteProfunctorOperations(ABC):
-
     @abstractmethod
     def series(self, p1: FiniteProfunctor, p2: FiniteProfunctor) -> FiniteProfunctor:
         ...
