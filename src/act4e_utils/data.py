@@ -13,9 +13,3 @@ def get_data_file(bn: str) -> str:
         raise ZException('does not exist', f=f)
     return read_ustring_from_utf8_file(f)
 
-
-def visualize_data_file(bn: str):
-    s = get_data_file(bn)
-    print('\\begin{minted}{yaml}')
-    print(s)
-    print('\\end{minted}',end='')
