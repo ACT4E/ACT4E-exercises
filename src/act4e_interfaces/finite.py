@@ -1,27 +1,41 @@
 from abc import ABC, abstractmethod
-from typing import Callable, Collection, Optional, Set, Tuple
+from typing import Callable, Iterator, Optional, Set, Tuple
 
 from .types import Element, Morphism, Object
 
 
-class FiniteSet(ABC):
+class Setoid(ABC):
+    """
+        A setoid is something to which elements may belong, and
+        has a way of distinguishing elements.
+    """
+
+    @abstractmethod
+    def contains(self, x: Element) -> bool:
+        """ Returns true if the element is in the set. """
+
+    def equal(self, x: Element, y: Element) -> bool:
+        """ Returns True if the two elements are to be considered equal. """
+        return x == y  # default is to use the Python equality
+
+    def apart(self, x: Element, y: Element) -> bool:  # snip
+        return not self.equal(x, y)  # snip
+
+
+class EnumerableSet(Setoid, ABC):
+    """ An enumerable set can construct its elements. """
+
+    @abstractmethod
+    def elements(self) -> Iterator[Element]:
+        """ Note: $x$ may not terminate. """
+
+
+class FiniteSet(EnumerableSet, ABC):
     """ A finite set has a finite size. """
 
     @abstractmethod
     def size(self) -> int:
         """ Return the size of the finite set. """
-
-    @abstractmethod
-    def contains(self, x: Element) -> bool:
-        ...
-
-    @abstractmethod
-    def equal(self, x: Element, y: Element) -> bool:
-        """ Returns True if the two elements are to be considered equal. """
-
-    @abstractmethod
-    def elements(self) -> Collection[Element]:
-        ...
 
 
 class InvalidFormat(Exception):
@@ -43,13 +57,13 @@ class FiniteSetRepresentation(ABC):
 class FiniteSetProperties(ABC):
     @abstractmethod
     def is_subset(self, a: FiniteSet, b: FiniteSet) -> bool:
-        ...
+        """ True if `a` is a subset of `b`. """
 
 
 class FiniteSetOperations(ABC):
     @abstractmethod
     def union(self, s1: FiniteSet, s2: FiniteSet) -> FiniteSet:
-        ...
+        """ Computes the union of the two sets. """
 
     @abstractmethod
     def intersection(self, s1: FiniteSet, s2: FiniteSet) -> FiniteSet:
@@ -78,7 +92,21 @@ class FiniteSetOperations2(ABC):
         """ Returns the two injection functions. """
 
 
-class FiniteRelation(ABC):
+class Relation(ABC):
+    @abstractmethod
+    def source(self) -> Setoid:
+        """ Returns a setoid """
+
+    @abstractmethod
+    def target(self) -> Setoid:
+        """ Returns a setoid """
+
+    @abstractmethod
+    def holds(self, a: Element, b: Element) -> bool:
+        """ Returns true if the two elements are related """
+
+
+class FiniteRelation(Relation, ABC):
     @abstractmethod
     def source(self) -> FiniteSet:
         """ Returns a finite set"""
@@ -86,10 +114,6 @@ class FiniteRelation(ABC):
     @abstractmethod
     def target(self) -> FiniteSet:
         """ Returns a finite set"""
-
-    @abstractmethod
-    def holds(self, a: Element, b: Element) -> bool:
-        """ Returns true if the two elements are related """
 
 
 class FiniteRelationRepresentation(ABC):
@@ -158,7 +182,21 @@ class FiniteEndorelationOperations(ABC):
         """ Returns transitive closure """
 
 
-class FiniteMap(ABC):
+class Mapping(ABC):
+    @abstractmethod
+    def source(self) -> Setoid:
+        """ Returns a finite set"""
+
+    @abstractmethod
+    def target(self) -> Setoid:
+        """ Returns a finite set"""
+
+    @abstractmethod
+    def __call__(self, a: Element) -> Element:
+        ...
+
+
+class FiniteMap(Mapping, ABC):
     @abstractmethod
     def source(self) -> FiniteSet:
         """ Returns a finite set"""
@@ -166,10 +204,6 @@ class FiniteMap(ABC):
     @abstractmethod
     def target(self) -> FiniteSet:
         """ Returns a finite set"""
-
-    @abstractmethod
-    def exec(self, a: Element) -> Element:
-        ...
 
 
 class FiniteMapRepresentation(ABC):
@@ -192,13 +226,19 @@ class FiniteMapOperations(ABC):
         """ Load the data  """
 
 
-class FiniteSemigroup(ABC):
+class Semigroup(ABC):
     @abstractmethod
-    def carrier(self) -> FiniteSet:
+    def carrier(self) -> Setoid:
         ...
 
     @abstractmethod
     def compose(self, a: Element, b: Element) -> Element:
+        ...
+
+
+class FiniteSemigroup(Semigroup, ABC):
+    @abstractmethod
+    def carrier(self) -> FiniteSet:
         ...
 
 
@@ -218,10 +258,24 @@ class FiniteSemigroupConstruct(ABC):
         """ Construct the free semigroup on a set. """
 
 
-class FiniteMonoid(FiniteSemigroup, ABC):
+class Monoid(Semigroup, ABC):
     @abstractmethod
     def identity(self) -> Element:
         ...
+
+
+class Group(Monoid, ABC):
+    @abstractmethod
+    def inverse(self, e: Element) -> Element:
+        """ Returns the inverse of an element"""
+
+
+class FiniteMonoid(Monoid, FiniteSemigroup, ABC):
+    """"""
+
+
+class FiniteGroup(Group, FiniteMonoid, ABC):
+    ...
 
 
 class FiniteMonoidRepresentation(ABC):
@@ -234,19 +288,25 @@ class FiniteMonoidRepresentation(ABC):
         """ Save the data  """
 
 
-# TODO: equational theotires
+# TODO: equational theories
 
 
-class FinitePoset(ABC):
+class Poset(ABC):
+    @abstractmethod
+    def carrier(self) -> Setoid:
+        ...
+
+    @abstractmethod
+    def leq(self, a: Element, b: Element) -> bool:
+        ...
+
+
+class FinitePoset(Poset, ABC):
     """ Implementation of finite posets. """
 
     @abstractmethod
     def carrier(self) -> FiniteSet:
         ...
-
-    @abstractmethod
-    def leq(self, x: Element, y: Element) -> bool:
-        """ Implements $\posleq$ """
 
 
 class FinitePosetRepresentation(ABC):
@@ -357,11 +417,11 @@ class FinitePosetOperations(ABC):
         ...
 
 
-class FiniteMonotoneMap(ABC):
-    def source(self) -> FinitePoset:
+class MonotoneMap(Mapping, ABC):
+    def source_poset(self) -> Poset:
         ...
 
-    def target(self) -> FinitePoset:
+    def target_poset(self) -> Poset:
         ...
 
 
@@ -395,7 +455,7 @@ class MonoidalPosetOperations(ABC):
         """ Check that the pair of poset and monoid make together a monoidal poset."""
 
 
-class FiniteMeetSemilattice:
+class MeetSemilattice(Poset, ABC):
     @abstractmethod
     def meet(self, x: Element, y: Element) -> Element:
         ...
@@ -405,7 +465,7 @@ class FiniteMeetSemilattice:
         ...
 
 
-class FiniteJoinSemilattice:
+class JoinSemilattice(Poset, ABC):
     @abstractmethod
     def join(self, x: Element, y: Element) -> Element:
         ...
@@ -415,11 +475,43 @@ class FiniteJoinSemilattice:
         ...
 
 
-class FiniteLattice(FiniteMeetSemilattice, FiniteJoinSemilattice, ABC):
+class Lattice(JoinSemilattice, MeetSemilattice, ABC):
+    pass
+
+
+class FiniteLattice(ABC):
+    @abstractmethod
+    def carrier(self) -> FiniteSet:
+        ...
+
+
+class SemiBiCategory(ABC):
+
+    @abstractmethod
+    def objects(self) -> Setoid:
+        ...
+
+    @abstractmethod
+    def homs(self, ob1: Object, ob2: Object) -> Setoid:
+        ...
+
+    @abstractmethod
+    def legs(self, m: Morphism) -> Tuple[Object, Object]:
+        """ Return source and target of the morphism """
+
+
+class SemiCategory(SemiBiCategory, ABC):
     ...
 
 
-class FiniteSemiCategory(ABC):
+class Category(SemiCategory, ABC):
+
+    @abstractmethod
+    def identity(self, ob: Object) -> Morphism:
+        """ Identity for the object """
+
+
+class FiniteSemiCategory(SemiCategory, ABC):
     @abstractmethod
     def objects(self) -> FiniteSet:
         ...
@@ -428,15 +520,27 @@ class FiniteSemiCategory(ABC):
     def homs(self, ob1: Object, ob2: Object) -> FiniteSet:
         ...
 
-    @abstractmethod
-    def legs(self, m: Morphism) -> Tuple[Object, Object]:
-        """ Return source and target of the morphism """
+
+class FiniteCategory(FiniteSemiCategory, Category, ABC):
+    ...
 
 
-class FiniteCategory(FiniteSemiCategory, ABC):
+class CategoryOperations:
     @abstractmethod
-    def identity(self, ob: Object) -> Morphism:
-        """ Identity for the object """
+    def product(self, c1: Category, c2: Category) -> Category:
+        """ Product of two categories. """
+
+    @abstractmethod
+    def disjoint_union(self, c1: Category, c2: Category) -> FiniteCategory:
+        """ Disjoint union for the categories """
+
+    @abstractmethod
+    def arrow(self, c1: Category) -> Category:
+        """ Computes the arrow category """
+
+    @abstractmethod
+    def twisted_arrow(self, c1: Category) -> Category:
+        """ Computes the twisted arrow category """
 
 
 class FiniteCategoryOperations:
@@ -457,13 +561,13 @@ class FiniteCategoryOperations:
         """ Computes the twisted arrow category """
 
 
-class FiniteFunctor(ABC):
+class Functor(ABC):
     @abstractmethod
-    def source(self) -> FiniteCategory:
+    def source(self) -> Category:
         ...
 
     @abstractmethod
-    def target(self) -> FiniteCategory:
+    def target(self) -> Category:
         ...
 
     @abstractmethod
@@ -473,6 +577,16 @@ class FiniteFunctor(ABC):
     @abstractmethod
     def f_mor(self, m: Morphism) -> Morphism:
         """ Effect on morphisms """
+
+
+class FiniteFunctor(Functor, ABC):
+    @abstractmethod
+    def source(self) -> FiniteCategory:
+        ...
+
+    @abstractmethod
+    def target(self) -> FiniteCategory:
+        ...
 
 
 class FiniteFunctorRepresentation(ABC):
@@ -485,7 +599,7 @@ class FiniteFunctorRepresentation(ABC):
         ...
 
 
-class FiniteMonoidalCategory(FiniteCategory, ABC):
+class MonoidalCategory(Category, ABC):
     @abstractmethod
     def monoidal_unit(self) -> Object:
         """ Return the product functor. """
@@ -495,13 +609,18 @@ class FiniteMonoidalCategory(FiniteCategory, ABC):
         """ Return the product functor. """
 
 
-class FiniteNaturalTransformation(ABC):
+class FiniteMonoidalCategory(MonoidalCategory, FiniteCategory, ABC):
+    ...
+
+
+class NaturalTransformation(ABC):
+
     @abstractmethod
-    def cat1(self) -> FiniteCategory:
+    def cat1(self) -> Category:
         ...
 
     @abstractmethod
-    def cat2(self) -> FiniteCategory:
+    def cat2(self) -> Category:
         ...
 
     @abstractmethod
@@ -509,6 +628,16 @@ class FiniteNaturalTransformation(ABC):
         """Returns the component for a particular object in the first category.
         This is a morphism in the second category.
         """
+
+
+class FiniteNaturalTransformation(NaturalTransformation, ABC):
+    @abstractmethod
+    def cat1(self) -> FiniteCategory:
+        ...
+
+    @abstractmethod
+    def cat2(self) -> FiniteCategory:
+        ...
 
 
 class FiniteNaturalTransformationRepresentation(ABC):
@@ -521,7 +650,25 @@ class FiniteNaturalTransformationRepresentation(ABC):
         ...
 
 
-class FiniteAdjunction(ABC):
+class Adjunction(ABC):
+    @abstractmethod
+    def source(self) -> Category:
+        ...
+
+    @abstractmethod
+    def target(self) -> Category:
+        ...
+
+    @abstractmethod
+    def left(self) -> Functor:
+        pass
+
+    @abstractmethod
+    def right(self) -> Functor:
+        pass
+
+
+class FiniteAdjunction(Adjunction, ABC):
     @abstractmethod
     def source(self) -> FiniteCategory:
         ...
@@ -565,6 +712,36 @@ class FiniteAdjunctionsOperations(ABC):
         ...
 
 
+class DPI(ABC):
+    @abstractmethod
+    def functionality(self) -> Poset:
+        ...
+
+    @abstractmethod
+    def implementations(self) -> Setoid:
+        ...
+
+    @abstractmethod
+    def costs(self) -> Poset:
+        ...
+
+    @abstractmethod
+    def requires(self) -> Mapping:
+        ...
+
+    @abstractmethod
+    def provides(self) -> Mapping:
+        ...
+
+
+class DPCategory(Category, ABC):
+    pass
+
+
+class DP(ABC):
+    pass
+
+
 class FiniteDP(ABC):
     pass
 
@@ -579,13 +756,13 @@ class FiniteDPRepresentation(ABC):
         ...
 
 
-class FiniteDPConstructors(ABC):
+class DPConstructors(ABC):
     @abstractmethod
-    def companion(self, f: FiniteMonotoneMap) -> FiniteDP:
+    def companion(self, f: MonotoneMap) -> DP:
         pass
 
     @abstractmethod
-    def conjoint(self, f: FiniteMonotoneMap) -> FiniteDP:
+    def conjoint(self, f: MonotoneMap) -> DP:
         pass
 
 
@@ -604,6 +781,17 @@ class FiniteDPOperations(ABC):
 
     @abstractmethod
     def from_relation(self, f: FiniteRelation) -> FiniteDP:
+        ...
+
+
+class Profunctor(ABC):
+    def source(self) -> Category:
+        ...
+
+    def target(self) -> Category:
+        ...
+
+    def functor(self) -> Functor:
         ...
 
 
@@ -637,3 +825,28 @@ class FiniteProfunctorOperations(ABC):
 class FiniteEnrichedCategory(FiniteCategory, ABC):
     def enrichment(self) -> FiniteMonoidalCategory:
         ...
+
+
+class SetoidOperations(ABC):
+    @classmethod
+    @abstractmethod
+    def union_setoids(cls, a: Setoid, b: Setoid) -> Setoid:
+        """ Creates the union of two Setoids. """
+
+    @classmethod
+    @abstractmethod
+    def intersection_setoids(cls, a: Setoid, b: Setoid) -> Setoid:
+        """ Creates the intersection of two Setoids. """
+
+
+class EnumerableSetsOperations(ABC):
+    @classmethod
+    @abstractmethod
+    def make_set_sequence(cls, f: Callable[[int], object]):
+        """Creates an EnumerableSet from a function that gives the
+        i-th element."""
+
+    @classmethod
+    @abstractmethod
+    def union_esets(cls, a: EnumerableSet, b: EnumerableSet) -> EnumerableSet:
+        """ Creates the union of two EnumerableSet. """
