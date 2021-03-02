@@ -6,6 +6,11 @@ from typing import List
 @dataclass
 class Component:
     mass: float
+    length: float
+    spring_const_pull: float
+    spring_const_push: float
+    max_compression: float
+    max_extension: float
 
 
 @dataclass
