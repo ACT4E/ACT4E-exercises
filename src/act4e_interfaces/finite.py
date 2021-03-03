@@ -6,6 +6,8 @@ from typing import Callable, Iterator, List, Optional, overload, Set, Tuple
 from .types import Element, Morphism, Object
 
 __all__ = [
+    "EnumerableSetsOperations",
+    "EnumerableSet",
     "Setoid",
     "SetoidOperations",
     "SetProduct",
@@ -16,6 +18,8 @@ __all__ = [
     "MakeSetProduct",
     "MonotoneMap",
     "Mapping",
+    "Monoid",
+    "MonoidalCategory",
     "MonoidalCategory",
     "FiniteMap",
     "FiniteDP",
@@ -55,6 +59,7 @@ __all__ = [
     "FiniteMapOperations",
     "FinitePosetSubsetOperations",
     "FiniteNaturalTransformation",
+    "Semigroup",
 ]
 
 
