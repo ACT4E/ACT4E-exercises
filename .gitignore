@@ -64,3 +64,4 @@ _minted*
 tex/snippets/compmake
 tex/main.pdf
 dist
+__pycache__

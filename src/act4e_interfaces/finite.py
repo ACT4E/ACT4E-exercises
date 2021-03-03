@@ -1,13 +1,67 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
-from typing import Callable, Iterator, Optional, Set, Tuple
+from typing import Callable, Iterator, List, Optional, overload, Set, Tuple
 
 from .types import Element, Morphism, Object
+
+__all__ = [
+    "Setoid",
+    "SetoidOperations",
+    "SetProduct",
+    "SetDisjointUnion",
+    "MakeSetUnion",
+    "MakeSetDisjointUnion",
+    "MakeSetIntersection",
+    "MakeSetProduct",
+    "MonotoneMap",
+    "Mapping",
+    "MonoidalCategory",
+    "FiniteMap",
+    "FiniteDP",
+    "FiniteSet",
+    "FiniteSetProperties",
+    "FiniteSetProduct",
+    "FiniteProfunctor",
+    "FiniteSetDisjointUnion",
+    "FiniteFunctor",
+    "FiniteDPRepresentation",
+    "FiniteSemigroupConstruct",
+    "FiniteSemigroup",
+    "FinitePoset",
+    "FiniteAdjunction",
+    "FiniteMonoidalPoset",
+    "FiniteMonoidalCategory",
+    "FiniteCategory",
+    "FiniteEnrichedCategory",
+    "FiniteRelation",
+    "FiniteSemiCategory",
+    "FiniteMonoid",
+    "FiniteCategoryOperations",
+    "FiniteDPOperations",
+    "FiniteAdjunctionsOperations",
+    "FiniteProfunctorOperations",
+    "FiniteGroup",
+    "FiniteLattice",
+    "FiniteRelationProperties",
+    "FiniteRelationOperations",
+    "FiniteEndorelationOperations",
+    "FiniteMonotoneMapProperties",
+    "FiniteEndorelationProperties",
+    "FinitePosetOperations",
+    "FinitePosetConstructors",
+    "FinitePosetSubsetProperties",
+    "FinitePosetProperties",
+    "FiniteMapOperations",
+    "FinitePosetSubsetOperations",
+    "FiniteNaturalTransformation",
+]
 
 
 class Setoid(ABC):
     """
-        A setoid is something to which elements may belong, and
-        has a way of distinguishing elements.
+    A setoid is something to which elements may belong, and
+    has a way of distinguishing elements.
     """
 
     @abstractmethod
@@ -18,16 +72,28 @@ class Setoid(ABC):
         """ Returns True if the two elements are to be considered equal. """
         return x == y  # default is to use the Python equality
 
-    def apart(self, x: Element, y: Element) -> bool:  # snip
-        return not self.equal(x, y)  # snip
+    def apart(self, x: Element, y: Element) -> bool:
+        return not self.equal(x, y)
+
+
+class Mapping(ABC):
+    @abstractmethod
+    def source(self) -> Setoid:
+        """ Returns a finite set"""
+
+    @abstractmethod
+    def target(self) -> Setoid:
+        """ Returns a finite set"""
+
+    @abstractmethod
+    def __call__(self, a: Element) -> Element:
+        ...
 
 
 class EnumerableSet(Setoid, ABC):
-    """ An enumerable set can construct its elements. """
-
     @abstractmethod
     def elements(self) -> Iterator[Element]:
-        """ Note: $x$ may not terminate. """
+        """ Note: possibly non-terminating. """
 
 
 class FiniteSet(EnumerableSet, ABC):
@@ -38,20 +104,18 @@ class FiniteSet(EnumerableSet, ABC):
         """ Return the size of the finite set. """
 
 
+class FiniteMap(Mapping, ABC):
+    @abstractmethod
+    def source(self) -> FiniteSet:
+        ...
+
+    @abstractmethod
+    def target(self) -> FiniteSet:
+        ...
+
+
 class InvalidFormat(Exception):
     pass
-
-
-class FiniteSetRepresentation(ABC):
-    @abstractmethod
-    def load(self, yaml_data: str) -> FiniteSet:
-        """Load a finite set from given YAML data.
-        Throw InvalidFormat if the format is incorrect.
-        """
-
-    @abstractmethod
-    def save(self, f: FiniteSet) -> str:
-        """ Save to a string. """
 
 
 class FiniteSetProperties(ABC):
@@ -59,37 +123,99 @@ class FiniteSetProperties(ABC):
     def is_subset(self, a: FiniteSet, b: FiniteSet) -> bool:
         """ True if `a` is a subset of `b`. """
 
+    def is_equal(self, a: FiniteSet, b: FiniteSet) -> bool:
+        return self.is_subset(a, b) and self.is_subset(b, a)
 
-class FiniteSetOperations(ABC):
-    @abstractmethod
-    def union(self, s1: FiniteSet, s2: FiniteSet) -> FiniteSet:
-        """ Computes the union of the two sets. """
+    def is_strict_subset(self, a: FiniteSet, b: FiniteSet) -> bool:
+        return self.is_subset(a, b) and not self.is_subset(b, a)
+
+
+class SetProduct(Setoid, ABC):
+    """ A set product is a setoid that can be factorized. """
 
     @abstractmethod
-    def intersection(self, s1: FiniteSet, s2: FiniteSet) -> FiniteSet:
+    def components(self) -> List[Setoid]:
+        """ Returns the components of the product"""
+
+    @abstractmethod
+    def pack(self, *args: Element) -> Element:
+        """ Packs an element of each setoid into an element of the mapping"""
+
+    @abstractmethod
+    def projections(self) -> List[Mapping]:
+        """ Returns the projection mappings. """
+
+
+class FiniteSetProduct(FiniteSet, SetProduct, ABC):
+    """ Specialization of SetProduct where we deal with FiniteSets"""
+
+    @abstractmethod
+    def components(self) -> List[FiniteSet]:
+        """ Returns the components """
+
+    @abstractmethod
+    def projections(self) -> List[FiniteMap]:
+        """ Returns the projection mappings. """
+
+
+class SetDisjointUnion(Setoid, ABC):
+    @abstractmethod
+    def components(self) -> List[Setoid]:
+        """ Returns the components of the union """
+
+    @abstractmethod
+    def injections(self) -> List[Mapping]:
+        """ Returns the projection mappings. """
+
+
+class FiniteSetDisjointUnion(FiniteSet, SetDisjointUnion, ABC):
+    """ Specialization of SetProduct where we deal with FiniteSets"""
+
+    @abstractmethod
+    def components(self) -> List[FiniteSet]:
+        ...
+
+    @abstractmethod
+    def injections(self) -> List[FiniteMap]:
         ...
 
 
-class FiniteSetOperations2(ABC):
-    @abstractmethod
-    def product(self, s1: FiniteSet, s2: FiniteSet) -> FiniteSet:
+class MakeSetProduct(ABC):
+    @overload
+    def product(self, components: List[Setoid]) -> SetProduct:
         ...
 
     @abstractmethod
-    def projections(
-        self,
-    ) -> Tuple[Callable[[Element], Element], Callable[[Element], Element]]:
-        """ Returns the two projection functions. """
+    def product(self, components: List[FiniteSet]) -> FiniteSetProduct:
+        ...
 
+
+class MakeSetIntersection(ABC):
     @abstractmethod
-    def disjoint_union(self, s1: FiniteSet, s2: FiniteSet) -> FiniteSet:
+    def intersection(self, components: List[FiniteSet]) -> FiniteSet:
+        ...
+
+
+class MakeSetUnion(ABC):
+    @overload
+    def union(self, components: List[Setoid]) -> Setoid:
         ...
 
     @abstractmethod
-    def injections(
-        self,
-    ) -> Tuple[Callable[[Element], Element], Callable[[Element], Element]]:
-        """ Returns the two injection functions. """
+    def union(self, components: List[FiniteSet]) -> FiniteSet:
+        ...
+
+
+class MakeSetDisjointUnion(ABC):
+    @overload
+    def compute_disjoint_union(self, components: List[Setoid]) -> SetDisjointUnion:
+        ...
+
+    @abstractmethod
+    def compute_disjoint_union(
+        self, components: List[FiniteSet]
+    ) -> FiniteSetDisjointUnion:
+        ...
 
 
 class Relation(ABC):
@@ -114,16 +240,6 @@ class FiniteRelation(Relation, ABC):
     @abstractmethod
     def target(self) -> FiniteSet:
         """ Returns a finite set"""
-
-
-class FiniteRelationRepresentation(ABC):
-    @abstractmethod
-    def load(self, yaml_data: str) -> FiniteRelation:
-        """ Load a finite set from given YAML data"""
-
-    @abstractmethod
-    def save(self, f: FiniteRelation) -> str:
-        """ Load a finite set from given YAML data"""
 
 
 class FiniteRelationProperties(ABC):
@@ -182,40 +298,6 @@ class FiniteEndorelationOperations(ABC):
         """ Returns transitive closure """
 
 
-class Mapping(ABC):
-    @abstractmethod
-    def source(self) -> Setoid:
-        """ Returns a finite set"""
-
-    @abstractmethod
-    def target(self) -> Setoid:
-        """ Returns a finite set"""
-
-    @abstractmethod
-    def __call__(self, a: Element) -> Element:
-        ...
-
-
-class FiniteMap(Mapping, ABC):
-    @abstractmethod
-    def source(self) -> FiniteSet:
-        """ Returns a finite set"""
-
-    @abstractmethod
-    def target(self) -> FiniteSet:
-        """ Returns a finite set"""
-
-
-class FiniteMapRepresentation(ABC):
-    @abstractmethod
-    def load(self, s: str) -> FiniteMap:
-        """ Load the data  """
-
-    @abstractmethod
-    def save(self, m: FiniteMap) -> str:
-        """ Load the data  """
-
-
 class FiniteMapOperations(ABC):
     @abstractmethod
     def compose(self, f: FiniteMap, g: FiniteMap) -> FiniteMap:
@@ -240,16 +322,6 @@ class FiniteSemigroup(Semigroup, ABC):
     @abstractmethod
     def carrier(self) -> FiniteSet:
         ...
-
-
-class FiniteSemigroupRepresentation(ABC):
-    @abstractmethod
-    def load(self, s: str) -> FiniteSemigroup:
-        """ Load the data  """
-
-    @abstractmethod
-    def save(self, m: FiniteSemigroup) -> str:
-        """ Save the data  """
 
 
 class FiniteSemigroupConstruct(ABC):
@@ -278,16 +350,6 @@ class FiniteGroup(Group, FiniteMonoid, ABC):
     ...
 
 
-class FiniteMonoidRepresentation(ABC):
-    @abstractmethod
-    def load(self, s: str) -> FiniteMonoid:
-        """ Load the data  """
-
-    @abstractmethod
-    def save(self, m: FiniteMonoid) -> str:
-        """ Save the data  """
-
-
 # TODO: equational theories
 
 
@@ -307,16 +369,6 @@ class FinitePoset(Poset, ABC):
     @abstractmethod
     def carrier(self) -> FiniteSet:
         ...
-
-
-class FinitePosetRepresentation(ABC):
-    @abstractmethod
-    def load(self, s: str) -> FinitePoset:
-        """ Load the data  """
-
-    @abstractmethod
-    def save(self, m: FinitePoset) -> str:
-        """ Save the data  """
 
 
 class FinitePosetProperties(ABC):
@@ -486,7 +538,6 @@ class FiniteLattice(ABC):
 
 
 class SemiBiCategory(ABC):
-
     @abstractmethod
     def objects(self) -> Setoid:
         ...
@@ -505,10 +556,13 @@ class SemiCategory(SemiBiCategory, ABC):
 
 
 class Category(SemiCategory, ABC):
-
     @abstractmethod
     def identity(self, ob: Object) -> Morphism:
         """ Identity for the object """
+
+
+assert [1] + [1, 2] == [1, 1, 2]
+assert [1, 1, 2] + [] == [1, 1, 2]
 
 
 class FiniteSemiCategory(SemiCategory, ABC):
@@ -589,16 +643,6 @@ class FiniteFunctor(Functor, ABC):
         ...
 
 
-class FiniteFunctorRepresentation(ABC):
-    @abstractmethod
-    def load(self, yaml_data: str) -> FiniteFunctor:
-        """ Load a functor from given YAML data"""
-
-    @abstractmethod
-    def save(self, f: FiniteFunctor) -> str:
-        ...
-
-
 class MonoidalCategory(Category, ABC):
     @abstractmethod
     def monoidal_unit(self) -> Object:
@@ -614,7 +658,6 @@ class FiniteMonoidalCategory(MonoidalCategory, FiniteCategory, ABC):
 
 
 class NaturalTransformation(ABC):
-
     @abstractmethod
     def cat1(self) -> Category:
         ...
@@ -637,16 +680,6 @@ class FiniteNaturalTransformation(NaturalTransformation, ABC):
 
     @abstractmethod
     def cat2(self) -> FiniteCategory:
-        ...
-
-
-class FiniteNaturalTransformationRepresentation(ABC):
-    @abstractmethod
-    def load(self, yaml_data: str) -> FiniteNaturalTransformation:
-        """ Load a natural transformation from given YAML data"""
-
-    @abstractmethod
-    def save(self, f: FiniteNaturalTransformation) -> str:
         ...
 
 
@@ -684,16 +717,6 @@ class FiniteAdjunction(Adjunction, ABC):
     @abstractmethod
     def right(self) -> FiniteFunctor:
         pass
-
-
-class FiniteAdjunctionRepresentation(ABC):
-    @abstractmethod
-    def load(self, yaml_data: str) -> FiniteAdjunction:
-        ...
-
-    @abstractmethod
-    def save(self, f: FiniteAdjunction) -> str:
-        ...
 
 
 class FiniteAdjunctionsOperations(ABC):
@@ -803,16 +826,6 @@ class FiniteProfunctor(ABC):
         ...
 
     def functor(self) -> FiniteFunctor:
-        ...
-
-
-class FiniteProfunctorRepresentation(ABC):
-    @abstractmethod
-    def load(self, yaml_data: str) -> FiniteProfunctor:
-        """ Load a natural transformation from given YAML data"""
-
-    @abstractmethod
-    def save(self, f: FiniteProfunctor) -> str:
         ...
 
 

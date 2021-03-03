@@ -2,6 +2,8 @@ from abc import ABC
 from dataclasses import dataclass
 from typing import List
 
+__all__ = ["Component", "Rope", "Elastic", "Brick", "Sphere", "Solution"]
+
 
 @dataclass
 class Component:
@@ -39,7 +41,6 @@ class Solution:
 
 
 class RupeGoldbergSolver(ABC):
-
     def hangthem(self, components: List[Component]) -> Solution:
         """ What if we hang the first component, and let the others hang below it?  """
 
