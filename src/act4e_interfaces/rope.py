@@ -8,6 +8,11 @@ __all__ = ["Component", "Rope", "Elastic", "Brick", "Sphere", "Solution", "RupeG
 @dataclass
 class Component:
     mass: float
+    length: float
+    spring_const_pull: float
+    spring_const_push: float
+    max_compression: float
+    max_extension: float
 
 
 @dataclass
