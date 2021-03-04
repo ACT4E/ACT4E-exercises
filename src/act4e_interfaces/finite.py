@@ -60,6 +60,10 @@ __all__ = [
     "FinitePosetSubsetOperations",
     "FiniteNaturalTransformation",
     "Semigroup",
+    "Lattice", "JoinSemilattice", "Adjunction",
+    'MeetSemilattice', "MonoidalPosetOperations", "SemiCategory",
+    "SemiBiCategory", "Poset", "Category", "CategoryOperations", 'DP', 'DPCategory', 'DPI',
+    "DPConstructors", "InvalidFormat",
 ]
 
 
@@ -84,12 +88,10 @@ class Setoid(ABC):
 class Mapping(ABC):
     @abstractmethod
     def source(self) -> Setoid:
-        """ Returns a finite set"""
-
+        ...
     @abstractmethod
     def target(self) -> Setoid:
-        """ Returns a finite set"""
-
+        ...
     @abstractmethod
     def __call__(self, a: Element) -> Element:
         ...
@@ -203,11 +205,15 @@ class MakeSetIntersection(ABC):
 
 class MakeSetUnion(ABC):
     @overload
-    def union(self, components: List[Setoid]) -> Setoid:
+    def union(self, components: List[FiniteSet]) -> FiniteSet:
+        ...
+
+    @overload
+    def union(self, components: List[EnumerableSet]) -> EnumerableSet:
         ...
 
     @abstractmethod
-    def union(self, components: List[FiniteSet]) -> FiniteSet:
+    def union(self, components: List[Setoid]) -> Setoid:
         ...
 
 

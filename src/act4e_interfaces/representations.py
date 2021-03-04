@@ -78,24 +78,23 @@ class FiniteMapRepresentation(ABC):
 
 
 class FiniteSetRepresentation(ABC):
-    @overload
-    def load(self, h: IOHelper, data: FiniteSetDisjointUnion_desc) \
-        -> FiniteSetDisjointUnion:
-        ...
-
-    @overload
-    def load(self, h: IOHelper, data: FiniteSetUnion_desc) -> FiniteSet:
-        ...
-
-    @overload
-    def load(self, h: IOHelper, data: FiniteSetProduct_desc) -> FiniteSetProduct:
-        ...
+    # @overload
+    # def load(self, h: IOHelper, data: FiniteSetDisjointUnion_desc) \
+    #     -> FiniteSetDisjointUnion:
+    #     ...
+    #
+    # @overload
+    # def load(self, h: IOHelper, data: FiniteSetUnion_desc) -> FiniteSet:
+    #     ...
+    #
+    # @overload
+    # def load(self, h: IOHelper, data: FiniteSetProduct_desc) -> FiniteSetProduct:
+    #     ...
 
     @abstractmethod
     def load(self, h: IOHelper, data: FiniteSet_desc) -> FiniteSet:
-        """
-        Load a finite set from data structure.
-        Throw InvalidFormat if the format is incorrect.
+        """ Load a finite set from data structure.
+            Throw InvalidFormat if the format is incorrect.
         """
 
     @abstractmethod
