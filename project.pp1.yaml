@@ -1,0 +1,30 @@
+package_name: ACT4E-exercises
+srcdir: src
+version_file: "1"
+modules:
+  - act4e_interfaces
+
+install_requires: []
+
+
+install_conflicts: [   ]
+tests_require: [ ]
+
+console_scripts: {}
+
+nose:
+  modules: []
+pypi:
+  upload: [ ]
+
+circleci:
+  active: true
+  test_python_versions: [ '3.7', '3.8' ]
+
+python_syntax_version: '3.7'
+
+url: ''
+author: ''
+author_email: ''
+short_description: ''
+full_description: ''
