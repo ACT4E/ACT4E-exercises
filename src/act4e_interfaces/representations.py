@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import List, overload, TypedDict, Union
+from typing import List, TypedDict, Union
 
-from .finite import (FiniteAdjunction, FiniteFunctor, FiniteGroup, FiniteMap, FiniteMonoid,
+from .finite import (FiniteAdjunction, FiniteDP, FiniteFunctor, FiniteGroup, FiniteMap, FiniteMonoid,
                      FiniteNaturalTransformation, FinitePoset, FiniteProfunctor, FiniteRelation,
-                     FiniteSemigroup, FiniteSet, FiniteSetDisjointUnion, FiniteSetProduct)
+                     FiniteSemigroup, FiniteSet)
 
 __all__ = [
     "FiniteSet_desc",
@@ -14,12 +14,17 @@ __all__ = [
     "FiniteSetProduct_desc",
     "FiniteSetDisjointUnion_desc",
     "DirectElements_desc",
-    "FiniteSetRepresentation",
-    "FiniteMapRepresentation",
+    "FiniteProfunctor_desc",
     "IOHelper",
+    "FiniteRelation_desc",
+    "FiniteFunctor_desc",
     "FiniteSemigroup_desc",
     "FiniteGroup_desc",
     "FiniteMonoid_desc",
+    "FiniteSetRepresentation",
+    "FiniteMapRepresentation",
+"FiniteAdjunction_desc",
+    "FiniteGroupRepresentation",
     "FiniteAdjunctionRepresentation",
     "FinitePosetRepresentation",
     "FiniteNaturalTransformationRepresentation",
@@ -28,29 +33,27 @@ __all__ = [
     "FiniteProfunctorRepresentation",
     "FiniteMonoidRepresentation",
     "FiniteSemigroupRepresentation",
+    "FiniteDPRepresentation",
 ]
 
-
-class IOHelper(ABC):
-    @abstractmethod
-    def loadfile(self, name: str) -> dict:
-        """ Load from the filesystem. """
+from .helper import IOHelper
+from .types import ConcreteRepr
 
 
 class DirectElements_desc(TypedDict):
-    elements: List[object]
+    elements: List[ConcreteRepr]
 
 
 class FiniteSetProduct_desc(TypedDict):
-    product_components: List[FiniteSet_desc]
+    product: List[FiniteSet_desc]
 
 
 class FiniteSetDisjointUnion_desc(TypedDict):
-    disunion_components: List[FiniteSet_desc]
+    disunion: List[FiniteSet_desc]
 
 
 class FiniteSetUnion_desc(TypedDict):
-    union_components: List[FiniteSet_desc]
+    union: List[FiniteSet_desc]
 
 
 FiniteSet_desc = Union[
@@ -64,7 +67,7 @@ FiniteSet_desc = Union[
 class FiniteMap_desc(TypedDict):
     source: FiniteSet_desc
     target: FiniteSet_desc
-    values: List[List[object]]
+    values: List[List[ConcreteRepr]]
 
 
 class FiniteMapRepresentation(ABC):
@@ -117,6 +120,10 @@ class FiniteSemigroupRepresentation(ABC):
         """ Save the data  """
 
 
+class FiniteNaturalTransformation_desc(TypedDict):
+    pass
+
+
 class FiniteMonoid_desc(FiniteSemigroup_desc):
     # carrier: FiniteSet_desc
     # compose: FiniteMap_desc
@@ -140,6 +147,10 @@ class FiniteGroup_desc(FiniteMonoid_desc):
     inv: FiniteMap_desc
 
 
+class FinitePoset_desc(TypedDict):
+    pass
+
+
 class FiniteGroupRepresentation(ABC):
     @abstractmethod
     def load(self, h: IOHelper, s: FiniteGroup_desc) -> FiniteGroup:
@@ -152,11 +163,11 @@ class FiniteGroupRepresentation(ABC):
 
 class FinitePosetRepresentation(ABC):
     @abstractmethod
-    def load(self, h: IOHelper, s: str) -> FinitePoset:
+    def load(self, h: IOHelper, s: FinitePoset_desc) -> FinitePoset:
         """ Load the data  """
 
     @abstractmethod
-    def save(self, h: IOHelper, m: FinitePoset) -> str:
+    def save(self, h: IOHelper, m: FinitePoset) -> FinitePoset_desc:
         """ Save the data  """
 
 
@@ -199,11 +210,11 @@ class FiniteFunctorRepresentation(ABC):
 
 class FiniteNaturalTransformationRepresentation(ABC):
     @abstractmethod
-    def load(self, h: IOHelper, data: str) -> FiniteNaturalTransformation:
+    def load(self, h: IOHelper, data: FiniteNaturalTransformation_desc) -> FiniteNaturalTransformation:
         ...
 
     @abstractmethod
-    def save(self, h: IOHelper, f: FiniteNaturalTransformation) -> str:
+    def save(self, h: IOHelper, f: FiniteNaturalTransformation) -> FiniteNaturalTransformation_desc:
         ...
 
 
@@ -232,4 +243,18 @@ class FiniteProfunctorRepresentation(ABC):
 
     @abstractmethod
     def save(self, h: IOHelper, f: FiniteProfunctor) -> FiniteProfunctor_desc:
+        ...
+
+
+class FiniteDP_desc(TypedDict):
+    pass
+
+
+class FiniteDPRepresentation(ABC):
+    @abstractmethod
+    def load(self, yaml_data: FiniteDP_desc) -> FiniteDP:
+        ...
+
+    @abstractmethod
+    def save(self, f: FiniteDP) -> FiniteDP_desc:
         ...

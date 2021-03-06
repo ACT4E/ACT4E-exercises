@@ -3,11 +3,15 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Callable, Iterator, List, Optional, overload, Set, Tuple
 
-from .types import Element, Morphism, Object
+from .helper import IOHelper
+from .types import ConcreteRepr, Element, Morphism, Object
 
 __all__ = [
+    "InvalidFormat",
+    "InvalidValue",
     "EnumerableSetsOperations",
     "EnumerableSet",
+    "FiniteSetUnion",
     "Setoid",
     "SetoidOperations",
     "SetProduct",
@@ -29,7 +33,6 @@ __all__ = [
     "FiniteProfunctor",
     "FiniteSetDisjointUnion",
     "FiniteFunctor",
-    "FiniteDPRepresentation",
     "FiniteSemigroupConstruct",
     "FiniteSemigroup",
     "FinitePoset",
@@ -69,8 +72,9 @@ __all__ = [
 
 class Setoid(ABC):
     """
-    A setoid is something to which elements may belong, and
-    has a way of distinguishing elements.
+    A setoid is something to which elements may belong,
+    has a way of distinguishing elements,
+    and is able to (de)serialize its elements.
     """
 
     @abstractmethod
@@ -84,14 +88,24 @@ class Setoid(ABC):
     def apart(self, x: Element, y: Element) -> bool:
         return not self.equal(x, y)
 
+    @abstractmethod
+    def save(self, h: IOHelper, x: Element) -> ConcreteRepr:
+        ...
+
+    @abstractmethod
+    def load(self, h: IOHelper, o: ConcreteRepr) -> Element:
+        ...
+
 
 class Mapping(ABC):
     @abstractmethod
     def source(self) -> Setoid:
         ...
+
     @abstractmethod
     def target(self) -> Setoid:
         ...
+
     @abstractmethod
     def __call__(self, a: Element) -> Element:
         ...
@@ -122,7 +136,11 @@ class FiniteMap(Mapping, ABC):
 
 
 class InvalidFormat(Exception):
-    pass
+    """ Raise this if the input data to parse is invalid. """
+
+
+class InvalidValue(ValueError):
+    """ Raise this if the input does not make sense. """
 
 
 class FiniteSetProperties(ABC):
@@ -165,6 +183,30 @@ class FiniteSetProduct(FiniteSet, SetProduct, ABC):
         """ Returns the projection mappings. """
 
 
+class SetUnion(Setoid, ABC):
+    """ A set product is a setoid that can be factorized. """
+
+    @abstractmethod
+    def components(self) -> List[Setoid]:
+        """ Returns the components of the union"""
+
+
+class EnumerableSetUnion(EnumerableSet, SetUnion, ABC):
+    """ Specialization of SetUnion where we deal with FiniteSets"""
+
+    @abstractmethod
+    def components(self) -> List[EnumerableSet]:
+        """ Returns the components of the union """
+
+
+class FiniteSetUnion(FiniteSet, EnumerableSetUnion, ABC):
+    """ Specialization of SetUnion where we deal with FiniteSets"""
+
+    @abstractmethod
+    def components(self) -> List[FiniteSet]:
+        """ Returns the components of the union """
+
+
 class SetDisjointUnion(Setoid, ABC):
     @abstractmethod
     def components(self) -> List[Setoid]:
@@ -205,18 +247,19 @@ class MakeSetIntersection(ABC):
 
 class MakeSetUnion(ABC):
     @overload
-    def union(self, components: List[FiniteSet]) -> FiniteSet:
+    def union(self, components: List[FiniteSet]) -> FiniteSetUnion:
         ...
 
     @overload
-    def union(self, components: List[EnumerableSet]) -> EnumerableSet:
+    def union(self, components: List[EnumerableSet]) -> EnumerableSetUnion:
         ...
 
     @abstractmethod
-    def union(self, components: List[Setoid]) -> Setoid:
+    def union(self, components: List[Setoid]) -> SetUnion:
         ...
 
 
+# added
 class MakeSetDisjointUnion(ABC):
     @overload
     def compute_disjoint_union(self, components: List[Setoid]) -> SetDisjointUnion:
@@ -778,16 +821,6 @@ class DP(ABC):
 
 class FiniteDP(ABC):
     pass
-
-
-class FiniteDPRepresentation(ABC):
-    @abstractmethod
-    def load(self, yaml_data: str) -> FiniteDP:
-        ...
-
-    @abstractmethod
-    def save(self, f: FiniteDP) -> str:
-        ...
 
 
 class DPConstructors(ABC):
