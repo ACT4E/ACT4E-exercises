@@ -1,0 +1,64 @@
+jobs:
+  test-3.7:
+    docker:
+    - {image: python:3.7}
+    environment: {COLUMNS: '160', PATH: /root/.local/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin}
+    steps:
+    - checkout
+    - run: {command: "mkdir -p  build-stats\nenv | tee  build-stats/env.txt\n", name: Build
+          stats (1)}
+    - store_artifacts: {destination: build-stats, path: build-stats}
+    - run: {command: "pip3 install pipdeptree\nmake install-deps\n", name: Install
+          deps}
+    - run: {command: "make install-testing-deps\n", name: Install testing deps}
+    - run: {command: "echo TERM = $TERM\n\npipdeptree | tee  build-stats/pipdeptree.txt\n\
+          pip list   | tee  build-stats/pip-list.txt\npip freeze | tee  build-stats/pip-freeze.txt\n",
+        name: Build stats (2)}
+    - store_artifacts: {destination: build-stats, path: build-stats}
+    - run: {command: "python setup.py develop --prefix ~/.local --no-deps\n", name: setup.py
+          develop}
+    - run: {command: "make docs\n", name: Make docs}
+    - run: {command: "make test\n", name: Run tests}
+    - store_test_results: {path: out/test-results, when: always}
+    - run: {command: "make coverage-combine\nmake coverage-report\ncoverage xml\n",
+        name: Coverage report, when: always}
+    - store_artifacts: {destination: coverage, path: out/coverage, when: always}
+    - store_artifacts: {destination: tests, path: out/tests, when: always}
+    - run: {command: "bash <(curl -s https://codecov.io/bash)\n", name: CodeCov, when: always}
+    working_directory: ~/repo
+  test-3.8:
+    docker:
+    - {image: python:3.8}
+    environment: {COLUMNS: '160', PATH: /root/.local/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin}
+    steps:
+    - checkout
+    - run: {command: "mkdir -p  build-stats\nenv | tee  build-stats/env.txt\n", name: Build
+          stats (1)}
+    - store_artifacts: {destination: build-stats, path: build-stats}
+    - run: {command: "pip3 install pipdeptree\nmake install-deps\n", name: Install
+          deps}
+    - run: {command: "make install-testing-deps\n", name: Install testing deps}
+    - run: {command: "echo TERM = $TERM\n\npipdeptree | tee  build-stats/pipdeptree.txt\n\
+          pip list   | tee  build-stats/pip-list.txt\npip freeze | tee  build-stats/pip-freeze.txt\n",
+        name: Build stats (2)}
+    - store_artifacts: {destination: build-stats, path: build-stats}
+    - run: {command: "python setup.py develop --prefix ~/.local --no-deps\n", name: setup.py
+          develop}
+    - run: {command: "make docs\n", name: Make docs}
+    - run: {command: "make test\n", name: Run tests}
+    - store_test_results: {path: out/test-results, when: always}
+    - run: {command: "make coverage-combine\nmake coverage-report\ncoverage xml\n",
+        name: Coverage report, when: always}
+    - store_artifacts: {destination: coverage, path: out/coverage, when: always}
+    - store_artifacts: {destination: tests, path: out/tests, when: always}
+    - run: {command: "bash <(curl -s https://codecov.io/bash)\n", name: CodeCov, when: always}
+    working_directory: ~/repo
+version: 2
+workflows:
+  test:
+    jobs:
+    - test-3.7: {context: pip-staging}
+    - test-3.8: {context: pip-staging}
+  version: 2
+
+# sigil 4f328abb2f3b865d42b499304ee31762
