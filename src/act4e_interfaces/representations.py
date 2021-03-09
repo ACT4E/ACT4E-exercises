@@ -3,9 +3,20 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Final, List, TypedDict, Union
 
-from .finite import (FiniteAdjunction, FiniteDP, FiniteFunctor, FiniteGroup, FiniteMap, FiniteMonoid,
-                     FiniteNaturalTransformation, FinitePoset, FiniteProfunctor, FiniteRelation,
-                     FiniteSemigroup, FiniteSet)
+from .finite import (
+    FiniteAdjunction,
+    FiniteDP,
+    FiniteFunctor,
+    FiniteGroup,
+    FiniteMap,
+    FiniteMonoid,
+    FiniteNaturalTransformation,
+    FinitePoset,
+    FiniteProfunctor,
+    FiniteRelation,
+    FiniteSemigroup,
+    FiniteSet,
+)
 
 __all__ = [
     "FiniteSet_desc",
@@ -23,7 +34,7 @@ __all__ = [
     "FiniteMonoid_desc",
     "FiniteSetRepresentation",
     "FiniteMapRepresentation",
-"FiniteAdjunction_desc",
+    "FiniteAdjunction_desc",
     "FiniteGroupRepresentation",
     "FiniteAdjunctionRepresentation",
     "FinitePosetRepresentation",
@@ -96,8 +107,8 @@ class FiniteSetRepresentation(ABC):
 
     @abstractmethod
     def load(self, h: IOHelper, data: FiniteSet_desc) -> FiniteSet:
-        """ Load a finite set from data structure.
-            Throw InvalidFormat if the format is incorrect.
+        """Load a finite set from data structure.
+        Throw InvalidFormat if the format is incorrect.
         """
 
     @abstractmethod
@@ -143,9 +154,11 @@ class FiniteMonoidRepresentation(ABC):
 class FiniteGroup_desc(FiniteMonoid_desc):
     inverse: FiniteMap_desc
 
+
 INVERSE: Final[str] = "inverse"
-COMPOSITION : Final[str]= "composition"
-CARRIER : Final[str]= "carrier"
+COMPOSITION: Final[str] = "composition"
+CARRIER: Final[str] = "carrier"
+
 
 class FinitePoset_desc(TypedDict):
     pass

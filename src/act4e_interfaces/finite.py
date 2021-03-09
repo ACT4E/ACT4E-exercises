@@ -64,10 +64,21 @@ __all__ = [
     "FinitePosetSubsetOperations",
     "FiniteNaturalTransformation",
     "Semigroup",
-    "Lattice", "JoinSemilattice", "Adjunction",
-    'MeetSemilattice', "MonoidalPosetOperations", "SemiCategory",
-    "SemiBiCategory", "Poset", "Category", "CategoryOperations", 'DP', 'DPCategory', 'DPI',
-    "DPConstructors", "InvalidFormat",
+    "Lattice",
+    "JoinSemilattice",
+    "Adjunction",
+    "MeetSemilattice",
+    "MonoidalPosetOperations",
+    "SemiCategory",
+    "SemiBiCategory",
+    "Poset",
+    "Category",
+    "CategoryOperations",
+    "DP",
+    "DPCategory",
+    "DPI",
+    "DPConstructors",
+    "InvalidFormat",
 ]
 
 
@@ -267,9 +278,7 @@ class MakeSetDisjointUnion(ABC):
         ...
 
     @abstractmethod
-    def compute_disjoint_union(
-        self, components: List[FiniteSet]
-    ) -> FiniteSetDisjointUnion:
+    def compute_disjoint_union(self, components: List[FiniteSet]) -> FiniteSetDisjointUnion:
         ...
 
 
@@ -409,6 +418,7 @@ class FiniteGroup(Group, FiniteMonoid, ABC):
     @abstractmethod
     def inverse(self) -> FiniteMap:
         ...
+
 
 # TODO: equational theories
 
@@ -785,9 +795,7 @@ class FiniteAdjunctionsOperations(ABC):
         """ check the pair is an adjunction """
 
     @abstractmethod
-    def compose(
-        self, adj1: FiniteAdjunction, adj2: FiniteAdjunction
-    ) -> FiniteAdjunction:
+    def compose(self, adj1: FiniteAdjunction, adj2: FiniteAdjunction) -> FiniteAdjunction:
         """ compose two compatible adjunctions"""
 
     @abstractmethod
