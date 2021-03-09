@@ -22,6 +22,7 @@ __all__ = [
     "MakeSetProduct",
     "MonotoneMap",
     "Mapping",
+    "SetUnion",
     "Monoid",
     "MonoidalCategory",
     "MonoidalCategory",
@@ -148,7 +149,7 @@ class FiniteSetProperties(ABC):
     def is_subset(self, a: FiniteSet, b: FiniteSet) -> bool:
         """ True if `a` is a subset of `b`. """
 
-    def is_equal(self, a: FiniteSet, b: FiniteSet) -> bool:
+    def equal(self, a: FiniteSet, b: FiniteSet) -> bool:
         return self.is_subset(a, b) and self.is_subset(b, a)
 
     def is_strict_subset(self, a: FiniteSet, b: FiniteSet) -> bool:
@@ -368,13 +369,17 @@ class Semigroup(ABC):
         ...
 
     @abstractmethod
-    def compose(self, a: Element, b: Element) -> Element:
+    def composition(self) -> Mapping:
         ...
 
 
 class FiniteSemigroup(Semigroup, ABC):
     @abstractmethod
     def carrier(self) -> FiniteSet:
+        ...
+
+    @abstractmethod
+    def composition(self) -> FiniteMap:
         ...
 
 
@@ -392,7 +397,7 @@ class Monoid(Semigroup, ABC):
 
 class Group(Monoid, ABC):
     @abstractmethod
-    def inverse(self, e: Element) -> Element:
+    def inverse(self) -> Mapping:
         """ Returns the inverse of an element"""
 
 
@@ -401,8 +406,9 @@ class FiniteMonoid(Monoid, FiniteSemigroup, ABC):
 
 
 class FiniteGroup(Group, FiniteMonoid, ABC):
-    ...
-
+    @abstractmethod
+    def inverse(self) -> FiniteMap:
+        ...
 
 # TODO: equational theories
 
@@ -582,7 +588,7 @@ class JoinSemilattice(Poset, ABC):
 
 
 class Lattice(JoinSemilattice, MeetSemilattice, ABC):
-    pass
+    ...
 
 
 class FiniteLattice(ABC):
@@ -597,7 +603,7 @@ class SemiBiCategory(ABC):
         ...
 
     @abstractmethod
-    def homs(self, ob1: Object, ob2: Object) -> Setoid:
+    def hom(self, ob1: Object, ob2: Object) -> Setoid:
         ...
 
     @abstractmethod
@@ -625,7 +631,7 @@ class FiniteSemiCategory(SemiCategory, ABC):
         ...
 
     @abstractmethod
-    def homs(self, ob1: Object, ob2: Object) -> FiniteSet:
+    def hom(self, ob1: Object, ob2: Object) -> FiniteSet:
         ...
 
 
@@ -748,11 +754,11 @@ class Adjunction(ABC):
 
     @abstractmethod
     def left(self) -> Functor:
-        pass
+        ...
 
     @abstractmethod
     def right(self) -> Functor:
-        pass
+        ...
 
 
 class FiniteAdjunction(Adjunction, ABC):
@@ -766,11 +772,11 @@ class FiniteAdjunction(Adjunction, ABC):
 
     @abstractmethod
     def left(self) -> FiniteFunctor:
-        pass
+        ...
 
     @abstractmethod
     def right(self) -> FiniteFunctor:
-        pass
+        ...
 
 
 class FiniteAdjunctionsOperations(ABC):
@@ -812,39 +818,39 @@ class DPI(ABC):
 
 
 class DPCategory(Category, ABC):
-    pass
+    ...
 
 
 class DP(ABC):
-    pass
+    ...
 
 
 class FiniteDP(ABC):
-    pass
+    ...
 
 
 class DPConstructors(ABC):
     @abstractmethod
     def companion(self, f: MonotoneMap) -> DP:
-        pass
+        ...
 
     @abstractmethod
     def conjoint(self, f: MonotoneMap) -> DP:
-        pass
+        ...
 
 
 class FiniteDPOperations(ABC):
     @abstractmethod
     def series(self, dp1: FiniteDP, dp2: FiniteDP) -> FiniteDP:
-        pass
+        ...
 
     @abstractmethod
     def union(self, dp1: FiniteDP, dp2: FiniteDP) -> FiniteDP:
-        pass
+        ...
 
     @abstractmethod
     def intersection(self, dp1: FiniteDP, dp2: FiniteDP) -> FiniteDP:
-        pass
+        ...
 
     @abstractmethod
     def from_relation(self, f: FiniteRelation) -> FiniteDP:

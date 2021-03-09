@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import List, TypedDict, Union
+from typing import Final, List, TypedDict, Union
 
 from .finite import (FiniteAdjunction, FiniteDP, FiniteFunctor, FiniteGroup, FiniteMap, FiniteMonoid,
                      FiniteNaturalTransformation, FinitePoset, FiniteProfunctor, FiniteRelation,
@@ -107,7 +107,7 @@ class FiniteSetRepresentation(ABC):
 
 class FiniteSemigroup_desc(TypedDict):
     carrier: FiniteSet_desc
-    compose: FiniteMap_desc
+    composition: FiniteMap_desc
 
 
 class FiniteSemigroupRepresentation(ABC):
@@ -141,11 +141,11 @@ class FiniteMonoidRepresentation(ABC):
 
 
 class FiniteGroup_desc(FiniteMonoid_desc):
-    # carrier: FiniteSet_desc
-    # compose: FiniteMap_desc
-    # neutral: object
-    inv: FiniteMap_desc
+    inverse: FiniteMap_desc
 
+INVERSE: Final[str] = "inverse"
+COMPOSITION : Final[str]= "composition"
+CARRIER : Final[str]= "carrier"
 
 class FinitePoset_desc(TypedDict):
     pass
