@@ -89,10 +89,7 @@ class FiniteMapRepresentation(ABC):
     @abstractmethod
     def save(self, h: IOHelper, m: FiniteMap) -> FiniteMap_desc:
         ...
-
-
-class FiniteSetRepresentation(ABC):
-    # @overload
+   # @overload
     # def load(self, h: IOHelper, data: FiniteSetDisjointUnion_desc) \
     #     -> FiniteSetDisjointUnion:
     #     ...
@@ -105,6 +102,8 @@ class FiniteSetRepresentation(ABC):
     # def load(self, h: IOHelper, data: FiniteSetProduct_desc) -> FiniteSetProduct:
     #     ...
 
+
+class FiniteSetRepresentation(ABC):
     @abstractmethod
     def load(self, h: IOHelper, data: FiniteSet_desc) -> FiniteSet:
         """Load a finite set from data structure.
