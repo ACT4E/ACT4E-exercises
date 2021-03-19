@@ -8,6 +8,7 @@ from .types import ConcreteRepr, Element, Morphism, Object
 
 __all__ = [
     "InvalidFormat",
+    "FreeSemigroup",
     "InvalidValue",
     "EnumerableSetsOperations",
     "EnumerableSet",
@@ -391,10 +392,16 @@ class FiniteSemigroup(Semigroup, ABC):
     def composition(self) -> FiniteMap:
         ...
 
+class FreeSemigroup(Semigroup, ABC):
+
+    @abstractmethod
+    def unit(self, a: Element) -> Element:
+        """ From an element of the carrier, returns the element of the free semigroup """
+
 
 class FiniteSemigroupConstruct(ABC):
     @abstractmethod
-    def free(self, fs: FiniteSet) -> FiniteSemigroup:
+    def free(self, fs: FiniteSet) -> FreeSemigroup:
         """ Construct the free semigroup on a set. """
 
 
