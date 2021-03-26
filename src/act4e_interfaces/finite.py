@@ -24,6 +24,7 @@ __all__ = [
     "MonotoneMap",
     "Mapping",
     "SetUnion",
+    "Group",
     "Monoid",
     "MonoidalCategory",
     "MonoidalCategory",
