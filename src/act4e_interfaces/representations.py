@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Final, List, TypedDict, Union
+from typing import Final, List, Union
+
+from typing_extensions import TypedDict
 
 from .finite import (
     FiniteAdjunction,
@@ -89,18 +91,20 @@ class FiniteMapRepresentation(ABC):
     @abstractmethod
     def save(self, h: IOHelper, m: FiniteMap) -> FiniteMap_desc:
         ...
-   # @overload
-    # def load(self, h: IOHelper, data: FiniteSetDisjointUnion_desc) \
-    #     -> FiniteSetDisjointUnion:
-    #     ...
-    #
-    # @overload
-    # def load(self, h: IOHelper, data: FiniteSetUnion_desc) -> FiniteSet:
-    #     ...
-    #
-    # @overload
-    # def load(self, h: IOHelper, data: FiniteSetProduct_desc) -> FiniteSetProduct:
-    #     ...
+
+
+# @overload
+# def load(self, h: IOHelper, data: FiniteSetDisjointUnion_desc) \
+#     -> FiniteSetDisjointUnion:
+#     ...
+#
+# @overload
+# def load(self, h: IOHelper, data: FiniteSetUnion_desc) -> FiniteSet:
+#     ...
+#
+# @overload
+# def load(self, h: IOHelper, data: FiniteSetProduct_desc) -> FiniteSetProduct:
+#     ...
 
 
 class FiniteSetRepresentation(ABC):
