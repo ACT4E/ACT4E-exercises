@@ -7,7 +7,7 @@ modules:
 install_requires: []
 
 
-install_conflicts: [   ]
+
 tests_require: [ ]
 
 console_scripts: {}
