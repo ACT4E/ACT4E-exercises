@@ -158,9 +158,9 @@ class FiniteGroup_desc(FiniteMonoid_desc):
     inverse: FiniteMap_desc
 
 
-INVERSE: Final[str] = "inverse"
-COMPOSITION: Final[str] = "composition"
-CARRIER: Final[str] = "carrier"
+# INVERSE: Final[str] = "inverse"
+# COMPOSITION: Final[str] = "composition"
+# CARRIER: Final[str] = "carrier"
 
 
 class FinitePoset_desc(TypedDict):

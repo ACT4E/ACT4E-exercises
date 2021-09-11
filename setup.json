@@ -1,17 +1,19 @@
 {
-  "install_requires": [],
+  "install_requires": [
+    "typing-extensions"
+  ],
   "tests_require": [],
   "srcdir": "src",
   "package_name": "ACT4E-exercises",
   "entry_points": {
     "console_scripts": []
   },
-  "zip_safe": false,
-  "include_package_data": false,
+  "zip_safe": true,
+  "include_package_data": true,
   "modules": [
     "act4e_interfaces"
   ],
-  "version": "2021.1.2103261909",
+  "version": "7.2",
   "author": "",
   "author_email": "",
   "url": ""

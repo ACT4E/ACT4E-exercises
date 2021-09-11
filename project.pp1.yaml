@@ -2,26 +2,27 @@ package_name: ACT4E-exercises
 srcdir: src
 version_file: "1"
 modules:
-  - act4e_interfaces
+- act4e_interfaces
 
-install_requires: []
+install_requires:
+- typing-extensions
 
 
 
-tests_require: [ ]
+tests_require: []
 
 console_scripts: {}
 
 nose:
   modules: []
 pypi:
-  upload: [ ]
+  upload: []
 
 circleci:
   active: true
   test_python_versions:
-      - '3.7'
-      - '3.8'
+  - '3.7'
+  - '3.8'
 
 python_syntax_version: '3.8'
 
