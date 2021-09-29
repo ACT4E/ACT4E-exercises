@@ -37,7 +37,7 @@ install-testing-deps:
 
 	pip install 		pipdeptree==0.13.2		bumpversion		nose==1.3.7		nose2==0.9.2		nose2-html-report==0.6.0		nose-parallel==0.3.1		nose_xunitmp==0.4.1		pre-commit==2.1.1		rednose==1.3.0		coverage==5.0.3		codecov==2.0.16		sphinx		sphinx-rtd-theme
 
-cover_packages=act4e_interfaces
+cover_packages=act4e_interfaces,act4e_interfaces_tests
 
 # PROJECT_ROOT ?= /project
 # REGISTRY ?= docker.io
@@ -66,18 +66,18 @@ clean:
 
 test:  
 	mkdir -p  $(tr)
-	DISABLE_CONTRACTS=1 nosetests $(extra) $(coverage)    -v --nologcapture $(xunit)
+	DISABLE_CONTRACTS=1 nosetests $(extra) $(coverage)  act4e_interfaces_tests  -v --nologcapture $(xunit)
 
 
 test-parallel:  
 	mkdir -p  $(tr)
-	DISABLE_CONTRACTS=1 nosetests $(extra) $(coverage)   -v --nologcapture $(parallel) $(
+	DISABLE_CONTRACTS=1 nosetests $(extra) $(coverage) act4e_interfaces_tests  -v --nologcapture $(parallel) $(
 	xunitmp)
 
 
 test-parallel-circle:
 	mkdir -p  $(tr)
-	DISABLE_CONTRACTS=1 	NODE_TOTAL=$(CIRCLE_NODE_TOTAL) 	NODE_INDEX=$(CIRCLE_NODE_INDEX) 	nosetests $(coverage) $(xunitmp)   -v  $(parallel)
+	DISABLE_CONTRACTS=1 	NODE_TOTAL=$(CIRCLE_NODE_TOTAL) 	NODE_INDEX=$(CIRCLE_NODE_INDEX) 	nosetests $(coverage) $(xunitmp) act4e_interfaces_tests  -v  $(parallel)
 
 
 coverage-combine:
@@ -88,4 +88,4 @@ docs:
 	
 -include extra.mk
         
-# sigil f87e7f2119020d7966c0c598751db661
+# sigil 10ee3c9c04bc91f058bd15d5d5a34b10
