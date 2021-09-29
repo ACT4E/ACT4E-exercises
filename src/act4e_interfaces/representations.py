@@ -82,6 +82,11 @@ class FiniteMap_desc(TypedDict):
     target: FiniteSet_desc
     values: List[List[ConcreteRepr]]
 
+class FiniteRelation_desc(TypedDict):
+    source: FiniteSet_desc
+    target: FiniteSet_desc
+    values: List[List[ConcreteRepr]]
+
 
 class FiniteMapRepresentation(ABC):
     @abstractmethod
@@ -186,12 +191,6 @@ class FinitePosetRepresentation(ABC):
     @abstractmethod
     def save(self, h: IOHelper, m: FinitePoset) -> FinitePoset_desc:
         """ Save the data  """
-
-
-class FiniteRelation_desc(TypedDict):
-    source: FiniteSet_desc
-    target: FiniteSet_desc
-    values: List[List[object]]
 
 
 class FiniteRelationRepresentation(ABC):

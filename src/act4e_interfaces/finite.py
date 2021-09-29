@@ -45,6 +45,7 @@ __all__ = [
     "FiniteCategory",
     "FiniteEnrichedCategory",
     "FiniteRelation",
+    "Relation",
     "FiniteSemiCategory",
     "FiniteMonoid",
     "FiniteCategoryOperations",
@@ -294,7 +295,7 @@ class Relation(ABC):
         """ Returns a setoid """
 
     @abstractmethod
-    def holds(self, a: Element, b: Element) -> bool:
+    def holds(self) -> Mapping:
         """ Returns true if the two elements are related """
 
 
@@ -306,6 +307,10 @@ class FiniteRelation(Relation, ABC):
     @abstractmethod
     def target(self) -> FiniteSet:
         """ Returns a finite set"""
+
+    @abstractmethod
+    def holds(self) -> FiniteMap:
+        """ Returns true if the two elements are related """
 
 
 class FiniteRelationProperties(ABC):
@@ -359,9 +364,10 @@ class FiniteEndorelationProperties(ABC):
 
 
 class FiniteEndorelationOperations(ABC):
+
     @abstractmethod
     def transitive_closure(self, fr: FiniteRelation) -> FiniteRelation:
-        """ Returns transitive closure """
+        """ Returns the transitive closure of a relation """
 
 
 class FiniteMapOperations(ABC):
@@ -393,6 +399,7 @@ class FiniteSemigroup(Semigroup, ABC):
     def composition(self) -> FiniteMap:
         ...
 
+
 class FreeSemigroup(Semigroup, ABC):
 
     @abstractmethod
@@ -406,13 +413,11 @@ class FiniteSemigroupConstruct(ABC):
         """ Construct the free semigroup on a set. """
 
 
-
 class FreeGroup(Semigroup, ABC):
 
     @abstractmethod
     def unit(self, a: Element) -> Element:
         """ From an element of the carrier, returns the element of the free group. """
-
 
 
 class FiniteFreeGroupConstruct(ABC):
@@ -452,7 +457,7 @@ class Poset(ABC):
         ...
 
     @abstractmethod
-    def leq(self, a: Element, b: Element) -> bool:
+    def leq(self) -> Mapping:
         ...
 
 
@@ -496,11 +501,11 @@ class FinitePosetConstructors(ABC):
         """ Creates the antichain set """
 
     @abstractmethod
-    def intervals(self, s: FinitePoset) -> FinitePoset:
+    def twisted(self, s: FinitePoset) -> FinitePoset:
         """ Computes the poset of intervals. """
 
     @abstractmethod
-    def intervals2(self, s: FinitePoset) -> FinitePoset:
+    def arrow(self, s: FinitePoset) -> FinitePoset:
         """ Computes the other of intervals. """
 
 
