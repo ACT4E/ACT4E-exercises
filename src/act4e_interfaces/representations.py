@@ -177,6 +177,7 @@ class FiniteGroupRepresentation(ABC):
         """ Save the data  """
 
 
+
 class FinitePosetRepresentation(ABC):
     @abstractmethod
     def load(self, h: IOHelper, s: FinitePoset_desc) -> FinitePoset:

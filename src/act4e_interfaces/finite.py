@@ -406,6 +406,21 @@ class FiniteSemigroupConstruct(ABC):
         """ Construct the free semigroup on a set. """
 
 
+
+class FreeGroup(Semigroup, ABC):
+
+    @abstractmethod
+    def unit(self, a: Element) -> Element:
+        """ From an element of the carrier, returns the element of the free group. """
+
+
+
+class FiniteFreeGroupConstruct(ABC):
+    @abstractmethod
+    def free(self, fs: FiniteSet) -> FreeGroup:
+        """ Construct the free group on a set. """
+
+
 class Monoid(Semigroup, ABC):
     @abstractmethod
     def identity(self) -> Element:
