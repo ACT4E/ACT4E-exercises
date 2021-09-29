@@ -1,24 +1,18 @@
 
 all:
-	@echo "You can try:"
 	@echo
-	@echo "  make build run"
-	@echo "  make docs "
-	@echo "  make test coverage-combine coverage-report"
-	@echo "  "
-	@echo "  make -C notebooks clean all"
+	 
 
+template:
+	zuper-cli template
+	
 bump:
-	bumpversion patch
-	git push --tags
-	git push
+	zuper-cli bump
 
 upload:
-	aido-check-not-dirty
-	aido-check-tagged
-	aido-check-need-upload --package ACT4E-exercises make upload-do
+	zuper-cli upload
 
-upload-do:
+upload-old:
 	rm -f dist/*
 	rm -rf src/*.egg-info
 	python3 setup.py sdist
@@ -27,7 +21,7 @@ upload-do:
 	devpi upload --verbose dist/*
 
 black:
-	black -l 110 --target-version py37 src
+	black -l 110 --target-version py38 src
 
 install-deps:
 	pip3 install --user shyaml
@@ -62,6 +56,7 @@ parallel=--processes=8 --process-timeout=1000 --process-restartworker
 coverage=--cover-html --cover-html-dir=$(coverage_dir) --cover-tests \
             --with-coverage --cover-package=$(cover_packages)
 
+xunit=--with-xunit --xunit-file=$(xunit_output)
 xunitmp=--with-xunitmp --xunitmp-file=$(xunit_output)
 extra=--rednose --immediate
 
@@ -69,18 +64,20 @@ clean:
 	coverage erase
 	rm -rf $(out) $(coverage_dir) $(tr)
 
-test: clean
+test:  
 	mkdir -p  $(tr)
-	DISABLE_CONTRACTS=1 nosetests $(extra) $(coverage)  src  -v --nologcapture $(xunitmp)
+	DISABLE_CONTRACTS=1 nosetests $(extra) $(coverage)    -v --nologcapture $(xunit)
 
 
-test-parallel: clean
+test-parallel:  
 	mkdir -p  $(tr)
-	DISABLE_CONTRACTS=1 nosetests $(extra) $(coverage) src  -v --nologcapture $(parallel)
+	DISABLE_CONTRACTS=1 nosetests $(extra) $(coverage)   -v --nologcapture $(parallel) $(
+	xunitmp)
 
 
 test-parallel-circle:
-	DISABLE_CONTRACTS=1 	NODE_TOTAL=$(CIRCLE_NODE_TOTAL) 	NODE_INDEX=$(CIRCLE_NODE_INDEX) 	nosetests $(coverage) $(xunitmp) TEST_PACKAGES  -v  $(parallel)
+	mkdir -p  $(tr)
+	DISABLE_CONTRACTS=1 	NODE_TOTAL=$(CIRCLE_NODE_TOTAL) 	NODE_INDEX=$(CIRCLE_NODE_INDEX) 	nosetests $(coverage) $(xunitmp)   -v  $(parallel)
 
 
 coverage-combine:
@@ -88,5 +85,7 @@ coverage-combine:
 
 docs:
 	sphinx-build src $(out)/docs
+	
+-include extra.mk
         
-# sigil 9ae10bcbb4764a2f765d285dd8e4a4d6
+# sigil f87e7f2119020d7966c0c598751db661
