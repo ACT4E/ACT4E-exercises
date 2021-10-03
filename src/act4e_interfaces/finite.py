@@ -366,7 +366,6 @@ class FiniteEndorelationProperties(ABC):
 
 
 class FiniteEndorelationOperations(ABC):
-
     @abstractmethod
     def transitive_closure(self, fr: FiniteRelation) -> FiniteRelation:
         """ Returns the transitive closure of a relation """
@@ -403,7 +402,6 @@ class FiniteSemigroup(Semigroup, ABC):
 
 
 class FreeSemigroup(Semigroup, ABC):
-
     @abstractmethod
     def unit(self, a: Element) -> Element:
         """ From an element of the carrier, returns the element of the free semigroup """
@@ -416,7 +414,6 @@ class FiniteSemigroupConstruct(ABC):
 
 
 class FreeGroup(Semigroup, ABC):
-
     @abstractmethod
     def unit(self, a: Element) -> Element:
         """ From an element of the carrier, returns the element of the free group. """
@@ -506,15 +503,14 @@ class FinitePosetMinMax(ABC):
 
 
 class FinitePosetInfSup(ABC):
-
     @abstractmethod
     def lower_bounds(self, fp: FinitePoset, s: List[Element]) -> List[Element]:
         """ Computes the lower bounds for the subset"""
 
     @abstractmethod
     def infimum(self, fp: FinitePoset, s: List[Element]) -> Optional[Element]:
-        """ Computes the infimum / meet / greatest lower bound
-            for the subset, or returns None if one does not exist. """
+        """Computes the infimum / meet / greatest lower bound
+        for the subset, or returns None if one does not exist."""
 
     @abstractmethod
     def upper_bounds(self, fp: FinitePoset, s: List[Element]) -> List[Element]:
@@ -522,12 +518,11 @@ class FinitePosetInfSup(ABC):
 
     @abstractmethod
     def supremum(self, fp: FinitePoset, s: List[Element]) -> Optional[Element]:
-        """ Computes the supremum for the subset if it exists,
-            or returns None if one does not exist. """
+        """Computes the supremum for the subset if it exists,
+        or returns None if one does not exist."""
 
 
 class FinitePosetSubsetProperties2(ABC):
-
     @abstractmethod
     def is_lower_set(self, fp: FinitePoset, s: List[Element]) -> bool:
         pass
@@ -538,7 +533,6 @@ class FinitePosetSubsetProperties2(ABC):
 
 
 class FinitePosetClosures(ABC):
-
     @abstractmethod
     def upper_closure(self, fp: FinitePoset, s: List[Element]) -> List[Element]:
         pass
@@ -571,7 +565,6 @@ class FinitePosetConstructors(ABC):
 
 
 class FinitePosetConstruction(ABC):
-
     @abstractmethod
     def product(self, p1: FinitePoset, p2: FinitePoset) -> FinitePoset:
         ...
@@ -595,8 +588,6 @@ class FinitePosetConstruction(ABC):
     @abstractmethod
     def powerposet(self, s: FinitePoset) -> FinitePoset:
         ...
-
-
 
 
 class MonotoneMap(Mapping, ABC):
