@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Callable, Iterator, List, Optional, overload, Set, Tuple
+from typing import Callable, Iterator, List, Optional, overload, Tuple
 
 from .helper import IOHelper
 from .types import ConcreteRepr, Element, Morphism, Object
@@ -59,12 +59,14 @@ __all__ = [
     "FiniteEndorelationOperations",
     "FiniteMonotoneMapProperties",
     "FiniteEndorelationProperties",
-    "FinitePosetOperations",
+    "FinitePosetConstruction",
     "FinitePosetConstructors",
     "FinitePosetSubsetProperties",
-    "FinitePosetProperties",
+    "FinitePosetClosures",
+    "FinitePosetMeasurement",
+    "FinitePosetSubsetProperties2",
     "FiniteMapOperations",
-    "FinitePosetSubsetOperations",
+    # "FinitePosetSubsetOperations",
     "FiniteNaturalTransformation",
     "Semigroup",
     "Lattice",
@@ -457,7 +459,7 @@ class Poset(ABC):
         ...
 
     @abstractmethod
-    def leq(self) -> Mapping:
+    def holds(self) -> Mapping:
         ...
 
 
@@ -468,8 +470,22 @@ class FinitePoset(Poset, ABC):
     def carrier(self) -> FiniteSet:
         ...
 
+    @abstractmethod
+    def holds(self) -> FiniteMap:
+        ...
 
-class FinitePosetProperties(ABC):
+
+class FinitePosetSubsetProperties(ABC):
+    @abstractmethod
+    def is_chain(self, fp: FinitePoset, s: List[Element]) -> bool:
+        """ True if the given elements form a chain. """
+
+    @abstractmethod
+    def is_antichain(self, fp: FinitePoset, s: List[Element]) -> bool:
+        """ True if the given elements form an antichain. """
+
+
+class FinitePosetMeasurement(ABC):
     @abstractmethod
     def width(self, fp: FinitePoset) -> int:
         """ Return the width of the poset. """
@@ -477,6 +493,59 @@ class FinitePosetProperties(ABC):
     @abstractmethod
     def height(self, fp: FinitePoset) -> int:
         """ Return the height of the poset. """
+
+
+class FinitePosetMinMax(ABC):
+    @abstractmethod
+    def miminal(self, fp: FinitePoset, S: List[Element]) -> List[Element]:
+        """ Return the minimal elements of S """
+
+    @abstractmethod
+    def maximal(self, fp: FinitePoset, S: List[Element]) -> List[Element]:
+        """ Return the maximal elements of S """
+
+
+class FinitePosetInfSup(ABC):
+
+    @abstractmethod
+    def lower_bounds(self, fp: FinitePoset, s: List[Element]) -> List[Element]:
+        """ Computes the lower bounds for the subset"""
+
+    @abstractmethod
+    def infimum(self, fp: FinitePoset, s: List[Element]) -> Optional[Element]:
+        """ Computes the infimum / meet / greatest lower bound
+            for the subset, or returns None if one does not exist. """
+
+    @abstractmethod
+    def upper_bounds(self, fp: FinitePoset, s: List[Element]) -> List[Element]:
+        """ Computes the upper bounds for the subset. """
+
+    @abstractmethod
+    def supremum(self, fp: FinitePoset, s: List[Element]) -> Optional[Element]:
+        """ Computes the supremum for the subset if it exists,
+            or returns None if one does not exist. """
+
+
+class FinitePosetSubsetProperties2(ABC):
+
+    @abstractmethod
+    def is_lower_set(self, fp: FinitePoset, s: List[Element]) -> bool:
+        pass
+
+    @abstractmethod
+    def is_upper_set(self, fp: FinitePoset, s: List[Element]) -> bool:
+        pass
+
+
+class FinitePosetClosures(ABC):
+
+    @abstractmethod
+    def upper_closure(self, fp: FinitePoset, s: List[Element]) -> List[Element]:
+        pass
+
+    @abstractmethod
+    def lower_closure(self, fp: FinitePoset, s: List[Element]) -> List[Element]:
+        pass
 
 
 class FinitePosetConstructors(ABC):
@@ -500,63 +569,8 @@ class FinitePosetConstructors(ABC):
     def antichains(self, s: FinitePoset) -> FiniteSet:
         """ Creates the antichain set """
 
-    @abstractmethod
-    def twisted(self, s: FinitePoset) -> FinitePoset:
-        """ Computes the poset of intervals. """
 
-    @abstractmethod
-    def arrow(self, s: FinitePoset) -> FinitePoset:
-        """ Computes the other of intervals. """
-
-
-class FinitePosetSubsetProperties(ABC):
-    @abstractmethod
-    def is_chain(self, fp: FinitePoset, s: FiniteSet) -> bool:
-        """ Computes if the subset is a chain. """
-
-    @abstractmethod
-    def is_antichain(self, fp: FinitePoset, s: FiniteSet) -> bool:
-        """ Computes if the subset is an antichain. """
-
-
-class FinitePosetSubsetOperations(ABC):
-    @abstractmethod
-    def upperclosure(self, fp: FinitePoset, s: Set[Element]) -> Set[Element]:
-        """ Computes the upper closure of an element"""
-
-    @abstractmethod
-    def lowerclosure(self, fp: FinitePoset, s: Set[Element]) -> Set[Element]:
-        """ Computes the lower closure of an element"""
-
-    @abstractmethod
-    def maximal(self, fp: FinitePoset, s: Set[Element]) -> Set[Element]:
-        """ Computes the maximal elements in a subset of the poset"""
-
-    @abstractmethod
-    def minimal(self, fp: FinitePoset, s: Set[Element]) -> Set[Element]:
-        """ Computes the minimal elements in a subset of the poset"""
-
-    @abstractmethod
-    def infimum(self, fp: FinitePoset, s: Set[Element]) -> Optional[Element]:
-        """ Computes the infimum for the subset, or None if one does not exist. """
-
-    @abstractmethod
-    def supremum(self, fp: FinitePoset, s: Set[Element]) -> Optional[Element]:
-        """ Computes the supremum for the subset, or None if one does not exist. """
-
-    @abstractmethod
-    def meet(self, fp: FinitePoset, s: Set[Element]) -> Optional[Element]:
-        """ Computes the meet for the subset, or None if one does not exist. """
-
-    @abstractmethod
-    def join(self, fp: FinitePoset, s: Set[Element]) -> Optional[Element]:
-        """ Computes the join for the subset, or None if one does not exist. """
-
-
-class FinitePosetOperations(ABC):
-    @abstractmethod
-    def opposite(self, s: str) -> FinitePoset:
-        ...
+class FinitePosetConstruction(ABC):
 
     @abstractmethod
     def product(self, p1: FinitePoset, p2: FinitePoset) -> FinitePoset:
@@ -565,6 +579,24 @@ class FinitePosetOperations(ABC):
     @abstractmethod
     def disjoint_union(self, p1: FinitePoset, p2: FinitePoset) -> FinitePoset:
         ...
+
+    @abstractmethod
+    def opposite(self, p: FinitePoset) -> FinitePoset:
+        ...
+
+    @abstractmethod
+    def twisted(self, s: FinitePoset) -> FinitePoset:
+        ...
+
+    @abstractmethod
+    def arrow(self, s: FinitePoset) -> FinitePoset:
+        ...
+
+    @abstractmethod
+    def powerposet(self, s: FinitePoset) -> FinitePoset:
+        ...
+
+
 
 
 class MonotoneMap(Mapping, ABC):
@@ -691,7 +723,7 @@ class CategoryOperations:
         """ Computes the arrow category """
 
     @abstractmethod
-    def twisted_arrow(self, c1: Category) -> Category:
+    def twisted(self, c1: Category) -> Category:
         """ Computes the twisted arrow category """
 
 
@@ -709,7 +741,7 @@ class FiniteCategoryOperations:
         """ Computes the arrow category """
 
     @abstractmethod
-    def twisted_arrow(self, c1: FiniteCategory) -> FiniteCategory:
+    def twisted(self, c1: FiniteCategory) -> FiniteCategory:
         """ Computes the twisted arrow category """
 
 

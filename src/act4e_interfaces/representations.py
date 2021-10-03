@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Final, List, Union
+from typing import List, Union
 
 from typing_extensions import TypedDict
 
