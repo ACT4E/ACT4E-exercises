@@ -5,20 +5,17 @@ from typing import List, Union
 
 from typing_extensions import TypedDict
 
-from .finite import (
+from .categories import (
     FiniteAdjunction,
     FiniteDP,
     FiniteFunctor,
-    FiniteGroup,
-    FiniteMap,
-    FiniteMonoid,
     FiniteNaturalTransformation,
-    FinitePoset,
     FiniteProfunctor,
-    FiniteRelation,
-    FiniteSemigroup,
-    FiniteSet,
 )
+from .posets import FinitePoset
+from .relations import FiniteRelation
+from .semigroups import FiniteGroup, FiniteMonoid, FiniteSemigroup
+from .sets import FiniteMap, FiniteSet
 
 __all__ = [
     "FiniteSet_desc",
@@ -47,6 +44,7 @@ __all__ = [
     "FiniteMonoidRepresentation",
     "FiniteSemigroupRepresentation",
     "FiniteDPRepresentation",
+    "FiniteMap_desc",
 ]
 
 from .helper import IOHelper
@@ -204,7 +202,7 @@ class FiniteRelationRepresentation(ABC):
 
 
 class FiniteCategory_desc(TypedDict):
-    ...
+    pass
 
 
 class FiniteFunctor_desc(TypedDict):
@@ -235,7 +233,7 @@ class FiniteNaturalTransformationRepresentation(ABC):
 
 
 class FiniteAdjunction_desc(TypedDict):
-    ...
+    pass
 
 
 class FiniteAdjunctionRepresentation(ABC):
@@ -249,7 +247,7 @@ class FiniteAdjunctionRepresentation(ABC):
 
 
 class FiniteProfunctor_desc(TypedDict):
-    ...
+    pass
 
 
 class FiniteProfunctorRepresentation(ABC):
