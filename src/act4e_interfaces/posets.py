@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
 
-from .semigroups import FiniteMonoid
+from .semigroups import FiniteMonoid, Monoid
 from .sets import FiniteMap, FiniteSet, Mapping, Setoid
 from .types import Element
 
@@ -166,7 +166,19 @@ class FiniteMonotoneMapProperties(ABC):
         """ Check if a map is antitone. """
 
 
-class FiniteMonoidalPoset(ABC):
+class MonoidalPoset(ABC):
+    """ Implementation of finite posets. """
+
+    @abstractmethod
+    def poset(self) -> Poset:
+        ...
+
+    @abstractmethod
+    def monoid(self) -> Monoid:
+        ...
+
+
+class FiniteMonoidalPoset(MonoidalPoset, ABC):
     """ Implementation of finite posets. """
 
     @abstractmethod
@@ -210,7 +222,7 @@ class Lattice(JoinSemilattice, MeetSemilattice, ABC):
     ...
 
 
-class FiniteLattice(ABC):
+class FiniteLattice(Lattice, ABC):
     @abstractmethod
     def carrier(self) -> FiniteSet:
         ...
