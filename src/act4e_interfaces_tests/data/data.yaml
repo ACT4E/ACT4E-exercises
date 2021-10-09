@@ -288,7 +288,7 @@ map3:
 mixpaint:
   tags:
     set: true
-  data: &id010
+  data: &wrm
     elements: [white, red, mixed]
 
 mon_max5:
@@ -296,12 +296,12 @@ mon_max5:
     monoid: true
     semigroup: true
   data:
-    carrier: &id007
+    carrier: &zerotofour
       elements: [0, 1, 2, 3, 4]
     composition:
       source:
-        product: [*id007, *id007]
-      target: *id007
+        product: [*zerotofour, *zerotofour]
+      target: *zerotofour
       values:
       - - [0, 0]
         - 0
@@ -360,14 +360,14 @@ mon_min2:
     monoid: true
 
   data:
-    carrier: &id008
+    carrier: &zeroonetwo
       elements: [0, 1, 2]
     composition:
       source:
         product:
-        - *id008
-        - *id008
-      target: *id008
+        - *zeroonetwo
+        - *zeroonetwo
+      target: *zeroonetwo
       values:
       - - [0, 0]
         - 0
@@ -394,14 +394,13 @@ mon_min5:
     semigroup: true
 
   data:
-    carrier: &id009
-      elements: [0, 1, 2, 3, 4]
+    carrier: *zerotofour
     composition:
       source:
         product:
-        - *id009
-        - *id009
-      target: *id009
+        - *zerotofour
+        - *zerotofour
+      target: *zerotofour
       values:
       - - [0, 0]
         - 0
@@ -459,13 +458,13 @@ paint:
   tags:
     semigroup: true
   data:
-    carrier: *id010
+    carrier: *wrm
     composition:
       source:
         product:
-        - *id010
-        - *id010
-      target: *id010
+        - *wrm
+        - *wrm
+      target: *wrm
       values:
       - - [white, white]
         - white
@@ -527,7 +526,7 @@ set_product10:
     set_product: true
   data:
     product:
-    - &id011
+    - &one
       elements: [1]
     - *EMPTYSET
 
@@ -538,9 +537,9 @@ set_product111:
     set_product: true
   data:
     product:
-    - *id011
-    - *id011
-    - *id011
+    - *one
+    - *one
+    - *one
 set_union:
   tags:
     set: true
@@ -580,14 +579,13 @@ sm_max5:
   tags:
     semigroup: true
   data:
-    carrier: &id012
-      elements: [0, 1, 2, 3, 4]
+    carrier: *zerotofour
     composition:
       source:
         product:
-        - *id012
-        - *id012
-      target: *id012
+        - *zerotofour
+        - *zerotofour
+      target: *zerotofour
       values:
       - - [0, 0]
         - 0
@@ -643,14 +641,13 @@ sm_min3:
   tags:
     semigroup: true
   data:
-    carrier: &id013
-      elements: [0, 1, 2]
+    carrier: *zeroonetwo
     composition:
       source:
         product:
-        - *id013
-        - *id013
-      target: *id013
+        - *zeroonetwo
+        - *zeroonetwo
+      target: *zeroonetwo
       values:
       - - [0, 0]
         - 0
