@@ -667,3 +667,62 @@ sm_min3:
         - 1
       - - [2, 2]
         - 2
+
+poset_empty:
+  tags:
+    poset: true
+  data:
+    carrier:
+      elements: []
+    hasse: []
+  properties:
+    height: 0
+    width: 0
+    has_bottom: false
+    has_top: false
+
+poset_one:
+  tags:
+    poset: true
+  data:
+    carrier:
+      elements: [a]
+    hasse: []
+  properties:
+    height: 1
+    width: 1
+    has_bottom: true
+    bottom: a
+    has_top: true
+    top: a
+
+poset_two:
+  tags:
+    poset: true
+  data:
+    carrier:
+      elements: [a, b]
+    hasse: []
+  properties:
+    height: 1
+    width: 2
+    has_bottom: false
+    has_top: false
+
+poset_two_side:
+  tags:
+    poset: true
+  data:
+    carrier:
+      elements: [a, b]
+    hasse:
+    - [a, b]
+  properties:
+    height: 1
+    width: 2
+    has_bottom: true
+    bottom: a
+    has_top: true
+    top: b
+    lattice: true
+

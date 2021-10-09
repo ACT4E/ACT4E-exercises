@@ -45,6 +45,7 @@ __all__ = [
     "FiniteSemigroupRepresentation",
     "FiniteDPRepresentation",
     "FiniteMap_desc",
+    "FinitePoset_desc",
 ]
 
 from .helper import IOHelper
@@ -85,6 +86,11 @@ class FiniteRelation_desc(TypedDict):
     source: FiniteSet_desc
     target: FiniteSet_desc
     values: List[List[ConcreteRepr]]
+
+
+class FinitePoset_desc(TypedDict):
+    carrier: FiniteSet_desc
+    hasse: List[List[ConcreteRepr]]
 
 
 class FiniteMapRepresentation(ABC):
