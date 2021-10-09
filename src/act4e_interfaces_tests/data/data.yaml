@@ -1,0 +1,672 @@
+---
+rel0a:
+  tags:
+    relation: true
+  data:
+    source: &emptyset
+      elements: []
+    target: &ABC
+      elements: [a, b, c]
+    values: []
+
+rel0b:
+  tags:
+    relation: true
+  data:
+    source: *emptyset
+    target: *emptyset
+    values: []
+  properties:
+    injective: true
+    surjective: true
+    single_valued: true
+    defined_everywhere: true
+
+rel1:
+  tags:
+    relation: true
+  data:
+    source: &onetwothree
+      elements: [1, 2, 3]
+    target: *ABC
+    values:
+    - [1, a]
+    - [1, b]
+    - [3, c]
+
+R1:
+  tags:
+    relation: true
+  data:
+    source:
+      elements: [1]
+    target:
+      elements: [a]
+    values:
+    - [1, a]
+  properties:
+    injective: true
+    surjective: true
+    single_valued: true
+    defined_everywhere: true
+
+R3:
+  tags:
+    relation: true
+  data:
+    source:
+      elements: [1, 2]
+    target:
+      elements: [a, b]
+    values:
+    - [1, a]
+    - [2, b]
+  properties:
+    injective: true
+    surjective: true
+    single_valued: true
+    defined_everywhere: true
+
+R4:
+  tags:
+    relation: true
+  data:
+    source:
+      elements: [1, 2]
+    target:
+      elements: [a, b]
+    values:
+    - [1, a]
+    - [1, b]
+  properties:
+    injective: true
+    surjective: true
+    single_valued: false
+    defined_everywhere: false
+
+R5:
+  tags:
+    relation: true
+  data:
+    source:
+      elements: [1, 2]
+    target:
+      elements: [a, b]
+    values:
+    - [1, a]
+    - [2, a]
+  properties:
+    injective: false
+    surjective: false
+    single_valued: true
+    defined_everywhere: true
+
+
+ER0:
+  tags:
+    relation: true
+  data:
+    source: *onetwothree
+    target: *onetwothree
+    values:
+    - [1, 1]
+    - [2, 2]
+    - [3, 3]
+  properties:
+    reflexive: true
+    irreflexive: false
+
+ER1:
+  tags:
+    relation: true
+  data:
+    source: *onetwothree
+    target: *onetwothree
+    values: []
+  properties:
+    reflexive: false
+    irreflexive: true
+
+ER2:
+  tags:
+    relation: true
+  data:
+    source: *onetwothree
+    target: *onetwothree
+    values:
+    - [1, 2]
+    - [2, 3]
+  properties:
+    transitive: false
+
+ER3:
+  tags:
+    relation: true
+  data:
+    source: *onetwothree
+    target: *onetwothree
+    values:
+    - [1, 2]
+    - [2, 3]
+    - [1, 3]
+  properties:
+    transitive: true
+
+ER4:
+  tags:
+    relation: true
+  data:
+    source: *onetwothree
+    target: *onetwothree
+    values:
+    - [1, 2]
+    - [2, 1]
+  properties:
+    symmetric: true
+    asymmetric: false
+
+ER5:
+  tags:
+    relation: true
+  data:
+    source: *onetwothree
+    target: *onetwothree
+    values:
+    - [1, 2]
+  properties:
+    symmetric: false
+    asymmetric: true
+
+ER6:
+  tags:
+    relation: true
+  data:
+    source: *onetwothree
+    target: *onetwothree
+    values:
+    - [1, 1]
+    - [2, 3]
+  properties:
+    antisymmetric: true
+
+ER7:
+  tags:
+    relation: true
+  data:
+    source: *onetwothree
+    target: *onetwothree
+    values:
+    - [1, 1]
+    - [2, 1]
+    - [1, 2]
+  properties:
+    antisymmetric: false
+
+
+G1:
+  tags:
+    group: true
+    monoid: true
+    semigroup: true
+  data:
+    carrier: &id001
+      elements: &id002 [1]
+    composition:
+      source:
+        product:
+        - *id001
+        - *id001
+      target: *id001
+      values:
+      - - [1, 1]
+        - 1
+    inverse:
+      source: &id003
+        elements: *id002
+      target: *id003
+      values:
+      - [1, 1.0]
+    neutral: 1
+G2:
+  tags:
+    group: true
+    monoid: true
+    semigroup: true
+  data:
+    carrier: &id004
+      elements: &id005 [1, -1]
+    composition:
+      source:
+        product:
+        - *id004
+        - *id004
+      target: *id004
+      values:
+      - - [1, 1]
+        - 1
+      - - [1, -1]
+        - -1
+      - - [-1, 1]
+        - -1
+      - - [-1, -1]
+        - 1
+    inverse:
+      source: &id006
+        elements: *id005
+      target: *id006
+      values:
+      - [1, 1]
+      - [-1, -1]
+    neutral: 1
+
+
+map1:
+  tags:
+    map: true
+  data:
+    source:
+      elements: [a, b, c, d]
+    target:
+      elements: [1, 2, 3, 4, 5]
+    values:
+    - [a, 1]
+    - [b, 2]
+    - [c, 3]
+    - [d, 4]
+map3:
+  tags:
+    map: true
+  data:
+    source:
+      elements: [a, b, c]
+    target:
+      elements: [1, 2]
+    values:
+    - [a, 1]
+    - [b, 2]
+    - [c, 1]
+mixpaint:
+  tags:
+    set: true
+  data: &id010
+    elements: [white, red, mixed]
+
+mon_max5:
+  tags:
+    monoid: true
+    semigroup: true
+  data:
+    carrier: &id007
+      elements: [0, 1, 2, 3, 4]
+    composition:
+      source:
+        product: [*id007, *id007]
+      target: *id007
+      values:
+      - - [0, 0]
+        - 0
+      - - [0, 1]
+        - 1
+      - - [0, 2]
+        - 2
+      - - [0, 3]
+        - 3
+      - - [0, 4]
+        - 4
+      - - [1, 0]
+        - 1
+      - - [1, 1]
+        - 1
+      - - [1, 2]
+        - 2
+      - - [1, 3]
+        - 3
+      - - [1, 4]
+        - 4
+      - - [2, 0]
+        - 2
+      - - [2, 1]
+        - 2
+      - - [2, 2]
+        - 2
+      - - [2, 3]
+        - 3
+      - - [2, 4]
+        - 4
+      - - [3, 0]
+        - 3
+      - - [3, 1]
+        - 3
+      - - [3, 2]
+        - 3
+      - - [3, 3]
+        - 3
+      - - [3, 4]
+        - 4
+      - - [4, 0]
+        - 4
+      - - [4, 1]
+        - 4
+      - - [4, 2]
+        - 4
+      - - [4, 3]
+        - 4
+      - - [4, 4]
+        - 4
+    neutral: 0
+mon_min2:
+  tags:
+    semigroup: true
+    monoid: true
+
+  data:
+    carrier: &id008
+      elements: [0, 1, 2]
+    composition:
+      source:
+        product:
+        - *id008
+        - *id008
+      target: *id008
+      values:
+      - - [0, 0]
+        - 0
+      - - [0, 1]
+        - 0
+      - - [0, 2]
+        - 0
+      - - [1, 0]
+        - 0
+      - - [1, 1]
+        - 1
+      - - [1, 2]
+        - 1
+      - - [2, 0]
+        - 0
+      - - [2, 1]
+        - 1
+      - - [2, 2]
+        - 2
+    neutral: 2
+mon_min5:
+  tags:
+    monoid: true
+    semigroup: true
+
+  data:
+    carrier: &id009
+      elements: [0, 1, 2, 3, 4]
+    composition:
+      source:
+        product:
+        - *id009
+        - *id009
+      target: *id009
+      values:
+      - - [0, 0]
+        - 0
+      - - [0, 1]
+        - 0
+      - - [0, 2]
+        - 0
+      - - [0, 3]
+        - 0
+      - - [0, 4]
+        - 0
+      - - [1, 0]
+        - 0
+      - - [1, 1]
+        - 1
+      - - [1, 2]
+        - 1
+      - - [1, 3]
+        - 1
+      - - [1, 4]
+        - 1
+      - - [2, 0]
+        - 0
+      - - [2, 1]
+        - 1
+      - - [2, 2]
+        - 2
+      - - [2, 3]
+        - 2
+      - - [2, 4]
+        - 2
+      - - [3, 0]
+        - 0
+      - - [3, 1]
+        - 1
+      - - [3, 2]
+        - 2
+      - - [3, 3]
+        - 3
+      - - [3, 4]
+        - 3
+      - - [4, 0]
+        - 0
+      - - [4, 1]
+        - 1
+      - - [4, 2]
+        - 2
+      - - [4, 3]
+        - 3
+      - - [4, 4]
+        - 4
+    neutral: 4
+
+paint:
+  tags:
+    semigroup: true
+  data:
+    carrier: *id010
+    composition:
+      source:
+        product:
+        - *id010
+        - *id010
+      target: *id010
+      values:
+      - - [white, white]
+        - white
+      - - [white, red]
+        - mixed
+      - - [white, mixed]
+        - mixed
+      - - [red, white]
+        - mixed
+      - - [red, red]
+        - red
+      - - [red, mixed]
+        - mixed
+      - - [mixed, white]
+        - mixed
+      - - [mixed, red]
+        - mixed
+      - - [mixed, mixed]
+        - mixed
+
+set1:
+  tags:
+    set: true
+  data:
+    elements: [a, b, c]
+
+set2:
+  tags:
+    set: true
+  data:
+    elements: [a, b, c, d, e]
+
+set3:
+  tags:
+    set: true
+  data:
+    elements: [1, 2, 3]
+
+set_empty:
+  tags:
+    set: true
+  data: &EMPTYSET
+    elements: []
+
+set_product:
+  tags:
+    set: true
+  requires:
+    set_product: true
+  data:
+    product:
+    - elements: [a, b]
+    - elements: [1, 2]
+
+set_product10:
+  tags:
+    set: true
+  requires:
+    set_product: true
+  data:
+    product:
+    - &id011
+      elements: [1]
+    - *EMPTYSET
+
+set_product111:
+  tags:
+    set: true
+  requires:
+    set_product: true
+  data:
+    product:
+    - *id011
+    - *id011
+    - *id011
+set_union:
+  tags:
+    set: true
+  requires:
+    set_union: true
+  data:
+    union:
+    - elements: [1, 2]
+    - elements: [a, b, 1]
+
+set_union_empty1:
+  tags:
+    set: true
+  requires:
+    set_union: true
+  data:
+    union:
+    - *EMPTYSET
+set_union_empty2:
+  tags:
+    set: true
+  requires:
+    set_union: true
+  data:
+    union:
+    - *EMPTYSET
+    - *EMPTYSET
+set_union_zero:
+  tags:
+    set: true
+  requires:
+    set_union: true
+  data:
+    union: []
+
+sm_max5:
+  tags:
+    semigroup: true
+  data:
+    carrier: &id012
+      elements: [0, 1, 2, 3, 4]
+    composition:
+      source:
+        product:
+        - *id012
+        - *id012
+      target: *id012
+      values:
+      - - [0, 0]
+        - 0
+      - - [0, 1]
+        - 1
+      - - [0, 2]
+        - 2
+      - - [0, 3]
+        - 3
+      - - [0, 4]
+        - 4
+      - - [1, 0]
+        - 1
+      - - [1, 1]
+        - 1
+      - - [1, 2]
+        - 2
+      - - [1, 3]
+        - 3
+      - - [1, 4]
+        - 4
+      - - [2, 0]
+        - 2
+      - - [2, 1]
+        - 2
+      - - [2, 2]
+        - 2
+      - - [2, 3]
+        - 3
+      - - [2, 4]
+        - 4
+      - - [3, 0]
+        - 3
+      - - [3, 1]
+        - 3
+      - - [3, 2]
+        - 3
+      - - [3, 3]
+        - 3
+      - - [3, 4]
+        - 4
+      - - [4, 0]
+        - 4
+      - - [4, 1]
+        - 4
+      - - [4, 2]
+        - 4
+      - - [4, 3]
+        - 4
+      - - [4, 4]
+        - 4
+sm_min3:
+  tags:
+    semigroup: true
+  data:
+    carrier: &id013
+      elements: [0, 1, 2]
+    composition:
+      source:
+        product:
+        - *id013
+        - *id013
+      target: *id013
+      values:
+      - - [0, 0]
+        - 0
+      - - [0, 1]
+        - 0
+      - - [0, 2]
+        - 0
+      - - [1, 0]
+        - 0
+      - - [1, 1]
+        - 1
+      - - [1, 2]
+        - 1
+      - - [2, 0]
+        - 0
+      - - [2, 1]
+        - 1
+      - - [2, 2]
+        - 2
