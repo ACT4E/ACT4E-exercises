@@ -17,6 +17,9 @@ from .relations import FiniteRelation
 from .semigroups import FiniteGroup, FiniteMonoid, FiniteSemigroup
 from .sets import FiniteMap, FiniteSet
 
+from .helper import IOHelper
+from .types import ConcreteRepr
+
 __all__ = [
     "FiniteSet_desc",
     "FiniteMap_desc",
@@ -25,6 +28,7 @@ __all__ = [
     "FiniteSetDisjointUnion_desc",
     "DirectElements_desc",
     "FiniteProfunctor_desc",
+    "FiniteNaturalTransformation_desc",
     "IOHelper",
     "FiniteRelation_desc",
     "FiniteFunctor_desc",
@@ -47,9 +51,6 @@ __all__ = [
     "FiniteMap_desc",
     "FinitePoset_desc",
 ]
-
-from .helper import IOHelper
-from .types import ConcreteRepr
 
 
 class DirectElements_desc(TypedDict):
