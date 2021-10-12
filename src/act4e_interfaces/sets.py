@@ -90,7 +90,11 @@ class SetProduct(Setoid, ABC):
         """ Returns the components of the product"""
 
     @abstractmethod
-    def pack(self, *args: Element) -> Element:
+    def pack(self, args: List[Element]) -> Element:
+        """ Packs an element of each setoid into an element of the mapping"""
+
+    @abstractmethod
+    def unpack(self, args: Element) -> List[Element]:
         """ Packs an element of each setoid into an element of the mapping"""
 
     @abstractmethod
@@ -118,9 +122,22 @@ class SetUnion(Setoid, ABC):
         """ Returns the components of the union"""
 
 
+class SetOfSubsets(Setoid, ABC):
+    """ A poset of subsets. """
+
+    def contents(self, e: Element) -> Iterator[Element]:
+        """ Returns the contents of a subset"""
+
+
+class FiniteSetOfSubsets(SetOfSubsets, FiniteSet, ABC):
+    def construct(self, elements: List[Element]) -> Element:
+        """ Given a list of elements, builds the element that represents the poset."""
+        pass
+
+
 class FiniteSetPowerSet(ABC):
     @abstractmethod
-    def powerset(self, s: FiniteSet) -> FiniteSet:
+    def powerset(self, s: FiniteSet) -> FiniteSetOfSubsets:
         """ Creates the powerset  """
 
 
@@ -159,6 +176,16 @@ class FiniteSetDisjointUnion(FiniteSet, SetDisjointUnion, ABC):
 
     @abstractmethod
     def injections(self) -> List[FiniteMap]:
+        ...
+
+
+class MakeSetDisjointUnion(ABC):
+    @overload
+    def disjoint_union(self, components: List[Setoid]) -> SetDisjointUnion:
+        ...
+
+    @abstractmethod
+    def disjoint_union(self, components: List[FiniteSet]) -> FiniteSetDisjointUnion:
         ...
 
 

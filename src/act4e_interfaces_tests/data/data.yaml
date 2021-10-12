@@ -22,6 +22,21 @@ rel0b:
     single_valued: true
     defined_everywhere: true
 
+rel0: # display in book
+  tags:
+    relation: true
+  data:
+    source:
+      elements: [a, b, c, d]
+    target:
+      elements: [1, 2, 3, 4]
+    values:
+    - [a, 1]
+    - [a, 2]
+    - [c, 3]
+
+
+
 rel1:
   tags:
     relation: true
@@ -637,6 +652,23 @@ sm_max5:
         - 4
       - - [4, 4]
         - 4
+
+sm_min0:
+  tags:
+    semigroup: true
+  data:
+    carrier: &S
+      elements: [0, 1]
+    composition:
+      source:
+        product: [*S, *S]
+      target: *S
+      values:
+      - [[0, 0], 0]
+      - [[0, 1], 0]
+      - [[1, 0], 0]
+      - [[1, 1], 1]
+
 sm_min3:
   tags:
     semigroup: true
@@ -695,6 +727,7 @@ poset_one:
     bottom: a
     has_top: true
     top: a
+    oppposite: poset_one
 
 poset_two:
   tags:
@@ -708,6 +741,7 @@ poset_two:
     width: 2
     has_bottom: false
     has_top: false
+    oppposite: poset_two
 
 poset_two_side:
   tags:
@@ -725,6 +759,19 @@ poset_two_side:
     has_top: true
     top: b
     lattice: true
+    opposite: poset_two_side_op
+
+
+poset_two_side_op:
+  tags:
+    poset: true
+  data:
+    carrier:
+      elements: [a, b]
+    hasse:
+    - [b, a]
+  properties:
+    opposite: poset_two_side
 
 poset_large1:
   tags:
@@ -961,11 +1008,7 @@ poset_food:
 
   tags:
     poset: true
-  properties:
-    has_bottom: false
-    has_top: false
-    height: 4
-    width: 3
+
   data:
     carrier:
       elements: [🍎, 🍫, 🥕, 🍔, 🥨, 🧀, 🫕, 🍇]
@@ -979,3 +1022,82 @@ poset_food:
     - [🍫, 🍔]
     - [🍔, 🫕]
     - [🧀, 🫕]
+  properties:
+    has_bottom: false
+    has_top: false
+    height: 4
+    width: 3
+    some_chains:
+      empty: []
+      simple: [🥕, 🥨]
+      longer: [🥕, 🥨, 🍎]
+      longer2: [🥕, 🍎]
+      inverted: [🥨, 🥕, 🍎]
+    some_not_chains:
+      nc1: [🥕, 🍇]
+    some_antichains:
+      empty: []
+      a1: [🍎]
+      a2: [🍎, 🍔]
+      a3: [🍎, 🍔, 🧀]
+    some_not_antichains:
+      na1: [🥕, 🍇, 🧀]
+    some_uppersets:
+      u0: []
+      u1: [🍎]
+      u2: [🍎, 🥨]
+      u4: [🍇, 🧀, 🍔, 🫕]
+    some_not_uppersets:
+      u3: [🍎, 🥨, 🥕]
+    some_lowersets:
+      l0: []
+      l1: [🥕]
+    some_not_lowersets:
+      l1: [🥨]
+
+
+
+
+
+
+poset_fruit1:
+  tags:
+    poset: true
+  data:
+    carrier:
+      elements: [a, b, c, d, e]
+    hasse:
+    - [d, a] # comment
+    - [d, b]
+    - [e, b]
+    - [e, c]
+
+dp1:
+  tags:
+    dp: true
+  properties: {}
+
+  data:
+    source: TODO
+    target: TODO
+
+
+cat1:
+
+  tags:
+    category: true
+  properties: {}
+
+  data:
+    objects: TODO
+    morphisms: TODO
+
+nat1:
+
+  tags:
+    natural_transform: true
+  properties: {}
+
+  data:
+    objects: TODO
+    morphisms: TODO
