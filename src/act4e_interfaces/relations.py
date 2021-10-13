@@ -49,6 +49,12 @@ class FiniteRelationProperties(ABC):
         """ Return True if the relation is single-valued """
 
 
+class FiniteRelationCompose(ABC):
+    @abstractmethod
+    def transpose(self, fr: FiniteRelation, fr2: FiniteRelation) -> FiniteRelation:
+        """ Compose two relations """
+
+
 class FiniteRelationOperations(ABC):
     @abstractmethod
     def transpose(self, fr: FiniteRelation) -> FiniteRelation:

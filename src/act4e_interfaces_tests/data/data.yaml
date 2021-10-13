@@ -545,6 +545,29 @@ set_product10:
       elements: [1]
     - *EMPTYSET
 
+
+set_ABC:
+  tags:
+    set: true
+  data:
+    elements: [a, b, c]
+  properties:
+    powerset: set_ABC_powerset
+
+set_ABC_powerset:
+  tags:
+    set: true
+  data:
+    elements:
+    - []
+    - [a]
+    - [b]
+    - [c]
+    - [a, b]
+    - [b, c]
+    - [a, c]
+    - [a, b, c]
+
 set_product111:
   tags:
     set: true
@@ -727,7 +750,7 @@ poset_one:
     bottom: a
     has_top: true
     top: a
-    oppposite: poset_one
+    opposite: poset_one
 
 poset_two:
   tags:
@@ -741,7 +764,7 @@ poset_two:
     width: 2
     has_bottom: false
     has_top: false
-    oppposite: poset_two
+    opposite: poset_two
 
 poset_two_side:
   tags:
@@ -778,7 +801,7 @@ poset_large1:
     poset: true
   properties:
     has_bottom: false
-    hast_top: false
+    has_top: false
     height: 8
     width: 24
   data:

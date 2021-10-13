@@ -82,12 +82,11 @@ class FiniteSetProperties(ABC):
         return self.is_subset(a, b) and not self.is_subset(b, a)
 
 
+### Set product
+
+
 class SetProduct(Setoid, ABC):
     """ A set product is a setoid that can be factorized. """
-
-    @abstractmethod
-    def components(self) -> List[Setoid]:
-        """ Returns the components of the product"""
 
     @abstractmethod
     def pack(self, args: List[Element]) -> Element:
@@ -96,6 +95,10 @@ class SetProduct(Setoid, ABC):
     @abstractmethod
     def unpack(self, args: Element) -> List[Element]:
         """ Packs an element of each setoid into an element of the mapping"""
+
+    @abstractmethod
+    def components(self) -> List[Setoid]:
+        """ Returns the components of the product"""
 
     @abstractmethod
     def projections(self) -> List[Mapping]:
@@ -114,31 +117,25 @@ class FiniteSetProduct(FiniteSet, SetProduct, ABC):
         """ Returns the projection mappings. """
 
 
+class MakeSetProduct(ABC):
+    @overload
+    def product(self, components: List[Setoid]) -> SetProduct:
+        ...
+
+    @abstractmethod
+    def product(self, components: List[FiniteSet]) -> FiniteSetProduct:
+        ...
+
+
+## Set union
+
+
 class SetUnion(Setoid, ABC):
     """ A set product is a setoid that can be factorized. """
 
     @abstractmethod
     def components(self) -> List[Setoid]:
         """ Returns the components of the union"""
-
-
-class SetOfSubsets(Setoid, ABC):
-    """ A poset of subsets. """
-
-    def contents(self, e: Element) -> Iterator[Element]:
-        """ Returns the contents of a subset"""
-
-
-class FiniteSetOfSubsets(SetOfSubsets, FiniteSet, ABC):
-    def construct(self, elements: List[Element]) -> Element:
-        """ Given a list of elements, builds the element that represents the poset."""
-        pass
-
-
-class FiniteSetPowerSet(ABC):
-    @abstractmethod
-    def powerset(self, s: FiniteSet) -> FiniteSetOfSubsets:
-        """ Creates the powerset  """
 
 
 class EnumerableSetUnion(EnumerableSet, SetUnion, ABC):
@@ -155,6 +152,46 @@ class FiniteSetUnion(FiniteSet, EnumerableSetUnion, ABC):
     @abstractmethod
     def components(self) -> List[FiniteSet]:
         """ Returns the components of the union """
+
+
+class MakeSetUnion(ABC):
+    @overload
+    def union(self, components: List[FiniteSet]) -> FiniteSetUnion:
+        ...
+
+    @overload
+    def union(self, components: List[EnumerableSet]) -> EnumerableSetUnion:
+        ...
+
+    @abstractmethod
+    def union(self, components: List[Setoid]) -> SetUnion:
+        ...
+
+
+### Power set
+
+
+class SetOfSubsets(Setoid, ABC):
+    """ A set of subsets. """
+
+    @abstractmethod
+    def contents(self, e: Element) -> Iterator[Element]:
+        """ Returns the contents of an element represeting a subset."""
+
+
+class FiniteSetOfSubsets(SetOfSubsets, FiniteSet, ABC):
+    @abstractmethod
+    def construct(self, elements: List[Element]) -> Element:
+        """ Get the element representing the given subset."""
+
+
+class MakePowerSet(ABC):
+    @abstractmethod
+    def powerset(self, s: FiniteSet) -> FiniteSetOfSubsets:
+        """ Creates the powerset of a finite set. """
+
+
+### disjoint union
 
 
 class SetDisjointUnion(Setoid, ABC):
@@ -189,41 +226,10 @@ class MakeSetDisjointUnion(ABC):
         ...
 
 
-class MakeSetProduct(ABC):
-    @overload
-    def product(self, components: List[Setoid]) -> SetProduct:
-        ...
-
-    @abstractmethod
-    def product(self, components: List[FiniteSet]) -> FiniteSetProduct:
-        ...
+### Set intersection
 
 
 class MakeSetIntersection(ABC):
     @abstractmethod
     def intersection(self, components: List[FiniteSet]) -> FiniteSet:
-        ...
-
-
-class MakeSetUnion(ABC):
-    @overload
-    def union(self, components: List[FiniteSet]) -> FiniteSetUnion:
-        ...
-
-    @overload
-    def union(self, components: List[EnumerableSet]) -> EnumerableSetUnion:
-        ...
-
-    @abstractmethod
-    def union(self, components: List[Setoid]) -> SetUnion:
-        ...
-
-
-class MakeSetDisjointUnion(ABC):
-    @overload
-    def compute_disjoint_union(self, components: List[Setoid]) -> SetDisjointUnion:
-        ...
-
-    @abstractmethod
-    def compute_disjoint_union(self, components: List[FiniteSet]) -> FiniteSetDisjointUnion:
         ...
