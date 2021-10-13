@@ -1,11 +1,16 @@
 from abc import ABC, abstractmethod
-from typing import Iterator, List, overload, Tuple
+from typing import Generic, Iterator, List, overload, Tuple, TypeVar
 
 from .helper import IOHelper
-from .types import ConcreteRepr, Element
+from .types import ConcreteRepr
+
+E = TypeVar("E")
+E1 = TypeVar("E1")
+E2 = TypeVar("E2")
+E3 = TypeVar("E3")
 
 
-class Setoid(ABC):
+class Setoid(Generic[E], ABC):
     """
     A setoid is something to which elements may belong,
     has a way of distinguishing elements,
@@ -13,46 +18,46 @@ class Setoid(ABC):
     """
 
     @abstractmethod
-    def contains(self, x: Element) -> bool:
+    def contains(self, x: E) -> bool:
         """ Returns true if the element is in the set. """
 
-    def equal(self, x: Element, y: Element) -> bool:
+    def equal(self, x: E, y: E) -> bool:
         """ Returns True if the two elements are to be considered equal. """
         return x == y  # default is to use the Python equality
 
-    def apart(self, x: Element, y: Element) -> bool:
+    def apart(self, x: E, y: E) -> bool:
         return not self.equal(x, y)
 
     @abstractmethod
-    def save(self, h: IOHelper, x: Element) -> ConcreteRepr:
+    def save(self, h: IOHelper, x: E) -> ConcreteRepr:
         ...
 
     @abstractmethod
-    def load(self, h: IOHelper, o: ConcreteRepr) -> Element:
+    def load(self, h: IOHelper, o: ConcreteRepr) -> E:
         ...
 
 
-class Mapping(ABC):
+class Mapping(Generic[E1, E2], ABC):
     @abstractmethod
-    def source(self) -> Setoid:
+    def source(self) -> Setoid[E1]:
         ...
 
     @abstractmethod
-    def target(self) -> Setoid:
+    def target(self) -> Setoid[E2]:
         ...
 
     @abstractmethod
-    def __call__(self, a: Element) -> Element:
+    def __call__(self, a: E1) -> E2:
         ...
 
 
-class EnumerableSet(Setoid, ABC):
+class EnumerableSet(Setoid[E], ABC):
     @abstractmethod
-    def elements(self) -> Iterator[Element]:
+    def elements(self) -> Iterator[E]:
         """ Note: possibly non-terminating. """
 
 
-class FiniteSet(EnumerableSet, ABC):
+class FiniteSet(EnumerableSet[E], ABC):
     """ A finite set has a finite size. """
 
     @abstractmethod
@@ -60,165 +65,167 @@ class FiniteSet(EnumerableSet, ABC):
         """ Return the size of the finite set. """
 
 
-class FiniteMap(Mapping, ABC):
+class FiniteMap(Mapping[E1, E2], ABC):
     @abstractmethod
-    def source(self) -> FiniteSet:
+    def source(self) -> FiniteSet[E1]:
         ...
 
     @abstractmethod
-    def target(self) -> FiniteSet:
+    def target(self) -> FiniteSet[E2]:
         ...
 
 
 class FiniteSetProperties(ABC):
     @abstractmethod
-    def is_subset(self, a: FiniteSet, b: FiniteSet) -> bool:
+    def is_subset(self, a: FiniteSet[E], b: FiniteSet[E]) -> bool:
         """ True if `a` is a subset of `b`. """
 
-    def equal(self, a: FiniteSet, b: FiniteSet) -> bool:
+    def equal(self, a: FiniteSet[E], b: FiniteSet[E]) -> bool:
         return self.is_subset(a, b) and self.is_subset(b, a)
 
-    def is_strict_subset(self, a: FiniteSet, b: FiniteSet) -> bool:
+    def is_strict_subset(self, a: FiniteSet[E], b: FiniteSet[E]) -> bool:
         return self.is_subset(a, b) and not self.is_subset(b, a)
 
 
 ### Set product
 
+C = TypeVar("C")
 
-class SetProduct(Setoid, ABC):
+
+class SetProduct(Generic[C, E], Setoid[E], ABC):
     """ A set product is a setoid that can be factorized. """
 
     @abstractmethod
-    def components(self) -> List[Setoid]:
+    def components(self) -> List[Setoid[E]]:
         """ Returns the components of the product"""
 
     @abstractmethod
-    def pack(self, args: List[Element]) -> Element:
+    def pack(self, args: List[C]) -> E:
         """ Packs an element of each setoid into an element of the mapping"""
 
     @abstractmethod
-    def unpack(self, args: Element) -> List[Element]:
+    def unpack(self, args: E) -> List[C]:
         """ Packs an element of each setoid into an element of the mapping"""
 
 
-class FiniteSetProduct(FiniteSet, SetProduct, ABC):
+class FiniteSetProduct(FiniteSet[E], SetProduct[C, E], ABC):
     """ Specialization of SetProduct where we deal with FiniteSets"""
 
     @abstractmethod
-    def components(self) -> List[FiniteSet]:
+    def components(self) -> List[FiniteSet[E]]:
         """ Returns the components """
 
 
 class MakeSetProduct(ABC):
     @overload
-    def product(self, components: List[Setoid]) -> SetProduct:
+    def product(self, components: List[Setoid[E]]) -> SetProduct[C, E]:
         ...
 
     @abstractmethod
-    def product(self, components: List[FiniteSet]) -> FiniteSetProduct:
+    def product(self, components: List[FiniteSet[E]]) -> FiniteSetProduct[C, E]:
         ...
 
 
 ## Set union
 
 
-class SetUnion(Setoid, ABC):
+class SetUnion(Generic[C, E], Setoid[E], ABC):
     """ A set product is a setoid that can be factorized. """
 
     @abstractmethod
-    def components(self) -> List[Setoid]:
+    def components(self) -> List[Setoid[C]]:
         """ Returns the components of the union"""
 
 
-class EnumerableSetUnion(EnumerableSet, SetUnion, ABC):
+class EnumerableSetUnion(Generic[C, E], EnumerableSet[E], SetUnion[C, E], ABC):
     """ Specialization of SetUnion where we deal with FiniteSets"""
 
     @abstractmethod
-    def components(self) -> List[EnumerableSet]:
+    def components(self) -> List[EnumerableSet[C]]:
         """ Returns the components of the union """
 
 
-class FiniteSetUnion(FiniteSet, EnumerableSetUnion, ABC):
+class FiniteSetUnion(Generic[C, E], FiniteSet[E], EnumerableSetUnion[C, E], ABC):
     """ Specialization of SetUnion where we deal with FiniteSets"""
 
     @abstractmethod
-    def components(self) -> List[FiniteSet]:
+    def components(self) -> List[FiniteSet[C]]:
         """ Returns the components of the union """
 
 
 class MakeSetUnion(ABC):
     @overload
-    def union(self, components: List[FiniteSet]) -> FiniteSetUnion:
+    def union(self, components: List[FiniteSet[C]]) -> FiniteSetUnion[C, E]:
         ...
 
     @overload
-    def union(self, components: List[EnumerableSet]) -> EnumerableSetUnion:
+    def union(self, components: List[EnumerableSet[C]]) -> EnumerableSetUnion[C, E]:
         ...
 
     @abstractmethod
-    def union(self, components: List[Setoid]) -> SetUnion:
+    def union(self, components: List[Setoid[C]]) -> SetUnion[C, E]:
         ...
 
 
 ### Power set
 
 
-class SetOfFiniteSubsets(Setoid, ABC):
+class SetOfFiniteSubsets(Generic[C, E], Setoid[E], ABC):
     """ A set of subsets. """
 
     @abstractmethod
-    def contents(self, e: Element) -> Iterator[Element]:
+    def contents(self, e: E) -> Iterator[C]:
         """ Returns the contents of an element represeting a subset."""
 
     @abstractmethod
-    def construct(self, elements: List[Element]) -> Element:
+    def construct(self, elements: List[C]) -> E:
         """ Get the element representing the given subset."""
 
 
-class FiniteSetOfFiniteSubsets(SetOfFiniteSubsets, FiniteSet, ABC):
+class FiniteSetOfFiniteSubsets(Generic[C, E], SetOfFiniteSubsets[C, E], FiniteSet[E], ABC):
     pass
 
 
 class MakePowerSet(ABC):
     @overload
-    def powerset(self, s: Setoid) -> SetOfFiniteSubsets:
+    def powerset(self, s: Setoid[C]) -> SetOfFiniteSubsets[C, E]:
         ...
 
     @abstractmethod
-    def powerset(self, s: FiniteSet) -> FiniteSetOfFiniteSubsets:
+    def powerset(self, s: FiniteSet[C]) -> FiniteSetOfFiniteSubsets[C, E]:
         """ Creates the powerset of a finite set. """
 
 
 ### disjoint union
 
 
-class SetDisjointUnion(Setoid, ABC):
+class SetDisjointUnion(Generic[C, E], Setoid[E], ABC):
     @abstractmethod
-    def components(self) -> List[Setoid]:
+    def components(self) -> List[Setoid[C]]:
         """ Returns the components of the union """
 
-    def pack(self, i: int, e: Element) -> Element:
+    def pack(self, i: int, e: C) -> E:
         """ Injection mapping. """
 
-    def unpack(self, e: Element) -> Tuple[int, Element]:
+    def unpack(self, e: E) -> Tuple[int, C]:
         """ Injection mapping. """
 
 
-class FiniteSetDisjointUnion(FiniteSet, SetDisjointUnion, ABC):
+class FiniteSetDisjointUnion(Generic[C, E], FiniteSet[E], SetDisjointUnion[C, E], ABC):
     """ Specialization of SetProduct where we deal with FiniteSets"""
 
     @abstractmethod
-    def components(self) -> List[FiniteSet]:
+    def components(self) -> List[FiniteSet[C]]:
         ...
 
 
 class MakeSetDisjointUnion(ABC):
     @overload
-    def disjoint_union(self, components: List[Setoid]) -> SetDisjointUnion:
+    def disjoint_union(self, components: List[Setoid[C]]) -> SetDisjointUnion[C, E]:
         ...
 
     @abstractmethod
-    def disjoint_union(self, components: List[FiniteSet]) -> FiniteSetDisjointUnion:
+    def disjoint_union(self, components: List[FiniteSet[C]]) -> FiniteSetDisjointUnion[C, E]:
         ...
 
 
@@ -227,5 +234,5 @@ class MakeSetDisjointUnion(ABC):
 
 class MakeSetIntersection(ABC):
     @abstractmethod
-    def intersection(self, components: List[FiniteSet]) -> FiniteSet:
+    def intersection(self, components: List[FiniteSet[C]]) -> FiniteSet[C]:
         ...

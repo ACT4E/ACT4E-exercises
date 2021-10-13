@@ -12,12 +12,11 @@ from .categories import (
     FiniteNaturalTransformation,
     FiniteProfunctor,
 )
+from .helper import IOHelper
 from .posets import FinitePoset
 from .relations import FiniteRelation
 from .semigroups import FiniteGroup, FiniteMonoid, FiniteSemigroup
 from .sets import FiniteMap, FiniteSet
-
-from .helper import IOHelper
 from .types import ConcreteRepr
 
 __all__ = [
@@ -94,6 +93,19 @@ class FinitePoset_desc(TypedDict):
     hasse: List[List[ConcreteRepr]]
 
 
+class FiniteSemigroup_desc(TypedDict):
+    carrier: FiniteSet_desc
+    composition: List[List[ConcreteRepr]]
+
+
+class FiniteMonoid_desc(FiniteSemigroup_desc):
+    neutral: ConcreteRepr
+
+
+class FiniteGroup_desc(FiniteMonoid_desc):
+    inverse: List[List[ConcreteRepr]]
+
+
 class FiniteMapRepresentation(ABC):
     @abstractmethod
     def load(self, h: IOHelper, s: FiniteMap_desc) -> FiniteMap:
@@ -116,11 +128,6 @@ class FiniteSetRepresentation(ABC):
         """ Serializes into a data structure """
 
 
-class FiniteSemigroup_desc(TypedDict):
-    carrier: FiniteSet_desc
-    composition: FiniteMap_desc
-
-
 class FiniteSemigroupRepresentation(ABC):
     @abstractmethod
     def load(self, h: IOHelper, s: FiniteSemigroup_desc) -> FiniteSemigroup:
@@ -135,12 +142,6 @@ class FiniteNaturalTransformation_desc(TypedDict):
     pass
 
 
-class FiniteMonoid_desc(FiniteSemigroup_desc):
-    # carrier: FiniteSet_desc
-    # compose: FiniteMap_desc
-    neutral: object
-
-
 class FiniteMonoidRepresentation(ABC):
     @abstractmethod
     def load(self, h: IOHelper, s: FiniteMonoid_desc) -> FiniteMonoid:
@@ -149,10 +150,6 @@ class FiniteMonoidRepresentation(ABC):
     @abstractmethod
     def save(self, h: IOHelper, m: FiniteMonoid) -> FiniteMonoid_desc:
         """ Save the data  """
-
-
-class FiniteGroup_desc(FiniteMonoid_desc):
-    inverse: FiniteMap_desc
 
 
 class FiniteGroupRepresentation(ABC):
