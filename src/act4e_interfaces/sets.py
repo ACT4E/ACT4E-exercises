@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Iterator, List, overload
+from typing import Iterator, List, overload, Tuple
 
 from .helper import IOHelper
 from .types import ConcreteRepr, Element
@@ -89,20 +89,16 @@ class SetProduct(Setoid, ABC):
     """ A set product is a setoid that can be factorized. """
 
     @abstractmethod
+    def components(self) -> List[Setoid]:
+        """ Returns the components of the product"""
+
+    @abstractmethod
     def pack(self, args: List[Element]) -> Element:
         """ Packs an element of each setoid into an element of the mapping"""
 
     @abstractmethod
     def unpack(self, args: Element) -> List[Element]:
         """ Packs an element of each setoid into an element of the mapping"""
-
-    @abstractmethod
-    def components(self) -> List[Setoid]:
-        """ Returns the components of the product"""
-
-    @abstractmethod
-    def projections(self) -> List[Mapping]:
-        """ Returns the projection mappings. """
 
 
 class FiniteSetProduct(FiniteSet, SetProduct, ABC):
@@ -111,10 +107,6 @@ class FiniteSetProduct(FiniteSet, SetProduct, ABC):
     @abstractmethod
     def components(self) -> List[FiniteSet]:
         """ Returns the components """
-
-    @abstractmethod
-    def projections(self) -> List[FiniteMap]:
-        """ Returns the projection mappings. """
 
 
 class MakeSetProduct(ABC):
@@ -171,23 +163,29 @@ class MakeSetUnion(ABC):
 ### Power set
 
 
-class SetOfSubsets(Setoid, ABC):
+class SetOfFiniteSubsets(Setoid, ABC):
     """ A set of subsets. """
 
     @abstractmethod
     def contents(self, e: Element) -> Iterator[Element]:
         """ Returns the contents of an element represeting a subset."""
 
-
-class FiniteSetOfSubsets(SetOfSubsets, FiniteSet, ABC):
     @abstractmethod
     def construct(self, elements: List[Element]) -> Element:
         """ Get the element representing the given subset."""
 
 
+class FiniteSetOfFiniteSubsets(SetOfFiniteSubsets, FiniteSet, ABC):
+    pass
+
+
 class MakePowerSet(ABC):
+    @overload
+    def powerset(self, s: Setoid) -> SetOfFiniteSubsets:
+        ...
+
     @abstractmethod
-    def powerset(self, s: FiniteSet) -> FiniteSetOfSubsets:
+    def powerset(self, s: FiniteSet) -> FiniteSetOfFiniteSubsets:
         """ Creates the powerset of a finite set. """
 
 
@@ -199,9 +197,11 @@ class SetDisjointUnion(Setoid, ABC):
     def components(self) -> List[Setoid]:
         """ Returns the components of the union """
 
-    @abstractmethod
-    def injections(self) -> List[Mapping]:
-        """ Returns the projection mappings. """
+    def pack(self, i: int, e: Element) -> Element:
+        """ Injection mapping. """
+
+    def unpack(self, e: Element) -> Tuple[int, Element]:
+        """ Injection mapping. """
 
 
 class FiniteSetDisjointUnion(FiniteSet, SetDisjointUnion, ABC):
@@ -209,10 +209,6 @@ class FiniteSetDisjointUnion(FiniteSet, SetDisjointUnion, ABC):
 
     @abstractmethod
     def components(self) -> List[FiniteSet]:
-        ...
-
-    @abstractmethod
-    def injections(self) -> List[FiniteMap]:
         ...
 
 

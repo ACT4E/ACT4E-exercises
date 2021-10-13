@@ -104,20 +104,6 @@ class FiniteMapRepresentation(ABC):
         ...
 
 
-# @overload
-# def load(self, h: IOHelper, data: FiniteSetDisjointUnion_desc) \
-#     -> FiniteSetDisjointUnion:
-#     ...
-#
-# @overload
-# def load(self, h: IOHelper, data: FiniteSetUnion_desc) -> FiniteSet:
-#     ...
-#
-# @overload
-# def load(self, h: IOHelper, data: FiniteSetProduct_desc) -> FiniteSetProduct:
-#     ...
-
-
 class FiniteSetRepresentation(ABC):
     @abstractmethod
     def load(self, h: IOHelper, data: FiniteSet_desc) -> FiniteSet:
@@ -167,15 +153,6 @@ class FiniteMonoidRepresentation(ABC):
 
 class FiniteGroup_desc(FiniteMonoid_desc):
     inverse: FiniteMap_desc
-
-
-# INVERSE: Final[str] = "inverse"
-# COMPOSITION: Final[str] = "composition"
-# CARRIER: Final[str] = "carrier"
-
-
-class FinitePoset_desc(TypedDict):
-    pass
 
 
 class FiniteGroupRepresentation(ABC):
@@ -268,7 +245,10 @@ class FiniteProfunctorRepresentation(ABC):
 
 
 class FiniteDP_desc(TypedDict):
-    pass
+    F: FinitePoset_desc
+    R: FinitePoset_desc
+    I: FiniteSet_desc
+    feas: List[List[ConcreteRepr]]
 
 
 class FiniteDPRepresentation(ABC):
