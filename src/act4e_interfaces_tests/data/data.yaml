@@ -35,6 +35,18 @@ rel0: # display in book
     - [a, 2]
     - [c, 3]
 
+monoid2:
+  tags:
+    monoid: true
+  data:
+    carrier:
+      elements: [0, 1]
+    composition:
+    - [[0, 0], 0]
+    - [[0, 1], 0]
+    - [[1, 0], 0]
+    - [[1, 1], 1]
+    neutral: 1
 
 
 rel1:
@@ -253,6 +265,26 @@ G2:
     - [1, 1]
     - [-1, -1]
     neutral: 1
+G2_:
+  tags:
+    group: true
+    monoid: true
+    semigroup: true
+  data:
+    carrier:
+      elements: [-1, 1]
+
+    composition:
+    - [[-1, -1], 1]
+    - [[-1, 1], -1]
+    - [[1, -1], -1]
+    - [[1, 1], 1]
+
+    neutral: 1
+
+    inverse:
+    - [-1, 1]
+    - [1, -1]
 
 
 map1:

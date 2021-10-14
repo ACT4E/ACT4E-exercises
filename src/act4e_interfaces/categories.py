@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Callable, Tuple
+from typing import Callable, Generic, Tuple, TypeVar
 
-from .posets import MonotoneMap, Poset
+from .posets import FinitePoset, MonotoneMap, Poset
 from .relations import FiniteRelation
-from .sets import EnumerableSet, FiniteMap, FiniteSet, Mapping, Setoid
-from .types import Morphism, Object
+from .sets import EnumerableSet, FiniteMap, FiniteSet, Setoid
+from .types import Object
 
 __all__ = [
     "EnumerableSetsOperations",
@@ -37,6 +37,8 @@ __all__ = [
     "DPI",
     "DPConstructors",
 ]
+E1 = TypeVar("E1")
+E2 = TypeVar("E2")
 
 
 class FiniteMapOperations(ABC):
@@ -49,13 +51,34 @@ class FiniteMapOperations(ABC):
         """ Load the data  """
 
 
-class SemiBiCategory(ABC):
+O1 = TypeVar("O1")
+O2 = TypeVar("O2")
+#
+#
+# class BaseMorphism(Generic[O1, O2], ABC):
+#     @abstractmethod
+#     def source(self) -> O1:
+#         pass
+#
+#     @abstractmethod
+#     def target(self) -> O2:
+#         pass
+
+
+Morphism = TypeVar("Morphism")
+
+
+class SemiBiCategory(Generic[Object, Morphism], ABC):
     @abstractmethod
-    def objects(self) -> Setoid:
+    def objects(self) -> Setoid[Object]:
         ...
 
     @abstractmethod
-    def hom(self, ob1: Object, ob2: Object) -> Setoid:
+    def hom(self, ob1: Object, ob2: Object) -> Setoid[Morphism]:
+        ...
+
+    @abstractmethod
+    def compose(self, m1: Morphism, m2: Morphism) -> Morphism:
         ...
 
     @abstractmethod
@@ -63,31 +86,29 @@ class SemiBiCategory(ABC):
         """ Return source and target of the morphism """
 
 
-class SemiCategory(SemiBiCategory, ABC):
+class SemiCategory(Generic[Object, Morphism], SemiBiCategory[Object, Morphism], ABC):
     ...
 
 
-class Category(SemiCategory, ABC):
+class Category(Generic[Object, Morphism], SemiCategory[Object, Morphism], ABC):
     @abstractmethod
     def identity(self, ob: Object) -> Morphism:
         """ Identity for the object """
 
 
-assert [1] + [1, 2] == [1, 1, 2]
-assert [1, 1, 2] + [] == [1, 1, 2]
-
-
-class FiniteSemiCategory(SemiCategory, ABC):
+class FiniteSemiCategory(Generic[Object, Morphism], SemiCategory[Object, Morphism], ABC):
     @abstractmethod
-    def objects(self) -> FiniteSet:
+    def objects(self) -> FiniteSet[Object]:
         ...
 
     @abstractmethod
-    def hom(self, ob1: Object, ob2: Object) -> FiniteSet:
+    def hom(self, ob1: Object, ob2: Object) -> FiniteSet[Morphism]:
         ...
 
 
-class FiniteCategory(FiniteSemiCategory, Category, ABC):
+class FiniteCategory(
+    Generic[Object, Morphism], FiniteSemiCategory[Object, Morphism], Category[Object, Morphism], ABC
+):
     ...
 
 
@@ -245,47 +266,78 @@ class FiniteAdjunctionsOperations(ABC):
         ...
 
 
-class DPI(ABC):
+F = TypeVar("F")
+I = TypeVar("I")
+R = TypeVar("R")
+
+
+class DPI(Generic[F, I, R], ABC):
     @abstractmethod
-    def functionality(self) -> Poset:
+    def functionality(self) -> Poset[F]:
         ...
 
     @abstractmethod
-    def implementations(self) -> Setoid:
+    def implementations(self) -> Setoid[I]:
         ...
 
     @abstractmethod
-    def costs(self) -> Poset:
+    def costs(self) -> Poset[R]:
         ...
 
     @abstractmethod
-    def requires(self) -> Mapping:
+    def requires(self, i: I) -> R:
         ...
 
     @abstractmethod
-    def provides(self) -> Mapping:
+    def provides(self, i: I) -> F:
         ...
 
 
-class DPCategory(Category, ABC):
-    ...
+class FiniteDPI(Generic[F, I, R], DPI[F, I, R], ABC):
+    @abstractmethod
+    def functionality(self) -> FinitePoset[F]:
+        ...
+
+    @abstractmethod
+    def implementations(self) -> FiniteSet[I]:
+        ...
+
+    @abstractmethod
+    def costs(self) -> FinitePoset[R]:
+        ...
 
 
-class DP(ABC):
-    ...
+class DP(Generic[F, R], ABC):
+    @abstractmethod
+    def functionality(self) -> Poset[F]:
+        ...
+
+    @abstractmethod
+    def costs(self) -> Poset[R]:
+        ...
+
+    @abstractmethod
+    def feasible(self, f: F, r: R) -> bool:
+        ...
 
 
-class FiniteDP(ABC):
-    ...
+class FiniteDP(Generic[F, R], DP[F, R], ABC):
+    @abstractmethod
+    def functionality(self) -> FinitePoset[F]:
+        ...
+
+    @abstractmethod
+    def costs(self) -> FinitePoset[R]:
+        ...
 
 
 class DPConstructors(ABC):
     @abstractmethod
-    def companion(self, f: MonotoneMap) -> DP:
+    def companion(self, f: MonotoneMap[E1, E2]) -> DP[E1, E2]:
         ...
 
     @abstractmethod
-    def conjoint(self, f: MonotoneMap) -> DP:
+    def conjoint(self, f: MonotoneMap[E1, E2]) -> DP[E1, E2]:
         ...
 
 
@@ -305,6 +357,10 @@ class FiniteDPOperations(ABC):
     @abstractmethod
     def from_relation(self, f: FiniteRelation) -> FiniteDP:
         ...
+
+
+class DPCategory(Category, ABC):
+    ...
 
 
 class Profunctor(ABC):
