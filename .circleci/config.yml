@@ -5,18 +5,18 @@ workflows:
   version: 2
   test:
     jobs:
-    - test-3.8-staging:
-        context: pip-staging
+    - test-3.8-stage:
+        context: alphabul-stage
         filters:
           branches:
-            only: /z7-stage.*/
-    - test-3.8-production:
-        context: z7-production
+            only: /alphubel-stage.*/
+    - test-3.8-prod:
+        context: alphabul-prod
         filters:
           branches:
-            ignore: /z7-stage.*/
+            only: /alphubel-prod.*/
 jobs:
-  test-3.8-staging:
+  test-3.8-stage:
     environment:
       COLUMNS: '160'
       # default is /usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
@@ -157,7 +157,7 @@ jobs:
         command: |
           bash <(curl -s https://codecov.io/bash)
     resource_class: medium
-  test-3.8-production:
+  test-3.8-prod:
     environment:
       COLUMNS: '160'
       # default is /usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
@@ -299,4 +299,4 @@ jobs:
           bash <(curl -s https://codecov.io/bash)
     resource_class: medium
 
-# sigil 008b06e10a1edb37585e2ff0cfd303c0
+# sigil 701062b54aa79de324c9f5cfab08ce10
