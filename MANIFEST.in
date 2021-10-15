@@ -21,3 +21,5 @@ prune src/*_tests*
 prune out
 
 #@ add local below
+
+graft src/act4e_interfaces_tests
