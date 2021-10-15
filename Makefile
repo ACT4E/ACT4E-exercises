@@ -71,8 +71,7 @@ test:
 
 test-parallel:  
 	mkdir -p  $(tr)
-	DISABLE_CONTRACTS=1 nosetests $(extra) $(coverage) act4e_interfaces_tests  -v --nologcapture $(parallel) $(
-	xunitmp)
+	DISABLE_CONTRACTS=1 nosetests $(extra) $(coverage) act4e_interfaces_tests -v --nologcapture $(parallel) $(xunitmp)
 
 
 test-parallel-circle:
@@ -88,4 +87,4 @@ docs:
 	
 -include extra.mk
         
-# sigil 47a5095aa431da30faeb5498e9b51923
+# sigil e7b002d28f19febc3dc7a083d902a275
