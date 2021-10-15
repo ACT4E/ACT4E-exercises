@@ -37,7 +37,7 @@ install-testing-deps:
 
 	pip install 		pipdeptree==0.13.2		bumpversion		nose==1.3.7		nose2==0.9.2		nose2-html-report==0.6.0		nose-parallel==0.3.1		nose_xunitmp==0.4.1		pre-commit==2.1.1		rednose==1.3.0		coverage==5.0.3		codecov==2.0.16		sphinx		sphinx-rtd-theme
 
-cover_packages=act4e_interfaces,act4e_interfaces_tests
+cover_packages=act4e_interfaces,act4e_interfaces_tests,act4e_interfaces_tests.data
 
 # PROJECT_ROOT ?= /project
 # REGISTRY ?= docker.io
@@ -88,4 +88,4 @@ docs:
 	
 -include extra.mk
         
-# sigil 10ee3c9c04bc91f058bd15d5d5a34b10
+# sigil 47a5095aa431da30faeb5498e9b51923

@@ -11,7 +11,9 @@
   "zip_safe": true,
   "include_package_data": true,
   "modules": [
-    "act4e_interfaces"
+    "act4e_interfaces",
+    "act4e_interfaces_tests",
+    "act4e_interfaces_tests.data"
   ],
   "version": "7.2",
   "author": "",
