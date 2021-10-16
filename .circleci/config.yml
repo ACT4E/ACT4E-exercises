@@ -6,12 +6,12 @@ workflows:
   test:
     jobs:
     - test-3.8-stage:
-        context: alphabul-stage
+        context: alphubel-stage
         filters:
           branches:
             only: /alphubel-stage.*/
     - test-3.8-prod:
-        context: alphabul-prod
+        context: alphubel-prod
         filters:
           branches:
             only: /alphubel-prod.*/
