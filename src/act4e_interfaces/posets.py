@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Generic, List, Optional, overload, Tuple
+from typing import Any, Generic, List, Optional, overload, Sequence, Tuple
 
 from .semigroups import FiniteMonoid, Monoid
 from .sets import (
@@ -10,6 +10,8 @@ from .sets import (
     FiniteMap,
     FiniteSet,
     FiniteSetDisjointUnion,
+    FiniteSetOfFiniteSubsets,
+    FiniteSetProduct,
     Mapping,
     SetDisjointUnion,
     SetOfFiniteSubsets,
@@ -32,7 +34,7 @@ class Poset(Generic[E], ABC):
 
 
 class FinitePoset(Poset[E], ABC):
-    """ Implementation of finite posets. """
+    """Implementation of finite posets."""
 
     @abstractmethod
     def carrier(self) -> FiniteSet[E]:
@@ -42,37 +44,37 @@ class FinitePoset(Poset[E], ABC):
 class FinitePosetSubsetProperties(ABC):
     @abstractmethod
     def is_chain(self, fp: FinitePoset[E], s: List[E]) -> bool:
-        """ True if the given elements form a chain. """
+        """True if the given elements form a chain."""
 
     @abstractmethod
     def is_antichain(self, fp: FinitePoset[E], s: List[E]) -> bool:
-        """ True if the given elements form an antichain. """
+        """True if the given elements form an antichain."""
 
 
 class FinitePosetMeasurement(ABC):
     @abstractmethod
     def width(self, fp: FinitePoset[E]) -> int:
-        """ Return the width of the poset. """
+        """Return the width of the poset."""
 
     @abstractmethod
     def height(self, fp: FinitePoset[E]) -> int:
-        """ Return the height of the poset. """
+        """Return the height of the poset."""
 
 
 class FinitePosetMinMax(ABC):
     @abstractmethod
     def miminal(self, fp: FinitePoset[E], S: List[E]) -> List[E]:
-        """ Return the minimal elements of S """
+        """Return the minimal elements of S"""
 
     @abstractmethod
     def maximal(self, fp: FinitePoset[E], S: List[E]) -> List[E]:
-        """ Return the maximal elements of S """
+        """Return the maximal elements of S"""
 
 
 class FinitePosetInfSup(ABC):
     @abstractmethod
     def lower_bounds(self, fp: FinitePoset[E], s: List[E]) -> List[E]:
-        """ Computes the lower bounds for the subset"""
+        """Computes the lower bounds for the subset"""
 
     @abstractmethod
     def infimum(self, fp: FinitePoset[E], s: List[E]) -> Optional[E]:
@@ -81,7 +83,7 @@ class FinitePosetInfSup(ABC):
 
     @abstractmethod
     def upper_bounds(self, fp: FinitePoset[E], s: List[E]) -> List[E]:
-        """ Computes the upper bounds for the subset. """
+        """Computes the upper bounds for the subset."""
 
     @abstractmethod
     def supremum(self, fp: FinitePoset[E], s: List[E]) -> Optional[E]:
@@ -114,19 +116,23 @@ class FinitePosetClosures(ABC):
 
 class FinitePosetConstructionDiscrete(ABC):
     @overload
+    def discrete(self, s: FiniteSet[E]) -> FinitePoset[E]:
+        """Creates the discrete poset from any set."""
+
+    @overload
     def discrete(self, s: Setoid[E]) -> Poset[E]:
-        """ Creates the discrete poset from any set. """
+        pass
 
     @abstractmethod
-    def discrete(self, s: FiniteSet[E]) -> FinitePoset[E]:
-        """ Creates the discrete poset from any set. """
+    def discrete(self, s: Setoid[E]) -> Poset[E]:
+        """Creates the discrete poset from any set."""
 
 
 ### Subset
 
 
 class PosetOfFiniteSubsets(Generic[C, E], Poset[E], ABC):
-    """ A poset of subsets. """
+    """A poset of subsets."""
 
     @abstractmethod
     def carrier(self) -> SetOfFiniteSubsets[C, E]:
@@ -134,16 +140,22 @@ class PosetOfFiniteSubsets(Generic[C, E], Poset[E], ABC):
 
 
 class FinitePosetOfFiniteSubsets(Generic[C, E], PosetOfFiniteSubsets[C, E], FinitePoset[E], ABC):
-    pass
+    @abstractmethod
+    def carrier(self) -> FiniteSetOfFiniteSubsets[C, E]:
+        ...
 
 
 class PosetConstructionPower(ABC):
     @overload
-    def powerposet(self, s: Poset[C]) -> PosetOfFiniteSubsets[C, E]:
+    def powerposet(self, s: FinitePoset[C]) -> FinitePosetOfFiniteSubsets[C, Any]:
+        ...
+
+    @overload
+    def powerposet(self, s: Poset[C]) -> PosetOfFiniteSubsets[C, Any]:
         ...
 
     @abstractmethod
-    def powerposet(self, s: FinitePoset[C]) -> FinitePosetOfFiniteSubsets[C, E]:
+    def powerposet(self, s: Poset[C]) -> PosetOfFiniteSubsets[C, Any]:
         ...
 
 
@@ -151,36 +163,40 @@ class PosetConstructionPower(ABC):
 
 
 class PosetProduct(Generic[C, E], Poset[E], ABC):
-    """ A poset product is a poset that can be factorized. """
+    """A poset product is a poset that can be factorized."""
 
     @abstractmethod
     def carrier(self) -> SetProduct[C, E]:
-        """ Returns the components of the product"""
+        """Returns the components of the product"""
 
     @abstractmethod
-    def components(self) -> List[Poset[C]]:
-        """ Returns the components of the product"""
+    def components(self) -> Sequence[Poset[C]]:
+        """Returns the components of the product"""
 
     @abstractmethod
-    def pack(self, args: List[C]) -> E:
-        """ Packs an element of each setoid into an element of the mapping"""
+    def pack(self, args: Sequence[C]) -> E:
+        """Packs an element of each setoid into an element of the mapping"""
 
     @abstractmethod
-    def unpack(self, e: E) -> List[C]:
+    def unpack(self, e: E) -> Sequence[C]:
         ...
 
 
 class FinitePosetProduct(Generic[C, E], FinitePoset[E], PosetProduct[C, E], ABC):
-    """ Specialization of PosetProduct where we deal with FinitePosets"""
+    """Specialization of PosetProduct where we deal with FinitePosets"""
 
     @abstractmethod
-    def components(self) -> List[FinitePoset[C]]:
-        """ Returns the components """
+    def carrier(self) -> FiniteSetProduct[C, E]:
+        """Returns the components of the product"""
+
+    @abstractmethod
+    def components(self) -> Sequence[FinitePoset[C]]:
+        """Returns the components"""
 
 
 class FinitePosetConstructionProduct(ABC):
     @abstractmethod
-    def product(self, ps: List[FinitePoset[C]]) -> FinitePoset[E]:
+    def product(self, ps: Sequence[FinitePoset[C]]) -> FinitePoset[E]:
         ...
 
 
@@ -188,36 +204,40 @@ class FinitePosetConstructionProduct(ABC):
 
 
 class PosetDisjointUnion(Generic[C, E], Poset[E], ABC):
-    """ A set product is a setoid that can be factorized in a sum. """
+    """A set product is a setoid that can be factorized in a sum."""
 
     @abstractmethod
     def carrier(self) -> SetDisjointUnion[C, E]:
-        """ Returns the components of the product"""
+        """Returns the components of the product"""
 
     @abstractmethod
-    def components(self) -> List[Poset[C]]:
-        """ Returns the components of the union"""
+    def components(self) -> Sequence[Poset[C]]:
+        """Returns the components of the union"""
 
 
 class FinitePosetDisjointUnion(Generic[C, E], PosetDisjointUnion[C, E], ABC):
-    """ Specialization of SetUnion where we deal with FiniteSets"""
+    """Specialization of SetUnion where we deal with FiniteSets"""
 
     @abstractmethod
     def carrier(self) -> FiniteSetDisjointUnion[C, E]:
-        """ Returns the components of the product"""
+        """Returns the components of the product"""
 
     @abstractmethod
-    def components(self) -> List[FinitePoset[C]]:
-        """ Returns the components of the union """
+    def components(self) -> Sequence[FinitePoset[C]]:
+        """Returns the components of the union"""
 
 
 class FinitePosetConstructionSum(ABC):
     @overload
-    def disjoint_union(self, ps: List[Poset[C]]) -> PosetDisjointUnion[C, E]:
+    def disjoint_union(self, ps: Sequence[FinitePoset[C]]) -> FinitePosetDisjointUnion[C, Any]:
+        ...
+
+    @overload
+    def disjoint_union(self, ps: Sequence[Poset[C]]) -> PosetDisjointUnion[C, Any]:
         ...
 
     @abstractmethod
-    def disjoint_union(self, ps: List[FinitePoset[C]]) -> FinitePosetDisjointUnion[C, E]:
+    def disjoint_union(self, ps: Sequence[Poset[C]]) -> PosetDisjointUnion[C, Any]:
         ...
 
 
@@ -226,11 +246,15 @@ class FinitePosetConstructionSum(ABC):
 
 class FinitePosetConstructionOpposite(ABC):
     @overload
+    def opposite(self, p: FinitePoset[E]) -> FinitePoset[E]:
+        ...
+
+    @overload
     def opposite(self, p: Poset[E]) -> Poset[E]:
         ...
 
     @abstractmethod
-    def opposite(self, p: FinitePoset[E]) -> FinitePoset[E]:
+    def opposite(self, p: Poset[E]) -> Poset[E]:
         ...
 
 
@@ -238,13 +262,13 @@ class FinitePosetConstructionOpposite(ABC):
 
 
 class PosetOfIntervals(Generic[C, E], Poset[E], ABC):
-    """ A poset of intervals. """
+    """A poset of intervals."""
 
     def construct(self, a: C, b: C) -> E:
-        """ Constructs an interval given the boundaries. """
+        """Constructs an interval given the boundaries."""
 
     def boundaries(self, interval: E) -> Tuple[C, C]:
-        """ Returns the boundaries of an interval."""
+        """Returns the boundaries of an interval."""
 
 
 class FinitePosetOfIntervals(Generic[C, E], PosetOfIntervals[C, E], FinitePoset[E], ABC):
@@ -253,21 +277,29 @@ class FinitePosetOfIntervals(Generic[C, E], PosetOfIntervals[C, E], FinitePoset[
 
 class FinitePosetConstructionTwisted(ABC):
     @overload
-    def twisted(self, s: Poset[C]) -> PosetOfIntervals[C, E]:
+    def twisted(self, s: FinitePoset[C]) -> FinitePosetOfIntervals[C, Any]:
+        ...
+
+    @overload
+    def twisted(self, s: Poset[C]) -> PosetOfIntervals[C, Any]:
         ...
 
     @abstractmethod
-    def twisted(self, s: FinitePoset[C]) -> FinitePosetOfIntervals[C, E]:
+    def twisted(self, s: Poset[C]) -> PosetOfIntervals[C, Any]:
         ...
 
 
 class FinitePosetConstructionArrow(ABC):
     @overload
-    def arrow(self, s: Poset[C]) -> PosetOfIntervals[C, E]:
+    def arrow(self, s: FinitePoset[C]) -> FinitePosetOfIntervals[C, Any]:
+        ...
+
+    @overload
+    def arrow(self, s: Poset[C]) -> PosetOfIntervals[C, Any]:
         ...
 
     @abstractmethod
-    def arrow(self, s: FinitePoset[C]) -> FinitePosetOfIntervals[C, E]:
+    def arrow(self, s: Poset[C]) -> PosetOfIntervals[C, Any]:
         ...
 
 
@@ -290,15 +322,15 @@ class FiniteMonotoneMap(Generic[E1, E2], MonotoneMap[E1, E2], ABC):
 class FiniteMonotoneMapProperties(ABC):
     @abstractmethod
     def is_monotone(self, p1: FinitePoset[E1], p2: FinitePoset[E2], m: FiniteMap[E1, E2]) -> bool:
-        """ Check if a map is monotone. """
+        """Check if a map is monotone."""
 
     @abstractmethod
     def is_antitone(self, p1: FinitePoset[E1], p2: FinitePoset[E2], m: FiniteMap[E1, E2]) -> bool:
-        """ Check if a map is antitone. """
+        """Check if a map is antitone."""
 
 
 class MonoidalPoset(Generic[E], ABC):
-    """ Implementation of finite posets. """
+    """Implementation of finite posets."""
 
     @abstractmethod
     def poset(self) -> Poset[E]:
@@ -310,7 +342,7 @@ class MonoidalPoset(Generic[E], ABC):
 
 
 class FiniteMonoidalPoset(Generic[E], MonoidalPoset[E], ABC):
-    """ Implementation of finite posets. """
+    """Implementation of finite posets."""
 
     @abstractmethod
     def poset(self) -> FinitePoset[E]:
@@ -322,11 +354,11 @@ class FiniteMonoidalPoset(Generic[E], MonoidalPoset[E], ABC):
 
 
 class MonoidalPosetOperations(ABC):
-    """ Implementation of finite posets. """
+    """Implementation of finite posets."""
 
     @abstractmethod
     def is_monoidal_poset(self, fp: FinitePoset[E], fm: FiniteMonoid[E]) -> bool:
-        """ Check that the pair of poset and monoid make together a monoidal poset."""
+        """Check that the pair of poset and monoid make together a monoidal poset."""
 
 
 class MeetSemilattice(Generic[E], Poset[E], ABC):

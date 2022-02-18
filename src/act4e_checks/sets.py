@@ -1,7 +1,7 @@
 import itertools
 import traceback
 from functools import partial
-from typing import Callable, Dict, Iterable, Iterator, List, Tuple, TypeVar
+from typing import Any, Callable, cast, Dict, Iterable, Iterator, List, Sequence, Tuple, TypeVar, Union
 
 import zuper_html as zh
 from zuper_commons.types import ZValueError
@@ -10,15 +10,14 @@ from zuper_testint import find_imp, ImplementationFail, TestContext, TestManager
 
 import act4e_interfaces as I
 from .actual_tests import good_fsr
-from .data import (check_good_output, get_test_data, get_test_sets, IOHelperImp, loadit_,
-                   purify_data, TestData)
+from .data import check_good_output, get_test_data, get_test_sets, IOHelperImp, loadit_, purify_data, TestData
 
-E = TypeVar('E')
-X = TypeVar('X')
+E = TypeVar("E")
+X = TypeVar("X")
 
 
 @tfor(I.MakeSetDisjointUnion)
-def test_MakeSetDisjointUnion(tm: TestManagerInterface):
+def test_MakeSetDisjointUnion(tm: TestManagerInterface) -> None:
     tm.addtest(check_set_disjoint_union)
 
 
@@ -26,20 +25,20 @@ def test_MakeSetDisjointUnion(tm: TestManagerInterface):
 def check_set_disjoint_union(tc: TestContext) -> None:
     msd = find_imp(tc, I.MakeSetDisjointUnion)
     fsr = find_imp(tc, I.FiniteSetRepresentation)
-    set_empty = load_set(fsr, 'set_empty')
+    set_empty = load_set(fsr, "set_empty")
 
     set2 = tc.check_result(msd, msd.disjoint_union, I.FiniteSetDisjointUnion, [set_empty, set_empty])
     check_same_set(tc, set2, set_empty)
 
 
-def check_same_element(tc: TestContext, s1: I.FiniteSet[E], a: E, b: E):
+def check_same_element(tc: TestContext, s1: I.FiniteSet[X], a: X, b: X) -> None:
     if not s1.equal(a, b):
         msg = zh.span("Elements are not the same")
         tc.fail(msg, a=a, b=b)
         raise ImplementationFail()
 
 
-def check_same_set(tc: TestContext, s1: I.FiniteSet, s2: I.FiniteSet):
+def check_same_set(tc: TestContext, s1: I.FiniteSet[X], s2: I.FiniteSet[X]) -> None:
     elements1 = list(s1.elements())
     elements2 = list(s2.elements())
     for e1 in elements1:
@@ -55,7 +54,7 @@ def check_same_set(tc: TestContext, s1: I.FiniteSet, s2: I.FiniteSet):
 
 
 @tfor(I.FiniteSetRepresentation, level="Product")
-def test_FiniteSetRepresentationProduct(tm: TestManagerInterface):
+def test_FiniteSetRepresentationProduct(tm: TestManagerInterface) -> None:
     d = get_test_data("set")
     res = {}
     for k, v in d.items():
@@ -68,7 +67,7 @@ def test_FiniteSetRepresentationProduct(tm: TestManagerInterface):
     doit_sets_simple(tm, res)
 
 
-def check_set(tc: TestContext, m: I.FiniteSet):
+def check_set(tc: TestContext, m: I.FiniteSet[X]) -> None:
     n = 0
     for e in m.elements():
         n += 1
@@ -80,7 +79,7 @@ def check_set(tc: TestContext, m: I.FiniteSet):
 
 
 @tfor(I.FiniteSetRepresentation)
-def test_FiniteSetRepresentation(tm: TestManagerInterface):
+def test_FiniteSetRepresentation(tm: TestManagerInterface) -> None:
     d = get_test_data("set")
     res = {}
     for k, v in d.items():
@@ -93,14 +92,14 @@ def test_FiniteSetRepresentation(tm: TestManagerInterface):
     doit_sets(tm, res)
 
 
-def doit_sets(tm: TestManagerInterface, collection2: Dict[str, TestData[I.FiniteSet_desc]]):
-    def dump(tc: TestContext, fmr: I.FiniteSetRepresentation, fi: I.FiniteSet) -> I.FiniteSet_desc:
+def doit_sets(tm: TestManagerInterface, collection2: Dict[str, TestData[I.FiniteSet_desc]]) -> None:
+    def dump(tc: TestContext, fmr: I.FiniteSetRepresentation, fi: I.FiniteSet[Any]) -> I.FiniteSet_desc:
         h = IOHelperImp()
         res = fmr.save(h, fi)
         check_good_output(tc, res)
         return res
 
-    def load(tc: TestContext, fmr: I.FiniteSetRepresentation, data: I.FiniteSet_desc) -> I.FiniteSet:
+    def load(tc: TestContext, fmr: I.FiniteSetRepresentation, data: I.FiniteSet_desc) -> I.FiniteSet[Any]:
         h = IOHelperImp()
         return fmr.load(h, data)
 
@@ -122,7 +121,7 @@ def doit_sets(tm: TestManagerInterface, collection2: Dict[str, TestData[I.Finite
         b = tm.addtest(dump, fsr, good_fs, tid0=f"set-{setname}-dump")
         tm.addtest(load, fsr, b, tid0=f"set-{setname}-load2")
 
-    def check_throws(tc: TestContext, fsr_: I.FiniteSetRepresentation, data: I.FiniteSet_desc):
+    def check_throws(tc: TestContext, fsr_: I.FiniteSetRepresentation, data: I.FiniteSet_desc) -> None:
         h = IOHelperImp()
         try:
             res = fsr_.load(h, data)
@@ -144,14 +143,14 @@ def doit_sets(tm: TestManagerInterface, collection2: Dict[str, TestData[I.Finite
     tm.addtest(check_throws, fsr, {"elements": "what ever"})
 
 
-def doit_sets_simple(tm: TestManagerInterface, collection: Dict[str, TestData[I.FiniteSet_desc]]):
-    def dump(tc: TestContext, fmr: I.FiniteSetRepresentation, fi: I.FiniteSet) -> I.FiniteSet_desc:
+def doit_sets_simple(tm: TestManagerInterface, collection: Dict[str, TestData[I.FiniteSet_desc]]) -> None:
+    def dump(tc: TestContext, fmr: I.FiniteSetRepresentation, fi: I.FiniteSet[Any]) -> I.FiniteSet_desc:
         h = IOHelperImp()
         res = fmr.save(h, fi)
         check_good_output(tc, res)
         return res
 
-    def load(tc: TestContext, fmr: I.FiniteSetRepresentation, data: I.FiniteSet_desc) -> I.FiniteSet:
+    def load(tc: TestContext, fmr: I.FiniteSetRepresentation, data: I.FiniteSet_desc) -> I.FiniteSet[Any]:
         h = IOHelperImp()
         return fmr.load(h, data)
 
@@ -164,12 +163,14 @@ def doit_sets_simple(tm: TestManagerInterface, collection: Dict[str, TestData[I.
         tm.addtest(load, fsr, b, tid0=f"set-{setname}-load2")
 
 
-def tm_load_set(tm: TestManagerInterface, name: str, data: TestRef[I.FiniteSet_desc]):
+def tm_load_set(
+    tm: TestManagerInterface, name: str, data: TestRef[I.FiniteSet_desc]
+) -> TestRef[I.FiniteSet[Any]]:
     h = IOHelperImp()
 
     # if 'data' in data:
     #     raise ValueError(data)
-    def loadit(tc: TestContext, fsr: I.FiniteSetRepresentation, data1: I.FiniteSet_desc):
+    def loadit(tc: TestContext, fsr: I.FiniteSetRepresentation, data1: I.FiniteSet_desc) -> I.FiniteSet[Any]:
         return loadit_(tc, fsr, h, data1, I.FiniteSet)
 
     fsr_ = tm.impof(I.FiniteSetRepresentation)
@@ -177,7 +178,7 @@ def tm_load_set(tm: TestManagerInterface, name: str, data: TestRef[I.FiniteSet_d
 
 
 @tfor(I.MakeSetUnion)
-def test_MakeSetUnion(tm: TestManagerInterface):
+def test_MakeSetUnion(tm: TestManagerInterface) -> None:
     A = good_load_set("set1")
     B = good_load_set("set2")
     msu = tm.impof(I.MakeSetUnion)
@@ -188,9 +189,9 @@ def test_MakeSetUnion(tm: TestManagerInterface):
 
 
 @tfor(I.MakeSetProduct)
-def test_MakeSetProduct(tm: TestManagerInterface):
-    A = good_make_set([1, 2])
-    B = good_make_set(["a", "b"])
+def test_MakeSetProduct(tm: TestManagerInterface) -> None:
+    A: I.FiniteSet[int] = good_make_set([1, 2])
+    B: I.FiniteSet[str] = good_make_set(["a", "b"])
 
     AxB = tm_make_set_product(tm, A, B)
 
@@ -198,8 +199,8 @@ def test_MakeSetProduct(tm: TestManagerInterface):
     tm.addtest(check_save_all_elements, AxB)
 
 
-def tm_make_set_product(tm: TestManagerInterface, *args) -> TestRef:
-    def f(tc: TestContext, imp: I.MakeSetProduct, *components):
+def tm_make_set_product(tm: TestManagerInterface, *args: Any) -> TestRef[I.SetProduct[Any, Any]]:
+    def f(tc: TestContext, imp: I.MakeSetProduct, *components: I.FiniteSet[Any]) -> I.SetProduct[Any, Any]:
         return tc.check_result(imp, imp.product, I.FiniteSetProduct, list(components))
         # return imp.product(list(components))
 
@@ -208,7 +209,7 @@ def tm_make_set_product(tm: TestManagerInterface, *args) -> TestRef:
 
 
 @tfor(I.MakePowerSet)
-def test_MakePowerSet(tm: TestManagerInterface):
+def test_MakePowerSet(tm: TestManagerInterface) -> None:
     mps = tm.impof(I.MakePowerSet)
 
     d = get_test_sets()
@@ -232,7 +233,7 @@ def powerset(iterable: Iterable[X]) -> Iterator[Tuple[X, ...]]:
     return itertools.chain.from_iterable(itertools.combinations(s, r) for r in range(len(s) + 1))
 
 
-def check_powerset(tc: TestContext, fsp: I.MakePowerSet, a: I.FiniteSet):
+def check_powerset(tc: TestContext, fsp: I.MakePowerSet, a: I.FiniteSet[X]) -> None:
     if a.size() > 5:
         return
 
@@ -257,7 +258,7 @@ def check_powerset(tc: TestContext, fsp: I.MakePowerSet, a: I.FiniteSet):
 
 
 @tfor(I.MakeSetIntersection)
-def test_MakeSetIntersection(tm: TestManagerInterface):
+def test_MakeSetIntersection(tm: TestManagerInterface) -> None:
     A = good_load_set("set1")
     B = good_load_set("set2")
     msi = tm.impof(I.MakeSetIntersection)
@@ -266,27 +267,35 @@ def test_MakeSetIntersection(tm: TestManagerInterface):
     tm_check_subset(tm, intersection, B, True, "B-intersection")
 
 
-def tm_check_subset(tm, a, b, expect, tid: str):
+def tm_check_subset(
+    tm: TestManagerInterface,
+    a: Union[I.FiniteSet[X], TestRef[I.FiniteSet[X]]],
+    b: Union[I.FiniteSet[X], TestRef[I.FiniteSet[X]]],
+    expect: bool,
+    tid: str,
+) -> TestRef[None]:
     fsp = tm.impof(I.FiniteSetProperties)
     return tm.addtest(check_subset, fsp, a, b, expect, tid0="subset-" + tid)
 
 
-def set_intersection(tc: TestContext, fso: I.MakeSetIntersection, a: I.FiniteSet, b: I.FiniteSet):
-    return fso.intersection([a, b])
+def set_intersection(
+    tc: TestContext, fso: I.MakeSetIntersection, a: I.FiniteSet[X], b: I.FiniteSet[X]
+) -> I.FiniteSet[X]:
+    return fso.intersection([a, b])  # FIXME: exceptions
 
 
-def set_union(tc: TestContext, fso: I.MakeSetUnion, a: I.FiniteSet, b: I.FiniteSet):
-    return fso.union([a, b])
+def set_union(tc: TestContext, fso: I.MakeSetUnion, a: I.FiniteSet[X], b: I.FiniteSet[X]) -> I.FiniteSet[X]:
+    return fso.union([a, b])  # FIXME: exceptions
 
 
-def test_notnone(tc: TestContext, x):
+def test_notnone(tc: TestContext, x: X) -> X:
     if x is None:
         tc.fail(zh.p("None obtained"))
     return x
 
 
 @tfor(I.FiniteSetProperties)
-def test_FiniteSetProperties(tm: TestManagerInterface):
+def test_FiniteSetProperties(tm: TestManagerInterface) -> None:
     sets = get_test_data("set")
     set1 = tm_load_set(tm, "set1", sets["set1"].data)
     set2 = tm_load_set(tm, "set2", sets["set2"].data)
@@ -297,7 +306,9 @@ def test_FiniteSetProperties(tm: TestManagerInterface):
     # print(yaml.dump(alldata))
 
 
-def check_subset(tc: TestContext, fsp: I.FiniteSetProperties, a: I.FiniteSet, b: I.FiniteSet, expect: bool):
+def check_subset(
+    tc: TestContext, fsp: I.FiniteSetProperties, a: I.FiniteSet[X], b: I.FiniteSet[X], expect: bool
+) -> None:
     res = fsp.is_subset(a, b)
     if res != expect:
         msg = zh.p(
@@ -309,7 +320,7 @@ def check_subset(tc: TestContext, fsp: I.FiniteSetProperties, a: I.FiniteSet, b:
         tc.fail(msg, a=set(a.elements()), b=set(b.elements()))
 
 
-def set_coherence(tc: TestContext, fi: I.FiniteSet):
+def set_coherence(tc: TestContext, fi: I.FiniteSet[X]) -> None:
     a = len(list(fi.elements()))
     b = fi.size()
     if a != b:
@@ -321,7 +332,7 @@ def set_coherence(tc: TestContext, fi: I.FiniteSet):
             tc.fail(zh.p("element in the set is not equal to itself"), element=element)
 
 
-def check_save_all_elements(tc: TestContext, S: I.FiniteSet):
+def check_save_all_elements(tc: TestContext, S: I.FiniteSet[X]) -> None:
     h = IOHelperImp()
     for a in S.elements():
         ra = S.save(h, a)
@@ -340,7 +351,9 @@ def check_save_all_elements(tc: TestContext, S: I.FiniteSet):
             # raise ImplementationFail(msg, element=a, representation=ra, element_reloaded=a2)
 
 
-def check_product(tc: TestContext, A: I.FiniteSet, B: I.FiniteSet, AxB: I.FiniteSetProduct):
+def check_product(
+    tc: TestContext, A: I.FiniteSet[X], B: I.FiniteSet[X], AxB: I.FiniteSetProduct[Any, X]
+) -> None:
     n = A.size() * B.size()
     tc.fail_not_equal2(n, AxB.size(), zh.span("Wrong size"))
 
@@ -365,39 +378,41 @@ def check_product(tc: TestContext, A: I.FiniteSet, B: I.FiniteSet, AxB: I.Finite
     # tc.f_expect_equal2(L(pB, ab), lambda: b, zh.span("Projection pB not working"))
 
     tc.f_expect_equal2(
-        lambda: AxB.contains(1), lambda: False, zh.span('Expected that the element "1" is not contained')
+        lambda: AxB.contains(cast(Any, 1)),
+        lambda: False,
+        zh.span('Expected that the element "1" is not contained'),
     )
     tc.f_expect_equal2(
         lambda: AxB.contains(ab), lambda: True, zh.span("Expected that the element is not contained")
     )
 
 
-def make_values1(s: List[X], f: Callable[[X], X]) -> List:
+def make_values1(s: Sequence[X], f: Callable[[X], X]) -> List[List[X]]:
     return [[x, f(x)] for x in s]
 
 
-def make_values(s: List[X], f: Callable[[X, X], X]) -> List[List[I.ConcreteRepr]]:
+def make_values(s: Sequence[X], f: Callable[[X, X], X]) -> List[Any]:
     return [[[x, y], f(x, y)] for x, y in itertools.product(s, s)]
 
 
-def make_set(s: List[X]) -> I.FiniteSet_desc:
+def make_set(s: List[Any]) -> I.FiniteSet_desc:
     return {"elements": s}
 
 
-def load_set(fsp: I.FiniteSetRepresentation, name: str):
+def load_set(fsp: I.FiniteSetRepresentation, name: str) -> I.FiniteSet[Any]:
     d = get_test_sets()
     h = IOHelperImp()
-    p1 = fsp.load(h, purify_data(d[name].data))
+    p1: I.FiniteSet[Any] = fsp.load(h, purify_data(d[name].data))
     return p1
 
 
-def good_load_set(setname: str):
+def good_load_set(setname: str) -> I.FiniteSet[Any]:
     h = IOHelperImp()
     sets = get_test_data("set")
 
     return good_fsr.load(h, sets[setname].data)
 
 
-def good_make_set(elements: List):
+def good_make_set(elements: Sequence[Any]) -> I.FiniteSet[Any]:
     h = IOHelperImp()
     return good_fsr.load(h, {"elements": list(elements)})

@@ -1,76 +1,81 @@
 import itertools
 from typing import (
+    Any,
     List,
+    TypeVar,
 )
 
 import zuper_html as zh
-from zuper_testint import (find_imp, TestContext, TestManagerInterface, TestRef, tfor)
+from zuper_testint import find_imp, TestContext, TestManagerInterface, TestRef, tfor
 
 import act4e_interfaces as I
 from . import logger
 from .data import dumpit_, get_test_data, get_test_posets, IOHelperImp, loadit_, purify_data
 from .sets import check_same_set
 
-__all__ = []
+__all__: List[str] = []
+X = TypeVar("X")
 
 
 @tfor(I.FinitePosetConstructionProduct)
-def test_FinitePosetConstructionProduct(tm: TestManagerInterface):
+def test_FinitePosetConstructionProduct(tm: TestManagerInterface) -> None:
     mks = tm.impof(I.FinitePosetConstructionProduct)
 
-    p1 = load_the_poset(tm, 'poset_two')
-    p2 = load_the_poset(tm, 'poset_two')
+    p1 = load_the_poset(tm, "poset_two")
+    p2 = load_the_poset(tm, "poset_two")
     tm.addtest(check_product2, mks, p1, p2, tid0=f"check_product-poset_one-poset_one")
 
 
 @tfor(I.FinitePosetConstructionArrow)
-def test_FinitePosetConstructionArrow(tm: TestManagerInterface):
+def test_FinitePosetConstructionArrow(tm: TestManagerInterface) -> None:
     _mks = tm.impof(I.FinitePosetConstructionArrow)
     for poset_name in ["poset_empty", "poset_one", "poset_two"]:
         tm.addtest(check_arrow1, poset_name, tid0=f"FinitePosetConstructionArrow-{poset_name}")
 
 
 @tfor(I.FinitePosetConstructionTwisted)
-def test_FinitePosetConstructionTwisted(tm: TestManagerInterface):
+def test_FinitePosetConstructionTwisted(tm: TestManagerInterface) -> None:
     _mks = tm.impof(I.FinitePosetConstructionTwisted)
     for poset_name in ["poset_empty", "poset_one", "poset_two"]:
         tm.addtest(check_twisted1, poset_name, tid0=f"FinitePosetConstructionTwisted-{poset_name}")
 
 
-def check_arrow1(tc: TestContext, poset_name: str):
+def check_arrow1(tc: TestContext, poset_name: str) -> None:
     mks = find_imp(tc, I.FinitePosetConstructionArrow)
     p = load_poset_tc(tc, poset_name)
     p_arrow = tc.check_result(mks, mks.arrow, I.PosetOfIntervals, p)
 
 
-def check_twisted1(tc: TestContext, poset_name: str):
+def check_twisted1(tc: TestContext, poset_name: str) -> None:
     mks = find_imp(tc, I.FinitePosetConstructionArrow)
     p = load_poset_tc(tc, poset_name)
     p_twisted = tc.check_result(mks, mks.arrow, I.PosetOfIntervals, p)
 
 
 @tfor(I.FinitePosetConstructionArrow)
-def test_twisted_one(tc: TestContext):
+def test_twisted_one(tc: TestContext) -> None:
     mks = find_imp(tc, I.FinitePosetConstructionArrow)
-    p = load_poset_tc(tc, 'poset_one')
-    p_twisted: I.PosetOfIntervals = tc.check_result(mks, mks.arrow, I.PosetOfIntervals, p)
+    p = load_poset_tc(tc, "poset_one")
+    p_twisted: I.FinitePosetOfIntervals[Any, Any] = tc.check_result(
+        mks, mks.arrow, I.FinitePosetOfIntervals, p
+    )
     pairs = [p_twisted.boundaries(_) for _ in p_twisted.carrier().elements()]
 
-    tc.fail_not_equal2(pairs, [(1, 1)], zh.p('Expected only one element'))
+    tc.fail_not_equal2(pairs, [(1, 1)], zh.p("Expected only one element"))
 
 
 @tfor(I.FiniteMonotoneMapProperties)
-def test_FiniteMonotoneMapProperties(tm: TestManagerInterface):
+def test_FiniteMonotoneMapProperties(tm: TestManagerInterface) -> None:
     mks = tm.impof(I.FiniteMonotoneMapProperties)
 
 
 @tfor(I.MonoidalPosetOperations)
-def test_MonoidalPosetOperations(tm: TestManagerInterface):
+def test_MonoidalPosetOperations(tm: TestManagerInterface) -> None:
     mks = tm.impof(I.MonoidalPosetOperations)
 
 
 @tfor(I.FinitePosetRepresentation)
-def test_FinitePosetRepresentation(tm: TestManagerInterface):
+def test_FinitePosetRepresentation(tm: TestManagerInterface) -> None:
     mks = tm.impof(I.FinitePosetRepresentation)
     posets = get_test_posets()
 
@@ -81,13 +86,13 @@ def test_FinitePosetRepresentation(tm: TestManagerInterface):
 
 
 @tfor(I.FinitePosetMeasurement)
-def test_FinitePosetMeasurements(tm: TestManagerInterface):
+def test_FinitePosetMeasurements(tm: TestManagerInterface) -> None:
     mks = tm.impof(I.FinitePosetMeasurement)
 
     d = get_test_posets()
     for rname, rinfo in d.items():
 
-        def get(p):
+        def get(p: Any) -> Any:
             return rinfo.properties.get(p, None)
 
         r1 = tm_load_poset(tm, rname, tm.store(purify_data(rinfo.data)))
@@ -100,19 +105,19 @@ def test_FinitePosetMeasurements(tm: TestManagerInterface):
 
 
 @tfor(I.FinitePosetClosures)
-def test_FinitePosetClosures(tm: TestManagerInterface):
+def test_FinitePosetClosures(tm: TestManagerInterface) -> None:
     mks = tm.impof(I.FinitePosetClosures)
     d = get_test_posets()
 
 
 @tfor(I.FinitePosetConstructionOpposite)
-def test_FinitePosetConstructionOpposite(tm: TestManagerInterface):
+def test_FinitePosetConstructionOpposite(tm: TestManagerInterface) -> None:
     mks = tm.impof(I.FinitePosetConstructionOpposite)
 
     d = get_test_posets()
     for rname, rinfo in d.items():
 
-        def get(p):
+        def get(p: Any) -> Any:
             return rinfo.properties.get(p, None)
 
         r1 = tm_load_poset(tm, rname, tm.store(purify_data(rinfo.data)))
@@ -124,14 +129,18 @@ def test_FinitePosetConstructionOpposite(tm: TestManagerInterface):
             tm.addtest(check_opposite, mks, r1, r2, tid0=f"check_opposite-{rname}-{rname2}")
 
 
-def check_poset_width(tc: TestContext, frp: I.FinitePosetMeasurement, s: I.FinitePoset, width: int):
+def check_poset_width(
+    tc: TestContext, frp: I.FinitePosetMeasurement, s: I.FinitePoset[Any], width: int
+) -> None:
     res = tc.check_result(frp, frp.width, int, s)
     if res != width:
         msg = zh.span(f"Expected width = {width}, obtained {res}.")
         tc.fail(msg)
 
 
-def check_poset_height(tc: TestContext, frp: I.FinitePosetMeasurement, s: I.FinitePoset, height: int):
+def check_poset_height(
+    tc: TestContext, frp: I.FinitePosetMeasurement, s: I.FinitePoset[Any], height: int
+) -> None:
     res = tc.check_result(frp, frp.height, int, s)
     if res != height:
         msg = zh.span(f"Expected height = {height}, obtained {res}.")
@@ -139,9 +148,9 @@ def check_poset_height(tc: TestContext, frp: I.FinitePosetMeasurement, s: I.Fini
 
 
 def check_opposite(
-    tc: TestContext, frp: I.FinitePosetConstructionOpposite, p: I.FinitePoset, p_op: I.FinitePoset
-):
-    p_op2 = tc.check_result(frp, frp.opposite, I.FinitePoset, p)
+    tc: TestContext, frp: I.FinitePosetConstructionOpposite, p: I.FinitePoset[X], p_op: I.FinitePoset[X]
+) -> None:
+    p_op2: I.FinitePoset[X] = tc.check_result(frp, frp.opposite, I.FinitePoset, p)  # type: ignore
     # logger.info(p=p, p_op=p_op, p_op2=p_op2)
     check_same_poset(tc, p_op, p_op2)
 
@@ -151,13 +160,13 @@ def check_opposite(
     for a, b in itertools.product(elements, elements):
         h = p.holds(a, b)
         h1 = p_op.holds(b, a)
-        tc.fail_not_equal2(h, h1, zh.span('Poset is not opposite'), a=a, b=b)
+        tc.fail_not_equal2(h, h1, zh.span("Poset is not opposite"), a=a, b=b)
 
     # p2 = tc.check_result(frp, frp.opposite, I.FinitePoset, p_op)
     # check_same_poset(tc, p, p2)
 
 
-def check_same_poset(tc: TestContext, s1: I.FinitePoset, s2: I.FinitePoset):
+def check_same_poset(tc: TestContext, s1: I.FinitePoset[X], s2: I.FinitePoset[X]) -> None:
     check_same_set(tc, s1.carrier(), s2.carrier())
 
     es = list(s1.carrier().elements())
@@ -172,12 +181,12 @@ def check_same_poset(tc: TestContext, s1: I.FinitePoset, s2: I.FinitePoset):
 
 
 @tfor(I.FinitePosetSubsetProperties)
-def test_FinitePosetSubsetProperties(tm: TestManagerInterface):
+def test_FinitePosetSubsetProperties(tm: TestManagerInterface) -> None:
     mks = tm.impof(I.FinitePosetSubsetProperties)
     d = get_test_posets()
     for rname, rinfo in d.items():
 
-        def get(p):
+        def get(p: Any) -> Any:
             return rinfo.properties.get(p, {})
 
         r1 = tm_load_poset(tm, rname, tm.store(purify_data(rinfo.data)))
@@ -196,12 +205,12 @@ def test_FinitePosetSubsetProperties(tm: TestManagerInterface):
 
 
 @tfor(I.FinitePosetSubsetProperties2)
-def test_FinitePosetSubsetProperties2(tm: TestManagerInterface):
+def test_FinitePosetSubsetProperties2(tm: TestManagerInterface) -> None:
     mks = tm.impof(I.FinitePosetSubsetProperties2)
     d = get_test_posets()
     for rname, rinfo in d.items():
 
-        def get(p):
+        def get(p: Any) -> Any:
             return rinfo.properties.get(p, {})
 
         r1 = tm_load_poset(tm, rname, tm.store(purify_data(rinfo.data)))
@@ -222,10 +231,10 @@ def test_FinitePosetSubsetProperties2(tm: TestManagerInterface):
 def check_is_upperset(
     tc: TestContext,
     frp: I.FinitePosetSubsetProperties2,
-    s: I.FinitePoset,
+    s: I.FinitePoset[Any],
     subset: List[I.ConcreteRepr],
     expect: bool,
-):
+) -> None:
     # TODO: wrap for safety
     h = IOHelperImp()
     carrier = s.carrier()
@@ -240,10 +249,10 @@ def check_is_upperset(
 def check_is_lowerset(
     tc: TestContext,
     frp: I.FinitePosetSubsetProperties2,
-    s: I.FinitePoset,
+    s: I.FinitePoset[Any],
     subset: List[I.ConcreteRepr],
     expect: bool,
-):
+) -> None:
     # TODO: wrap for safety
     h = IOHelperImp()
     carrier = s.carrier()
@@ -258,10 +267,10 @@ def check_is_lowerset(
 def check_is_chain(
     tc: TestContext,
     frp: I.FinitePosetSubsetProperties,
-    s: I.FinitePoset,
+    s: I.FinitePoset[Any],
     subset: List[I.ConcreteRepr],
     expect: bool,
-):
+) -> None:
     # TODO: wrap for safety
     h = IOHelperImp()
     carrier = s.carrier()
@@ -276,10 +285,10 @@ def check_is_chain(
 def check_is_antichain(
     tc: TestContext,
     frp: I.FinitePosetSubsetProperties,
-    s: I.FinitePoset,
+    s: I.FinitePoset[Any],
     subset: List[I.ConcreteRepr],
     expect: bool,
-):
+) -> None:
     h = IOHelperImp()
     carrier = s.carrier()
     elements = [carrier.load(h, _) for _ in subset]
@@ -290,8 +299,9 @@ def check_is_antichain(
         tc.fail(msg)
 
 
-def check_product2(tc: TestContext, frp: I.FinitePosetConstructionProduct, p1: I.FinitePoset,
-                   p2: I.FinitePoset):
+def check_product2(
+    tc: TestContext, frp: I.FinitePosetConstructionProduct, p1: I.FinitePoset[Any], p2: I.FinitePoset[Any]
+) -> None:
     logger.info(frp=frp, p1=p1, p2=p2)
     p1_p2 = tc.check_result(frp, frp.product, I.FinitePoset, [p1, p2])
     logger.info(p1_p2=p1_p2)
@@ -299,47 +309,55 @@ def check_product2(tc: TestContext, frp: I.FinitePosetConstructionProduct, p1: I
     elements = list(carrier.elements())
     logger.info(elements=list(carrier.elements()))
     e0 = elements[0]
-    tc.fail_not_equal2(True, p1_p2.holds(e0, e0), zh.p('p1_p2.holds(e0, e0)'))
+    tc.fail_not_equal2(True, p1_p2.holds(e0, e0), zh.p("p1_p2.holds(e0, e0)"))
 
 
-def load_the_poset(tm: TestManagerInterface, name: str):
+def load_the_poset(tm: TestManagerInterface, name: str) -> TestRef[I.FinitePoset[Any]]:
     d = get_test_posets()
     p1 = tm_load_poset(tm, name, tm.store(purify_data(d[name].data)))
     return p1
 
 
-def tm_load_poset(tm: TestManagerInterface, name: str, data: TestRef[I.FinitePoset_desc]) -> TestRef[
-    I.FinitePoset]:
+def tm_load_poset(
+    tm: TestManagerInterface, name: str, data: TestRef[I.FinitePoset_desc]
+) -> TestRef[I.FinitePoset[Any]]:
     h = IOHelperImp()
 
-    def loadit(tc: TestContext, fsr: I.FinitePosetRepresentation, data1: I.FinitePoset_desc) -> I.FinitePoset:
+    def loadit(
+        tc: TestContext, fsr: I.FinitePosetRepresentation, data1: I.FinitePoset_desc
+    ) -> I.FinitePoset[Any]:
         return loadit_(tc, fsr, h, data1, I.FinitePoset)
 
     fsr_ = tm.impof(I.FinitePosetRepresentation)
     return tm.addtest(loadit, fsr_, data, tid0=f"load-poset-{name}")
 
 
-def tm_save_poset(tm: TestManagerInterface, name: str, sgr: TestRef):
+def tm_save_poset(
+    tm: TestManagerInterface, name: str, sgr: TestRef[I.FinitePoset[Any]]
+) -> TestRef[I.FinitePoset_desc]:
     h = IOHelperImp()
 
-    def dumpit(tc: TestContext, fsr: I.FinitePosetRepresentation, sgr_: I.FinitePoset) -> I.FinitePoset_desc:
+    def dumpit(
+        tc: TestContext, fsr: I.FinitePosetRepresentation, sgr_: I.FinitePoset[Any]
+    ) -> I.FinitePoset_desc:
         return dumpit_(tc, fsr, h, sgr_)
 
     fsr_ = tm.impof(I.FinitePosetRepresentation)
     return tm.addtest(dumpit, fsr_, sgr, tid0=f"dump-poset-{name}")
 
 
-def load_poset_tc(tc: TestContext, name: str):
+def load_poset_tc(tc: TestContext, name: str) -> I.FinitePoset[Any]:
     fsr = find_imp(tc, I.FinitePosetRepresentation)
     data1 = get_poset_data(name)
     h = IOHelperImp()
     return loadit_(tc, fsr, h, data1, I.FinitePoset)
 
 
-def get_poset_data(name: str):
+def get_poset_data(name: str) -> I.FinitePoset_desc:
     d = get_test_data("poset")
     data1 = purify_data(d[name].data)
     return data1
+
 
 #
 # def load_group_tc(tc: TestContext, name: str):

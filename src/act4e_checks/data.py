@@ -3,19 +3,19 @@ from dataclasses import dataclass
 from datetime import datetime
 from functools import lru_cache
 from io import StringIO
-from typing import Any, Dict, Generic, TypeVar
+from typing import Any, Dict, Generic, Protocol, Type, TypeVar
 
+import act4e_interfaces as I
 import ruamel.yaml as yaml
 import zuper_html as zh
+from act4e_interfaces_tests.loading import load_test_data_file
 from ruamel.yaml import RoundTripLoader, YAML
 from zuper_commons.types import ZValueError
 from zuper_testint import ImplementationFail, TestContext
 
-import act4e_interfaces as I
-from act4e_interfaces_tests.loading import load_test_data_file
 from . import logger
 
-X = TypeVar('X')
+X = TypeVar("X")
 
 
 @dataclass
@@ -74,7 +74,7 @@ ENV_VAR = "ACT4E_DATA"
 
 
 @lru_cache()
-def get_all_test_data() -> Dict[str, TestData[X]]:
+def get_all_test_data() -> Dict[str, TestData[Any]]:
     from_env = os.environ.get(ENV_VAR, None)
     if from_env:
         logger.info(f"loading data from environment variable {ENV_VAR} = {from_env}")
@@ -83,11 +83,12 @@ def get_all_test_data() -> Dict[str, TestData[X]]:
     else:
         msg = (
             f"Using embedded data. You can use the environment variable {ENV_VAR} to give a different yaml "
-            "file.")
+            "file."
+        )
         logger.info(msg)
         data = load_test_data_file("data.yaml")
     d = yaml.load(data, Loader=RoundTripLoader)
-    res = {}
+    res: Dict[str, TestData[Any]] = {}
     for k, v in d.items():
 
         vv = dict(v)
@@ -119,11 +120,11 @@ def get_all_test_data() -> Dict[str, TestData[X]]:
     return res
 
 
-def purify_data(a):
-    """ Strip comments etc."""
+def purify_data(a: X) -> X:
+    """Strip comments etc."""
     loader = YAML()
     loader.indent(mapping=4, sequence=4, offset=2)
-    loader.preserve_quotes = True
+    loader.preserve_quotes = True  # type: ignore
     loader.default_flow_style = False
     i = StringIO()
     loader.dump(a, i)
@@ -144,7 +145,7 @@ def get_test_sets() -> Dict[str, TestData[I.FiniteSet_desc]]:
     return get_test_data("set")
 
 
-def get_test_data(tagname: str) -> Dict[str, TestData[X]]:
+def get_test_data(tagname: str) -> Dict[str, TestData[Any]]:
     alldata = get_all_test_data()
     res = {}
     for k, v in alldata.items():
@@ -155,11 +156,28 @@ def get_test_data(tagname: str) -> Dict[str, TestData[X]]:
 
 
 class IOHelperImp(I.IOHelper):
-    def loadfile(self, name: str) -> dict:
+    def loadfile(self, name: str) -> Dict[str, Any]:
         raise NotImplementedError(name)
 
 
-def dumpit_(tc: TestContext, fsr, h, ob):
+Rcov = TypeVar("Rcov", covariant=True)
+Rcon = TypeVar("Rcon", contravariant=True)
+
+Xcov = TypeVar("Xcov", covariant=True)
+Xcon = TypeVar("Xcon", contravariant=True)
+
+
+class Loader(Protocol[Xcov, Rcon]):
+    def load(self, h: I.IOHelper, data: Rcon) -> Xcov:
+        ...
+
+
+class Saver(Protocol[Xcon, Rcov]):
+    def save(self, h: I.IOHelper, ob: Xcon) -> Rcov:
+        ...
+
+
+def dumpit_(tc: TestContext, fsr: Saver[Xcon, Rcov], h: I.IOHelper, ob: Xcon) -> Rcov:
     KN = type(fsr).__name__
 
     try:
@@ -176,7 +194,7 @@ def dumpit_(tc: TestContext, fsr, h, ob):
     return res
 
 
-def loadit_(tc: TestContext, loader, h, data, K: type):
+def loadit_(tc: TestContext, loader: Loader[Xcov, Rcon], h: I.IOHelper, data: Rcon, K: type) -> Xcov:
     LN = type(loader).__name__
     try:
         res = loader.load(h, data)

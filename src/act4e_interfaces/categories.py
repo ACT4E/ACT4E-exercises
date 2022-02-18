@@ -1,19 +1,17 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Callable, Generic, Tuple, TypeVar
+from typing import Any, Generic, Tuple, TypeVar
 
-from .posets import FinitePoset, MonotoneMap, Poset
+from . import Poset
+from .dps import DP
 from .relations import FiniteRelation
-from .sets import EnumerableSet, FiniteMap, FiniteSet, Setoid
+from .sets import FiniteSet, FiniteSetProduct, Setoid, SetProduct
 from .types import Object
 
 __all__ = [
-    "EnumerableSetsOperations",
-    "SetoidOperations",
     "MonoidalCategory",
     "MonoidalCategory",
-    "FiniteDP",
     "FiniteProfunctor",
     "FiniteFunctor",
     "FiniteAdjunction",
@@ -22,54 +20,34 @@ __all__ = [
     "FiniteEnrichedCategory",
     "FiniteSemiCategory",
     "FiniteCategoryOperations",
-    "FiniteDPOperations",
     "FiniteAdjunctionsOperations",
     "FiniteProfunctorOperations",
-    "FiniteMapOperations",
     "FiniteNaturalTransformation",
     "Adjunction",
     "SemiCategory",
     "SemiBiCategory",
     "Category",
     "CategoryOperations",
-    "DP",
     "DPCategory",
-    "DPI",
-    "DPConstructors",
 ]
 E1 = TypeVar("E1")
 E2 = TypeVar("E2")
 
-A = TypeVar('A')
-B = TypeVar('B')
-C = TypeVar('C')
-
-
-class FiniteMapOperations(ABC):
-    @abstractmethod
-    def compose(self, f: I.FiniteMap[A, B], g: I.FiniteMap[B, C]) -> FiniteMap[A, C]:
-        """ compose two functions"""
-
-    @abstractmethod
-    def as_relation(self, f: FiniteMap[A, B]) -> FiniteRelation[A, B]:
-        """ Load the data  """
-
+A = TypeVar("A")
+B = TypeVar("B")
+C = TypeVar("C")
 
 O1 = TypeVar("O1")
 O2 = TypeVar("O2")
-#
-#
-# class BaseMorphism(Generic[O1, O2], ABC):
-#     @abstractmethod
-#     def source(self) -> O1:
-#         pass
-#
-#     @abstractmethod
-#     def target(self) -> O2:
-#         pass
-
 
 Morphism = TypeVar("Morphism")
+
+Object1 = TypeVar("Object1")
+Morphism1 = TypeVar("Morphism1")
+Object2 = TypeVar("Object2")
+Morphism2 = TypeVar("Morphism2")
+Object3 = TypeVar("Object3")
+Morphism3 = TypeVar("Morphism3")
 
 
 class SemiBiCategory(Generic[Object, Morphism], ABC):
@@ -87,7 +65,7 @@ class SemiBiCategory(Generic[Object, Morphism], ABC):
 
     @abstractmethod
     def legs(self, m: Morphism) -> Tuple[Object, Object]:
-        """ Return source and target of the morphism """
+        """Return source and target of the morphism"""
 
 
 class SemiCategory(Generic[Object, Morphism], SemiBiCategory[Object, Morphism], ABC):
@@ -97,7 +75,7 @@ class SemiCategory(Generic[Object, Morphism], SemiBiCategory[Object, Morphism], 
 class Category(Generic[Object, Morphism], SemiCategory[Object, Morphism], ABC):
     @abstractmethod
     def identity(self, ob: Object) -> Morphism:
-        """ Identity for the object """
+        """Identity for the object"""
 
 
 class FiniteSemiCategory(Generic[Object, Morphism], SemiCategory[Object, Morphism], ABC):
@@ -118,308 +96,226 @@ class FiniteCategory(
 
 class CategoryOperations:
     @abstractmethod
-    def product(self, c1: Category, c2: Category) -> Category:
-        """ Product of two categories. """
+    def product(
+        self, c1: Category[Object, Morphism], c2: Category[Object, Morphism]
+    ) -> Category[SetProduct[Any, Object], SetProduct[Any, Morphism]]:
+        """Product of two categories."""
 
     @abstractmethod
-    def disjoint_union(self, c1: Category, c2: Category) -> FiniteCategory:
-        """ Disjoint union for the categories """
+    def disjoint_union(
+        self, c1: Category[Object, Morphism], c2: Category[Object, Morphism]
+    ) -> Category[Any, Any]:  # TODO: better types
+        """Disjoint union for the categories"""
 
     @abstractmethod
-    def arrow(self, c1: Category) -> Category:
-        """ Computes the arrow category """
+    def arrow(self, c1: Category[Object, Morphism]) -> Category[Any, Any]:  # TODO: better types
+        """Computes the arrow category"""
 
     @abstractmethod
-    def twisted(self, c1: Category) -> Category:
-        """ Computes the twisted arrow category """
+    def twisted(self, c1: Category[Object, Morphism]) -> Category[Any, Any]:  # TODO: better types
+        """Computes the twisted arrow category"""
 
 
 class FiniteCategoryOperations:
     @abstractmethod
-    def product(self, c1: FiniteCategory, c2: FiniteCategory) -> FiniteCategory:
-        """ Product of two categories. """
+    def product(
+        self, c1: Category[Object, Morphism], c2: Category[Object, Morphism]
+    ) -> Category[FiniteSetProduct[Any, Object], FiniteSetProduct[Any, Morphism]]:
+        """Product of two categories."""
 
     @abstractmethod
-    def disjoint_union(self, c1: FiniteCategory, c2: FiniteCategory) -> FiniteCategory:
-        """ Disjoint union for the categories """
+    def disjoint_union(
+        self, c1: FiniteCategory[Object, Morphism], c2: FiniteCategory[Object, Morphism]
+    ) -> FiniteCategory[Any, Any]:  # TODO: better types
+
+        """Disjoint union for the categories"""
 
     @abstractmethod
-    def arrow(self, c1: FiniteCategory) -> FiniteCategory:
-        """ Computes the arrow category """
+    def arrow(self, c1: FiniteCategory[Object, Morphism]) -> FiniteCategory[Any, Any]:  # TODO: better types
+        """Computes the arrow category"""
 
     @abstractmethod
-    def twisted_arrow(self, c1: FiniteCategory) -> FiniteCategory:
-        """ Computes the twisted arrow category """
+    def twisted_arrow(
+        self, c1: FiniteCategory[Object, Morphism]
+    ) -> FiniteCategory[Any, Any]:  # TODO: better types
+        """Computes the twisted arrow category"""
 
 
-class Functor(ABC):
+class Functor(Generic[Object1, Morphism1, Object2, Morphism2], ABC):
     @abstractmethod
-    def source(self) -> Category:
+    def source(self) -> Category[Object1, Morphism1]:
         ...
 
     @abstractmethod
-    def target(self) -> Category:
+    def target(self) -> Category[Object2, Morphism2]:
         ...
 
     @abstractmethod
-    def f_ob(self, ob: Object) -> Object:
-        """ Effect on objects """
+    def f_ob(self, ob: Object1) -> Object2:
+        """Effect on objects"""
 
     @abstractmethod
-    def f_mor(self, m: Morphism) -> Morphism:
-        """ Effect on morphisms """
+    def f_mor(self, m: Morphism1) -> Morphism2:
+        """Effect on morphisms"""
 
 
-class FiniteFunctor(Functor, ABC):
+class FiniteFunctor(
+    Generic[Object1, Morphism1, Object2, Morphism2], Functor[Object1, Morphism1, Object2, Morphism2], ABC
+):
     @abstractmethod
-    def source(self) -> FiniteCategory:
+    def source(self) -> FiniteCategory[Object1, Morphism1]:
         ...
 
     @abstractmethod
-    def target(self) -> FiniteCategory:
+    def target(self) -> FiniteCategory[Object2, Morphism2]:
         ...
 
 
-class MonoidalCategory(Category, ABC):
+class MonoidalCategory(Generic[Object, Morphism], Category[Object, Morphism], ABC):
     @abstractmethod
     def monoidal_unit(self) -> Object:
-        """ Return the product functor. """
+        """Return the product functor."""
 
     @abstractmethod
-    def monoidal_product(self) -> FiniteFunctor:
-        """ Return the product functor. """
+    def monoidal_product(self) -> FiniteFunctor[Object, Morphism, Object, Morphism]:  # XXX: to check
+        """Return the product functor."""
 
 
-class FiniteMonoidalCategory(MonoidalCategory, FiniteCategory, ABC):
+class FiniteMonoidalCategory(
+    Generic[Object, Morphism], MonoidalCategory[Object, Morphism], FiniteCategory[Object, Morphism], ABC
+):
     ...
 
 
-class NaturalTransformation(ABC):
+class NaturalTransformation(Generic[Object1, Morphism1, Object2, Morphism2], ABC):
     @abstractmethod
-    def cat1(self) -> Category:
+    def cat1(self) -> Category[Object1, Morphism1]:
         ...
 
     @abstractmethod
-    def cat2(self) -> Category:
+    def cat2(self) -> Category[Object2, Morphism2]:
         ...
 
     @abstractmethod
-    def component(self, ob: Object) -> Morphism:
+    def component(self, ob: Object1) -> Morphism2:
         """Returns the component for a particular object in the first category.
         This is a morphism in the second category.
         """
 
 
-class FiniteNaturalTransformation(NaturalTransformation, ABC):
+class FiniteNaturalTransformation(
+    Generic[Object1, Morphism1, Object2, Morphism2],
+    NaturalTransformation[Object1, Morphism1, Object2, Morphism2],
+    ABC,
+):
     @abstractmethod
-    def cat1(self) -> FiniteCategory:
+    def cat1(self) -> FiniteCategory[Object1, Morphism1]:
         ...
 
     @abstractmethod
-    def cat2(self) -> FiniteCategory:
+    def cat2(self) -> FiniteCategory[Object2, Morphism2]:
         ...
 
 
-class Adjunction(ABC):
+class Adjunction(Generic[Object1, Morphism1, Object2, Morphism2], ABC):
     @abstractmethod
-    def source(self) -> Category:
+    def source(self) -> Category[Object1, Morphism1]:
         ...
 
     @abstractmethod
-    def target(self) -> Category:
+    def target(self) -> Category[Object2, Morphism2]:
         ...
 
     @abstractmethod
-    def left(self) -> Functor:
+    def left(self) -> Functor[Object1, Morphism1, Object2, Morphism2]:
         ...
 
     @abstractmethod
-    def right(self) -> Functor:
+    def right(self) -> Functor[Object2, Morphism2, Object1, Morphism1]:
         ...
 
 
-class FiniteAdjunction(Adjunction, ABC):
+class FiniteAdjunction(
+    Generic[Object1, Morphism1, Object2, Morphism2], Adjunction[Object1, Morphism1, Object2, Morphism2], ABC
+):
     @abstractmethod
-    def source(self) -> FiniteCategory:
+    def source(self) -> FiniteCategory[Object1, Morphism1]:
         ...
 
     @abstractmethod
-    def target(self) -> FiniteCategory:
+    def target(self) -> FiniteCategory[Object2, Morphism2]:
         ...
 
     @abstractmethod
-    def left(self) -> FiniteFunctor:
+    def left(self) -> FiniteFunctor[Object1, Morphism1, Object2, Morphism2]:
         ...
 
     @abstractmethod
-    def right(self) -> FiniteFunctor:
+    def right(self) -> FiniteFunctor[Object2, Morphism2, Object1, Morphism1]:
         ...
 
 
 class FiniteAdjunctionsOperations(ABC):
     @abstractmethod
-    def is_adjunction(self, left: FiniteFunctor, right: FiniteFunctor) -> bool:
-        """ check the pair is an adjunction """
+    def is_adjunction(
+        self,
+        left: FiniteFunctor[Object1, Morphism1, Object2, Morphism2],
+        right: FiniteFunctor[Object2, Morphism2, Object1, Morphism1],
+    ) -> bool:
+        """check the pair is an adjunction"""
 
     @abstractmethod
-    def compose(self, adj1: FiniteAdjunction, adj2: FiniteAdjunction) -> FiniteAdjunction:
-        """ compose two compatible adjunctions"""
+    def compose(
+        self,
+        adj1: FiniteAdjunction[Object1, Morphism1, Object2, Morphism2],
+        adj2: FiniteAdjunction[Object2, Morphism2, Object3, Morphism3],
+    ) -> FiniteAdjunction[Object1, Morphism1, Object3, Morphism3]:
+        """compose two compatible adjunctions"""
 
     @abstractmethod
-    def from_relation(self, f: FiniteRelation) -> FiniteAdjunction:
+    def from_relation(self, f: FiniteRelation[A, B]) -> FiniteAdjunction[Any, Any, Any, Any]:  # TODO: type
         ...
-
-
-F = TypeVar("F")
-I = TypeVar("I")
-R = TypeVar("R")
-
-
-class DPI(Generic[F, I, R], ABC):
-    @abstractmethod
-    def functionality(self) -> Poset[F]:
-        ...
-
-    @abstractmethod
-    def implementations(self) -> Setoid[I]:
-        ...
-
-    @abstractmethod
-    def costs(self) -> Poset[R]:
-        ...
-
-    @abstractmethod
-    def requires(self, i: I) -> R:
-        ...
-
-    @abstractmethod
-    def provides(self, i: I) -> F:
-        ...
-
-
-class FiniteDPI(Generic[F, I, R], DPI[F, I, R], ABC):
-    @abstractmethod
-    def functionality(self) -> FinitePoset[F]:
-        ...
-
-    @abstractmethod
-    def implementations(self) -> FiniteSet[I]:
-        ...
-
-    @abstractmethod
-    def costs(self) -> FinitePoset[R]:
-        ...
-
-
-class DP(Generic[F, R], ABC):
-    @abstractmethod
-    def functionality(self) -> Poset[F]:
-        ...
-
-    @abstractmethod
-    def costs(self) -> Poset[R]:
-        ...
-
-    @abstractmethod
-    def feasible(self, f: F, r: R) -> bool:
-        ...
-
-
-class FiniteDP(Generic[F, R], DP[F, R], ABC):
-    @abstractmethod
-    def functionality(self) -> FinitePoset[F]:
-        ...
-
-    @abstractmethod
-    def costs(self) -> FinitePoset[R]:
-        ...
-
-
-class DPConstructors(ABC):
-    @abstractmethod
-    def companion(self, f: MonotoneMap[E1, E2]) -> DP[E1, E2]:
-        ...
-
-    @abstractmethod
-    def conjoint(self, f: MonotoneMap[E1, E2]) -> DP[E1, E2]:
-        ...
-
-
-class FiniteDPOperations(ABC):
-    @abstractmethod
-    def series(self, dp1: FiniteDP, dp2: FiniteDP) -> FiniteDP:
-        ...
-
-    @abstractmethod
-    def union(self, dp1: FiniteDP, dp2: FiniteDP) -> FiniteDP:
-        ...
-
-    @abstractmethod
-    def intersection(self, dp1: FiniteDP, dp2: FiniteDP) -> FiniteDP:
-        ...
-
-    @abstractmethod
-    def from_relation(self, f: FiniteRelation) -> FiniteDP:
-        ...
-
-
-class DPCategory(Category, ABC):
-    ...
 
 
 class Profunctor(ABC):
-    def source(self) -> Category:
-        ...
-
-    def target(self) -> Category:
-        ...
-
-    def functor(self) -> Functor:
-        ...
+    pass
+    #
+    # def source(self) -> Category:
+    #     ...
+    #
+    # def target(self) -> Category:
+    #     ...
+    #
+    # def functor(self) -> Functor:
+    #     ...
 
 
 class FiniteProfunctor(ABC):
-    def cat1(self) -> FiniteCategory:
-        ...
-
-    def cat2(self) -> FiniteCategory:
-        ...
-
-    def functor(self) -> FiniteFunctor:
-        ...
+    pass
+    #
+    # def cat1(self) -> FiniteCategory:
+    #     ...
+    #
+    # def cat2(self) -> FiniteCategory:
+    #     ...
+    #
+    # def functor(self) -> FiniteFunctor:
+    #     ...
 
 
 class FiniteProfunctorOperations(ABC):
-    @abstractmethod
-    def series(self, p1: FiniteProfunctor, p2: FiniteProfunctor) -> FiniteProfunctor:
-        ...
+    pass
+    #
+    # @abstractmethod
+    # def series(self, p1: FiniteProfunctor, p2: FiniteProfunctor) -> FiniteProfunctor:
+    #     ...
 
 
-class FiniteEnrichedCategory(FiniteCategory, ABC):
-    def enrichment(self) -> FiniteMonoidalCategory:
-        ...
+class FiniteEnrichedCategory(Generic[Object, Morphism], FiniteCategory[Object, Morphism], ABC):
+    pass
+    # def enrichment(self) -> FiniteMonoidalCategory:
+    #     ...
 
 
-class SetoidOperations(ABC):
-    @classmethod
-    @abstractmethod
-    def union_setoids(cls, a: Setoid, b: Setoid) -> Setoid:
-        """ Creates the union of two Setoids. """
-
-    @classmethod
-    @abstractmethod
-    def intersection_setoids(cls, a: Setoid, b: Setoid) -> Setoid:
-        """ Creates the intersection of two Setoids. """
-
-
-class EnumerableSetsOperations(ABC):
-    @classmethod
-    @abstractmethod
-    def make_set_sequence(cls, f: Callable[[int], object]):
-        """Creates an EnumerableSet from a function that gives the
-        i-th element."""
-
-    @classmethod
-    @abstractmethod
-    def union_esets(cls, a: EnumerableSet, b: EnumerableSet) -> EnumerableSet:
-        """ Creates the union of two EnumerableSet. """
+class DPCategory(Category[Poset[Any], DP[Any, Any]], ABC):
+    ...

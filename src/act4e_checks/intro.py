@@ -5,7 +5,7 @@ import act4e_interfaces as I
 
 
 @tfor(I.SimpleIntro)
-def check_sum(tc: TestContext):
+def check_sum(tc: TestContext) -> None:
     si = find_imp(tc, I.SimpleIntro)
     a = 3
     b = 4

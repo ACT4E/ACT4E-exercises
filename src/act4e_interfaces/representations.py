@@ -1,17 +1,17 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import List, TypeVar, Union
+from typing import Any, List, TypeVar, Union
 
 from typing_extensions import TypedDict
 
 from .categories import (
     FiniteAdjunction,
-    FiniteDP,
     FiniteFunctor,
     FiniteNaturalTransformation,
     FiniteProfunctor,
 )
+from .dps import FiniteDP
 from .helper import IOHelper
 from .posets import FinitePoset
 from .relations import FiniteRelation
@@ -77,7 +77,7 @@ FiniteSet_desc = Union[
     FiniteSetProduct_desc,
     FiniteSetUnion_desc,
     FiniteSetDisjointUnion_desc,
-]
+]  # type: ignore
 
 
 class FiniteMap_desc(TypedDict):
@@ -112,34 +112,34 @@ class FiniteGroup_desc(FiniteMonoid_desc):
 
 class FiniteMapRepresentation(ABC):
     @abstractmethod
-    def load(self, h: IOHelper, s: FiniteMap_desc) -> FiniteMap[E1, E2]:
+    def load(self, h: IOHelper, s: FiniteMap_desc) -> FiniteMap[Any, Any]:
         ...
 
     @abstractmethod
-    def save(self, h: IOHelper, m: FiniteMap[E1, E2]) -> FiniteMap_desc:
+    def save(self, h: IOHelper, m: FiniteMap[Any, Any]) -> FiniteMap_desc:
         ...
 
 
 class FiniteSetRepresentation(ABC):
     @abstractmethod
-    def load(self, h: IOHelper, data: FiniteSet_desc) -> FiniteSet[E]:
+    def load(self, h: IOHelper, data: FiniteSet_desc) -> FiniteSet[Any]:
         """Load a finite set from data structure.
         Throw InvalidFormat if the format is incorrect.
         """
 
     @abstractmethod
-    def save(self, h: IOHelper, f: FiniteSet[E]) -> FiniteSet_desc:
-        """ Serializes into a data structure """
+    def save(self, h: IOHelper, f: FiniteSet[Any]) -> FiniteSet_desc:
+        """Serializes into a data structure"""
 
 
 class FiniteSemigroupRepresentation(ABC):
     @abstractmethod
-    def load(self, h: IOHelper, s: FiniteSemigroup_desc) -> FiniteSemigroup[E]:
-        """ Load the data  """
+    def load(self, h: IOHelper, s: FiniteSemigroup_desc) -> FiniteSemigroup[Any]:
+        """Load the data"""
 
     @abstractmethod
-    def save(self, h: IOHelper, m: FiniteSemigroup[E]) -> FiniteSemigroup_desc:
-        """ Save the data  """
+    def save(self, h: IOHelper, m: FiniteSemigroup[Any]) -> FiniteSemigroup_desc:
+        """Save the data"""
 
 
 class FiniteNaturalTransformation_desc(TypedDict):
@@ -148,42 +148,42 @@ class FiniteNaturalTransformation_desc(TypedDict):
 
 class FiniteMonoidRepresentation(ABC):
     @abstractmethod
-    def load(self, h: IOHelper, s: FiniteMonoid_desc) -> FiniteMonoid[E]:
-        """ Load the data  """
+    def load(self, h: IOHelper, s: FiniteMonoid_desc) -> FiniteMonoid[Any]:
+        """Load the data"""
 
     @abstractmethod
-    def save(self, h: IOHelper, m: FiniteMonoid[E]) -> FiniteMonoid_desc:
-        """ Save the data  """
+    def save(self, h: IOHelper, m: FiniteMonoid[Any]) -> FiniteMonoid_desc:
+        """Save the data"""
 
 
 class FiniteGroupRepresentation(ABC):
     @abstractmethod
-    def load(self, h: IOHelper, s: FiniteGroup_desc) -> FiniteGroup[E]:
-        """ Load the data  """
+    def load(self, h: IOHelper, s: FiniteGroup_desc) -> FiniteGroup[Any]:
+        """Load the data"""
 
     @abstractmethod
-    def save(self, h: IOHelper, m: FiniteGroup[E]) -> FiniteGroup_desc:
-        """ Save the data  """
+    def save(self, h: IOHelper, m: FiniteGroup[Any]) -> FiniteGroup_desc:
+        """Save the data"""
 
 
 class FinitePosetRepresentation(ABC):
     @abstractmethod
-    def load(self, h: IOHelper, s: FinitePoset_desc) -> FinitePoset[E]:
-        """ Load the data  """
+    def load(self, h: IOHelper, s: FinitePoset_desc) -> FinitePoset[Any]:
+        """Load the data"""
 
     @abstractmethod
-    def save(self, h: IOHelper, m: FinitePoset[E]) -> FinitePoset_desc:
-        """ Save the data  """
+    def save(self, h: IOHelper, m: FinitePoset[Any]) -> FinitePoset_desc:
+        """Save the data"""
 
 
 class FiniteRelationRepresentation(ABC):
     @abstractmethod
-    def load(self, h: IOHelper, data: FiniteRelation_desc) -> FiniteRelation[E1, E2]:
-        """ Load a finite set from given YAML data"""
+    def load(self, h: IOHelper, data: FiniteRelation_desc) -> FiniteRelation[Any, Any]:
+        """Load a finite set from given YAML data"""
 
     @abstractmethod
-    def save(self, h: IOHelper, f: FiniteRelation[E1, E2]) -> FiniteRelation_desc:
-        """ Load a finite set from given YAML data"""
+    def save(self, h: IOHelper, f: FiniteRelation[Any, Any]) -> FiniteRelation_desc:
+        """Load a finite set from given YAML data"""
 
 
 class FiniteCategory_desc(TypedDict):
@@ -193,27 +193,31 @@ class FiniteCategory_desc(TypedDict):
 class FiniteFunctor_desc(TypedDict):
     source: FiniteCategory_desc
     target: FiniteCategory_desc
-    f_ob: FiniteMap
-    f_mor: FiniteMap
+    f_ob: FiniteMap_desc
+    f_mor: FiniteMap_desc
 
 
 class FiniteFunctorRepresentation(ABC):
     @abstractmethod
-    def load(self, h: IOHelper, data: FiniteFunctor_desc) -> FiniteFunctor:
+    def load(self, h: IOHelper, data: FiniteFunctor_desc) -> FiniteFunctor[Any, Any, Any, Any]:
         ...
 
     @abstractmethod
-    def save(self, h: IOHelper, f: FiniteFunctor) -> FiniteFunctor_desc:
+    def save(self, h: IOHelper, f: FiniteFunctor[Any, Any, Any, Any]) -> FiniteFunctor_desc:
         ...
 
 
 class FiniteNaturalTransformationRepresentation(ABC):
     @abstractmethod
-    def load(self, h: IOHelper, data: FiniteNaturalTransformation_desc) -> FiniteNaturalTransformation:
+    def load(
+        self, h: IOHelper, data: FiniteNaturalTransformation_desc
+    ) -> FiniteNaturalTransformation[Any, Any, Any, Any]:
         ...
 
     @abstractmethod
-    def save(self, h: IOHelper, f: FiniteNaturalTransformation) -> FiniteNaturalTransformation_desc:
+    def save(
+        self, h: IOHelper, f: FiniteNaturalTransformation[Any, Any, Any, Any]
+    ) -> FiniteNaturalTransformation_desc:
         ...
 
 
@@ -223,11 +227,11 @@ class FiniteAdjunction_desc(TypedDict):
 
 class FiniteAdjunctionRepresentation(ABC):
     @abstractmethod
-    def load(self, h: IOHelper, data: FiniteAdjunction_desc) -> FiniteAdjunction:
+    def load(self, h: IOHelper, data: FiniteAdjunction_desc) -> FiniteAdjunction[Any, Any, Any, Any]:
         ...
 
     @abstractmethod
-    def save(self, h: IOHelper, f: FiniteAdjunction) -> FiniteAdjunction_desc:
+    def save(self, h: IOHelper, f: FiniteAdjunction[Any, Any, Any, Any]) -> FiniteAdjunction_desc:
         ...
 
 
@@ -254,9 +258,9 @@ class FiniteDP_desc(TypedDict):
 
 class FiniteDPRepresentation(ABC):
     @abstractmethod
-    def load(self, yaml_data: FiniteDP_desc) -> FiniteDP:
+    def load(self, yaml_data: FiniteDP_desc) -> FiniteDP[Any, Any]:
         ...
 
     @abstractmethod
-    def save(self, f: FiniteDP) -> FiniteDP_desc:
+    def save(self, f: FiniteDP[Any, Any]) -> FiniteDP_desc:
         ...

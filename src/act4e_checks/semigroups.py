@@ -1,8 +1,10 @@
 import itertools
 from functools import partial
 from typing import (
+    Any,
     Callable,
-    List, TypeVar,
+    List,
+    TypeVar,
 )
 
 import zuper_html as zh
@@ -14,11 +16,12 @@ from .data import dumpit_, get_test_data, IOHelperImp, loadit_, purify_data
 from .finite_maps import check_map_involutive
 from .sets import check_same_set, good_load_set, make_set, make_values
 
-E = TypeVar('E')
+E = TypeVar("E")
+X = TypeVar("X")
 
 
 @tfor(I.FiniteSemigroupConstruct)
-def test_FiniteSemigroupConstruct(tm: TestManagerInterface):
+def test_FiniteSemigroupConstruct(tm: TestManagerInterface) -> None:
     mks = tm.impof(I.FiniteSemigroupConstruct)
 
     A = good_load_set("set1")
@@ -27,7 +30,7 @@ def test_FiniteSemigroupConstruct(tm: TestManagerInterface):
         tm.addtest(check_free_semigroup, mks, s)
 
 
-def check_free_semigroup(tc: TestContext, fsg: I.FiniteSemigroupConstruct, s: I.FiniteSet):
+def check_free_semigroup(tc: TestContext, fsg: I.FiniteSemigroupConstruct, s: I.FiniteSet[X]) -> None:
     fs = tc.check_result(fsg, fsg.free, I.FreeSemigroup, s)
     carrier = fs.carrier()
 
@@ -40,7 +43,7 @@ def check_free_semigroup(tc: TestContext, fsg: I.FiniteSemigroupConstruct, s: I.
             raise ImplementationFail(msg, a=a, b=b, res=res)
 
 
-def check_semigroup(tc: TestContext, m: I.FiniteSemigroup[E]):
+def check_semigroup(tc: TestContext, m: I.FiniteSemigroup[E]) -> None:
     carrier = m.carrier()
     elements = list(carrier.elements())
     for e1, e2 in itertools.product(elements, elements):
@@ -50,23 +53,23 @@ def check_semigroup(tc: TestContext, m: I.FiniteSemigroup[E]):
             tc.fail(zh.span("composition fails"), e1=e1, e2=e2, e=e, inside=inside)
 
 
-def check_monoid(tc: TestContext, m: I.FiniteMonoid[E]):
+def check_monoid(tc: TestContext, m: I.FiniteMonoid[E]) -> None:
     check_semigroup(tc, m)
     m.identity()
 
 
-def check_group(tc: TestContext, m: I.FiniteGroup[E]):
-    with tc.description('checking it is a valid monoid'):
+def check_group(tc: TestContext, m: I.FiniteGroup[E]) -> None:
+    with tc.description("checking it is a valid monoid"):
         check_monoid(tc, m)
 
-    with tc.description('checking group composition'):
+    with tc.description("checking group composition"):
         check_group_composition(tc, m)
 
-    with tc.description('checking that the inverse is involutive'):
+    with tc.description("checking that the inverse is involutive"):
         check_map_involutive(tc, m.carrier(), m.inverse)
 
 
-def check_group_composition(tc: TestContext, G: I.FiniteGroup[E]):
+def check_group_composition(tc: TestContext, G: I.FiniteGroup[E]) -> None:
     carrier = G.carrier()
     neutral = G.identity()
     for e in carrier.elements():
@@ -74,7 +77,7 @@ def check_group_composition(tc: TestContext, G: I.FiniteGroup[E]):
         e_ei = G.compose(e, e_inv)
         e_ie = G.compose(e_inv, e)
 
-        with tc.description('Checking that id = e*inv(e)'):
+        with tc.description("Checking that id = e*inv(e)"):
             tc.f_expect_equal2(
                 partial(carrier.equal, neutral, e_ei),
                 lambda: True,
@@ -84,7 +87,7 @@ def check_group_composition(tc: TestContext, G: I.FiniteGroup[E]):
                 e_inv=e_inv,
                 e_times_e_inv=e_ei,
             )
-        with tc.description('Checking that id = inv(e)*e'):
+        with tc.description("Checking that id = inv(e)*e"):
             tc.f_expect_equal2(
                 partial(carrier.equal, neutral, e_ie),
                 lambda: True,
@@ -96,7 +99,7 @@ def check_group_composition(tc: TestContext, G: I.FiniteGroup[E]):
             )
 
 
-def check_same_semigroup(tc: TestContext, g1: I.FiniteSemigroup, g2: I.FiniteSemigroup):
+def check_same_semigroup(tc: TestContext, g1: I.FiniteSemigroup[X], g2: I.FiniteSemigroup[X]) -> None:
     carrier = g1.carrier()
     check_same_set(tc, g1.carrier(), g2.carrier())
     elements = list(carrier.elements())
@@ -110,7 +113,7 @@ def check_same_semigroup(tc: TestContext, g1: I.FiniteSemigroup, g2: I.FiniteSem
             tc.fail(msg, a=a, b=b, r1=r1, r2=r2)
 
 
-def check_same_monoid(tc: TestContext, g1: I.FiniteMonoid, g2: I.FiniteMonoid):
+def check_same_monoid(tc: TestContext, g1: I.FiniteMonoid[X], g2: I.FiniteMonoid[X]) -> None:
     check_same_semigroup(tc, g1, g2)
     id1 = g1.identity()
     id2 = g2.identity()
@@ -121,7 +124,7 @@ def check_same_monoid(tc: TestContext, g1: I.FiniteMonoid, g2: I.FiniteMonoid):
         tc.fail(msg, id1=id1, id2=id2)
 
 
-def check_same_group(tc: TestContext, g1: I.FiniteGroup, g2: I.FiniteGroup):
+def check_same_group(tc: TestContext, g1: I.FiniteGroup[X], g2: I.FiniteGroup[X]) -> None:
     check_same_monoid(tc, g1, g2)
     carrier = g1.carrier()
 
@@ -138,7 +141,7 @@ def tm_load_semigroup(
     tm: TestManagerInterface,
     name: str,
     data: TestRef[I.FiniteSemigroup_desc],
-):
+) -> TestRef[I.FiniteSemigroup[Any]]:
     h = IOHelperImp()
 
     # if 'data' in data:
@@ -146,18 +149,20 @@ def tm_load_semigroup(
 
     def loadit(
         c: TestContext, fsr: I.FiniteSemigroupRepresentation, data1: I.FiniteSemigroup_desc
-    ) -> I.FiniteSemigroup:
+    ) -> I.FiniteSemigroup[Any]:
         return loadit_(c, fsr, h, data1, I.FiniteSemigroup)
 
     fsr_ = tm.impof(I.FiniteSemigroupRepresentation)
     return tm.addtest(loadit, fsr_, data, tid0=f"load-semigroup-{name}")
 
 
-def tm_save_semigroup(tm: TestManagerInterface, name: str, sgr: TestRef):
+def tm_save_semigroup(
+    tm: TestManagerInterface, name: str, sgr: TestRef[I.FiniteSemigroup[Any]]
+) -> TestRef[I.FiniteSemigroup_desc]:
     h = IOHelperImp()
 
     def dumpit(
-        c: TestContext, fsr: I.FiniteSemigroupRepresentation, sgr_: I.FiniteSemigroup
+        c: TestContext, fsr: I.FiniteSemigroupRepresentation, sgr_: I.FiniteSemigroup[Any]
     ) -> I.FiniteSemigroup_desc:
         return dumpit_(c, fsr, h, sgr_)
 
@@ -165,11 +170,13 @@ def tm_save_semigroup(tm: TestManagerInterface, name: str, sgr: TestRef):
     return tm.addtest(dumpit, fsr_, sgr, tid0=f"save-semigroup-{name}")
 
 
-def tm_save_monoid(tm: TestManagerInterface, name: str, sgr: TestRef):
+def tm_save_monoid(
+    tm: TestManagerInterface, name: str, sgr: TestRef[I.FiniteMonoid[Any]]
+) -> TestRef[I.FiniteMonoid_desc]:
     h = IOHelperImp()
 
     def dumpit(
-        c: TestContext, fsr: I.FiniteMonoidRepresentation, sgr_: I.FiniteMonoid
+        c: TestContext, fsr: I.FiniteMonoidRepresentation, sgr_: I.FiniteMonoid[Any]
     ) -> I.FiniteMonoid_desc:
         return dumpit_(c, fsr, h, sgr_)
 
@@ -177,39 +184,46 @@ def tm_save_monoid(tm: TestManagerInterface, name: str, sgr: TestRef):
     return tm.addtest(dumpit, fsr_, sgr, tid0=f"save-monoid-{name}")
 
 
-def tm_save_group(tm: TestManagerInterface, name: str, sgr: TestRef) -> TestRef:
+def tm_save_group(
+    tm: TestManagerInterface, name: str, sgr: TestRef[I.FiniteGroup[Any]]
+) -> TestRef[I.FiniteGroup_desc]:
     h = IOHelperImp()
 
-    def dumpit(tc: TestContext, fsr: I.FiniteGroupRepresentation, sgr_: I.FiniteGroup) -> I.FiniteGroup_desc:
+    def dumpit(
+        tc: TestContext, fsr: I.FiniteGroupRepresentation, sgr_: I.FiniteGroup[Any]
+    ) -> I.FiniteGroup_desc:
         return dumpit_(tc, fsr, h, sgr_)
 
     fsr_ = tm.impof(I.FiniteGroupRepresentation)
     return tm.addtest(dumpit, fsr_, sgr, tid0=f"dump-group-{name}")
 
 
-def tm_load_group(tm: TestManagerInterface, name: str, data: TestRef[I.FiniteGroup_desc]):
+def tm_load_group(
+    tm: TestManagerInterface, name: str, data: TestRef[I.FiniteGroup_desc]
+) -> TestRef[I.FiniteGroup[Any]]:
     h = IOHelperImp()
 
-    def loadit(tc: TestContext, fsr: I.FiniteGroupRepresentation, data1: I.FiniteGroup_desc) -> I.FiniteGroup:
+    def loadit(
+        tc: TestContext, fsr: I.FiniteGroupRepresentation, data1: I.FiniteGroup_desc
+    ) -> I.FiniteGroup[Any]:
         return loadit_(tc, fsr, h, data1, I.FiniteGroup)
 
     fsr_ = tm.impof(I.FiniteGroupRepresentation)
     return tm.addtest(loadit, fsr_, data, tid0=f"load-group-{name}")
 
 
-def tm_load_monoid(tm: TestManagerInterface, name: str, data: TestRef[I.FiniteMonoid_desc]):
+def tm_load_monoid(
+    tm: TestManagerInterface, name: str, data: TestRef[I.FiniteMonoid_desc]
+) -> TestRef[I.FiniteMonoid[Any]]:
     h = IOHelperImp()
 
     def loadit(
         c: TestContext, fsr: I.FiniteMonoidRepresentation, data1: I.FiniteMonoid_desc
-    ) -> I.FiniteMonoid:
+    ) -> I.FiniteMonoid[Any]:
         return loadit_(c, fsr, h, data1, I.FiniteMonoid)
 
     fsr_ = tm.impof(I.FiniteMonoidRepresentation)
     return tm.addtest(loadit, fsr_, data, tid0=f"load-monoid-{name}")
-
-
-X = TypeVar('X')
 
 
 def make_semigroup(s: List[X], f: Callable[[X, X], X]) -> I.FiniteSemigroup_desc:
@@ -224,7 +238,7 @@ def make_semigroup(s: List[X], f: Callable[[X, X], X]) -> I.FiniteSemigroup_desc
 
 
 @tfor(I.FiniteMonoidRepresentation)
-def test_FiniteMonoidRepresentation(tm: TestManagerInterface):
+def test_FiniteMonoidRepresentation(tm: TestManagerInterface) -> None:
     monoids = get_test_data("monoid")
 
     for name, m in monoids.items():
@@ -236,7 +250,7 @@ def test_FiniteMonoidRepresentation(tm: TestManagerInterface):
 
 
 @tfor(I.FiniteSemigroupRepresentation)
-def test_FiniteSemigroupRepresentation(tm: TestManagerInterface):
+def test_FiniteSemigroupRepresentation(tm: TestManagerInterface) -> None:
     semigroups = get_test_data("semigroup")
     for sgrp_name, s in semigroups.items():
         data = s.data
@@ -247,52 +261,54 @@ def test_FiniteSemigroupRepresentation(tm: TestManagerInterface):
 
 
 @tfor(I.FiniteGroupRepresentation)
-def test_FiniteGroupRepresentation(tm: TestManagerInterface):
+def test_FiniteGroupRepresentation(tm: TestManagerInterface) -> None:
     groups = get_test_data("group")
 
     for name in groups:
-        tm.addtest(check_group_load_save, name, tid0=f'check_group_load_save-{name}')
+        tm.addtest(check_group_load_save, name, tid0=f"check_group_load_save-{name}")
 
 
-def check_group_load_save(tc: TestContext, name: str):
-    desc = f'Checking if we can save/load the test group called {name}'
+def check_group_load_save(tc: TestContext, name: str) -> None:
+    desc = f"Checking if we can save/load the test group called {name}"
     with tc.description(desc):
-        with tc.description(f'Trying to load the group {name}'):
+        with tc.description(f"Trying to load the group {name}"):
             g1 = load_group_tc(tc, name)
 
-        with tc.description('Checking it is a valid group'):
+        with tc.description("Checking it is a valid group"):
             check_group(tc, g1)
 
-        with tc.description('Trying to save the group'):
+        with tc.description("Trying to save the group"):
             g1_dumped = save_group_tc(tc, g1)
 
-        with tc.description('Trying to re-load the saved group'):
+        with tc.description("Trying to re-load the saved group"):
             fgr = find_imp(tc, I.FiniteGroupRepresentation)
             h = IOHelperImp()
             g2 = fgr.load(h, g1_dumped)
 
-        with tc.description('Checking the reloaded is a valid group'):
+        with tc.description("Checking the reloaded is a valid group"):
             check_group(tc, g1)
 
         tc.raise_if_failures()
-        with tc.description('Checking the original and reloaded groups are the same'):
+        with tc.description("Checking the original and reloaded groups are the same"):
             check_same_group(tc, g1, g2)
 
 
-def save_group_tc(tc: TestContext, g: I.FiniteGroup):
+def save_group_tc(tc: TestContext, g: I.FiniteGroup[Any]) -> I.FiniteGroup_desc:
     fgr = find_imp(tc, I.FiniteGroupRepresentation)
     h = IOHelperImp()
 
     return dumpit_(tc, fgr, h, g)
 
 
-def get_group_data(name: str):
+def get_group_data(name: str) -> I.ConcreteRepr:
     d = get_test_data("group")
     data1 = purify_data(d[name].data)
     return data1
 
-def load_group_tc(tc: TestContext, name: str):
+
+def load_group_tc(tc: TestContext, name: str) -> I.FiniteGroup[Any]:
     fgr = find_imp(tc, I.FiniteGroupRepresentation)
     h = IOHelperImp()
     data1 = get_group_data(name)
-    return loadit_(tc, fgr, h, data1, I.FiniteGroup)
+    # not sure why
+    return loadit_(tc, fgr, h, data1, I.FiniteGroup)  # type: ignore
