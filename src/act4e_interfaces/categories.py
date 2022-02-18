@@ -3,8 +3,8 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Any, Generic, Tuple, TypeVar
 
-from . import Poset
 from .dps import DP
+from .posets import Poset
 from .relations import FiniteRelation
 from .sets import FiniteSet, FiniteSetProduct, Setoid, SetProduct
 from .types import Object

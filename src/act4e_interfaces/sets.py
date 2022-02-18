@@ -102,10 +102,12 @@ class SetProduct(Generic[C, E], Setoid[E], ABC):
     @abstractmethod
     def pack(self, args: Sequence[C]) -> E:
         """Packs an element of each setoid into an element of the mapping"""
+        raise NotImplementedError()
 
     @abstractmethod
     def unpack(self, args: E) -> Sequence[C]:
         """Packs an element of each setoid into an element of the mapping"""
+        raise NotImplementedError()
 
 
 class FiniteSetProduct(Generic[C, E], FiniteSet[E], SetProduct[C, E], ABC):
@@ -212,11 +214,14 @@ class SetDisjointUnion(Generic[C, E], Setoid[E], ABC):
     def components(self) -> Sequence[Setoid[C]]:
         """Returns the components of the union"""
 
+    @abstractmethod
     def pack(self, i: int, e: C) -> E:
         """Injection mapping."""
+        raise NotImplementedError()
 
+    @abstractmethod
     def unpack(self, e: E) -> Tuple[int, C]:
-        ...
+        raise NotImplementedError()
 
 
 class FiniteSetDisjointUnion(Generic[C, E], FiniteSet[E], SetDisjointUnion[C, E], ABC):

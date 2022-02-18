@@ -11,7 +11,6 @@ __all__ = [
     "FiniteDP",
     "FiniteDPOperations",
     "DP",
-    "DPCategory",
     "DPI",
     "DPConstructors",
 ]

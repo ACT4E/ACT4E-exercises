@@ -176,10 +176,11 @@ class PosetProduct(Generic[C, E], Poset[E], ABC):
     @abstractmethod
     def pack(self, args: Sequence[C]) -> E:
         """Packs an element of each setoid into an element of the mapping"""
+        raise NotImplementedError()
 
     @abstractmethod
     def unpack(self, e: E) -> Sequence[C]:
-        ...
+        raise NotImplementedError()
 
 
 class FinitePosetProduct(Generic[C, E], FinitePoset[E], PosetProduct[C, E], ABC):
