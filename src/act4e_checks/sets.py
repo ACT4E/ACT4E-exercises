@@ -23,8 +23,8 @@ def test_MakeSetDisjointUnion(tm: TestManagerInterface) -> None:
 
 @tfor(I.MakeSetDisjointUnion)
 def check_set_disjoint_union(tc: TestContext) -> None:
-    msd = find_imp(tc, I.MakeSetDisjointUnion)
-    fsr = find_imp(tc, I.FiniteSetRepresentation)
+    msd: I.MakeSetDisjointUnion = find_imp(tc, I.MakeSetDisjointUnion)
+    fsr: I.FiniteSetRepresentation = find_imp(tc, I.FiniteSetRepresentation)
     set_empty = load_set(fsr, "set_empty")
 
     set2 = tc.check_result(msd, msd.disjoint_union, I.FiniteSetDisjointUnion, [set_empty, set_empty])

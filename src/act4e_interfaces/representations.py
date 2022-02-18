@@ -61,15 +61,18 @@ class DirectElements_desc(TypedDict):
 
 
 class FiniteSetProduct_desc(TypedDict):
-    product: List[FiniteSet_desc]
+    # product: List[FiniteSet_desc] # cannot be recursive
+    product: List[Any]
 
 
 class FiniteSetDisjointUnion_desc(TypedDict):
-    disunion: List[FiniteSet_desc]
+    # disunion: List[FiniteSet_desc]  # cannot be recursive
+    disunion: List[Any]
 
 
 class FiniteSetUnion_desc(TypedDict):
-    union: List[FiniteSet_desc]
+    # union: List[FiniteSet_desc]  # cannot be recursive
+    union: List[Any]
 
 
 FiniteSet_desc = Union[

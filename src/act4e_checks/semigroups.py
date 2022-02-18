@@ -281,7 +281,7 @@ def check_group_load_save(tc: TestContext, name: str) -> None:
             g1_dumped = save_group_tc(tc, g1)
 
         with tc.description("Trying to re-load the saved group"):
-            fgr = find_imp(tc, I.FiniteGroupRepresentation)
+            fgr: I.FiniteGroupRepresentation = find_imp(tc, I.FiniteGroupRepresentation)
             h = IOHelperImp()
             g2 = fgr.load(h, g1_dumped)
 
@@ -294,7 +294,7 @@ def check_group_load_save(tc: TestContext, name: str) -> None:
 
 
 def save_group_tc(tc: TestContext, g: I.FiniteGroup[Any]) -> I.FiniteGroup_desc:
-    fgr = find_imp(tc, I.FiniteGroupRepresentation)
+    fgr: I.FiniteGroupRepresentation = find_imp(tc, I.FiniteGroupRepresentation)
     h = IOHelperImp()
 
     return dumpit_(tc, fgr, h, g)
@@ -307,7 +307,7 @@ def get_group_data(name: str) -> I.ConcreteRepr:
 
 
 def load_group_tc(tc: TestContext, name: str) -> I.FiniteGroup[Any]:
-    fgr = find_imp(tc, I.FiniteGroupRepresentation)
+    fgr: I.FiniteGroupRepresentation = find_imp(tc, I.FiniteGroupRepresentation)
     h = IOHelperImp()
     data1 = get_group_data(name)
     # not sure why

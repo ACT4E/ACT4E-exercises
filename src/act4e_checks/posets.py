@@ -41,20 +41,20 @@ def test_FinitePosetConstructionTwisted(tm: TestManagerInterface) -> None:
 
 
 def check_arrow1(tc: TestContext, poset_name: str) -> None:
-    mks = find_imp(tc, I.FinitePosetConstructionArrow)
+    mks: I.FinitePosetConstructionArrow = find_imp(tc, I.FinitePosetConstructionArrow)
     p = load_poset_tc(tc, poset_name)
     p_arrow = tc.check_result(mks, mks.arrow, I.PosetOfIntervals, p)
 
 
 def check_twisted1(tc: TestContext, poset_name: str) -> None:
-    mks = find_imp(tc, I.FinitePosetConstructionArrow)
+    mks: I.FinitePosetConstructionArrow = find_imp(tc, I.FinitePosetConstructionArrow)
     p = load_poset_tc(tc, poset_name)
     p_twisted = tc.check_result(mks, mks.arrow, I.PosetOfIntervals, p)
 
 
 @tfor(I.FinitePosetConstructionArrow)
 def test_twisted_one(tc: TestContext) -> None:
-    mks = find_imp(tc, I.FinitePosetConstructionArrow)
+    mks: I.FinitePosetConstructionArrow = find_imp(tc, I.FinitePosetConstructionArrow)
     p = load_poset_tc(tc, "poset_one")
     p_twisted: I.FinitePosetOfIntervals[Any, Any] = tc.check_result(
         mks, mks.arrow, I.FinitePosetOfIntervals, p
@@ -347,7 +347,7 @@ def tm_save_poset(
 
 
 def load_poset_tc(tc: TestContext, name: str) -> I.FinitePoset[Any]:
-    fsr = find_imp(tc, I.FinitePosetRepresentation)
+    fsr: I.FinitePosetRepresentation = find_imp(tc, I.FinitePosetRepresentation)
     data1 = get_poset_data(name)
     h = IOHelperImp()
     return loadit_(tc, fsr, h, data1, I.FinitePoset)
