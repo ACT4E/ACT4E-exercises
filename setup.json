@@ -12,9 +12,9 @@
   "include_package_data": true,
   "modules": [
     "act4e_checks",
+    "act4e_checks.thedata",
     "act4e_interfaces",
-    "act4e_interfaces_tests",
-    "act4e_interfaces_tests.data"
+    "act4e_interfaces_tests"
   ],
   "version": "7.2",
   "author": "",
