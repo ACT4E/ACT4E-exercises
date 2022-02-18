@@ -1,0 +1,222 @@
+import itertools
+from dataclasses import dataclass
+from typing import (
+    Any,
+    Callable,
+    cast,
+    List,
+    Optional,
+    Set,
+    Tuple, TypeVar,
+)
+
+import zuper_html as zh
+from zuper_testint import (TestContext, TestManagerInterface, TestRef, tfor)
+
+import act4e_interfaces as I
+from .data import dumpit_, get_test_relations, IOHelperImp, loadit_, purify_data
+from .sets import check_same_set, make_set
+
+
+def check_same_relation(tc: TestContext, m1: I.FiniteRelation, m2: I.FiniteRelation):
+    check_same_set(tc, m1.source(), m2.source())
+    check_same_set(tc, m1.target(), m2.target())
+    S = m1.source()
+    T = m1.target()
+    for x, y in itertools.product(S.elements(), T.elements()):
+        a = m1.holds(x, y)  # TODO: wrap
+        b = m2.holds(x, y)
+        if a != b:
+            tc.fail(zh.span("not the same relation"), x=x, y=y, a=a, b=b)
+            return False
+    return True
+
+
+@tfor(I.FiniteEndorelationProperties)
+def test_FiniteEndorelationProperties(tm: TestManagerInterface):
+    mks = tm.impof(I.FiniteEndorelationProperties)
+
+    d = get_test_relations()
+    for rname, rinfo in d.items():
+        data = rinfo.data
+
+        def get(p):
+            return rinfo.properties.get(p, None)
+
+        r1 = tm_load_relation(tm, rname, tm.store(purify_data(data)))
+        rp = EndoRelProps(
+            reflexive=get("reflexive"),
+            irreflexive=get("irreflexive"),
+            transitive=get("transitive"),
+            symmetric=get("symmetric"),
+            asymmetric=get("asymmetric"),
+        )
+        tm.addtest(check_endorel_props, mks, r1, rp, tid0=f"check_endorel_props-{rname}")
+
+
+@tfor(I.FiniteEndorelationOperations)
+def test_FiniteEndorelationOperations(tm: TestManagerInterface):
+    frp = tm.impof(I.FiniteRelationRepresentation)
+    feo = tm.impof(I.FiniteEndorelationOperations)
+
+    tm.addtest(check_closure1, frp, feo)
+
+
+def check_closure1(tc: TestContext, frp: I.FiniteRelationRepresentation, feo: I.FiniteEndorelationOperations):
+    h = IOHelperImp()
+    S = [1, 2, 3]
+    r1 = make_relation(S, S, {(1, 2), (2, 3)})
+    R1 = frp.load(h, r1)
+    r2 = make_relation(S, S, {(1, 2), (2, 3), (1, 3)})
+    R2 = frp.load(h, r2)
+    R3 = feo.transitive_closure(R1)
+    tc.expect_type2(R3, I.FiniteRelation, zh.span("Expected a FiniteRelation"))
+    check_same_relation(tc, R2, R3)
+
+
+@tfor(I.FiniteRelationProperties)
+def test_FiniteRelationProperties(tm: TestManagerInterface):
+    mks = tm.impof(I.FiniteRelationProperties)
+
+    d = get_test_relations()
+    for rname, rinfo in d.items():
+        def get(p):
+            return rinfo.properties.get(p, None)
+
+        r1 = tm_load_relation(tm, rname, tm.store(purify_data(rinfo.data)))
+        rp = RelProps(
+            injective=get("injective"),
+            surjective=get("surjective"),
+            single_valued=get("single_valued"),
+            defined_everywhere=get("defined_everywhere"),
+        )
+        tm.addtest(check_rel_props, mks, r1, rp, tid0=f"check_rel_props-{rname}")
+
+
+@dataclass
+class RelProps:
+    injective: Optional[bool]
+    surjective: Optional[bool]
+    single_valued: Optional[bool]
+    defined_everywhere: Optional[bool]
+
+
+def check_rel_props(tc: TestContext, frp: I.FiniteRelationProperties, s: I.FiniteRelation, rp: RelProps):
+    def expect(f, a, desc):
+        if a is None:
+            return
+        res = f(s)
+        if res not in (True, False):
+            tc.fail(zh.p("Expected boolean"), f=f.__name__, res=res)
+            return
+        msg = zh.span(f"Checking {desc}: expect {a} obtained {res} ")
+        tc.fail_not_equal2(res, a, msg=msg)
+
+    expect(frp.is_injective, rp.injective, "injective")
+    expect(frp.is_surjective, rp.surjective, "surjective")
+    expect(frp.is_single_valued, rp.single_valued, "single_valued")
+    expect(frp.is_defined_everywhere, rp.defined_everywhere, "defined_everywhere")
+
+
+def check_rel_transpose(tc: TestContext, frp: I.FiniteRelationOperations, fr: I.FiniteRelation):
+    fr2 = frp.transpose(fr)
+    if not isinstance(fr2, I.FiniteRelation):
+        tc.fail(zh.p("Expected FiniteRelation"), fr2=fr2)
+        return
+
+    fr3 = frp.transpose(fr2)
+    check_same_relation(tc, fr, fr3)
+
+
+@dataclass
+class EndoRelProps:
+    reflexive: Optional[bool] = None
+    irreflexive: Optional[bool] = None
+    transitive: Optional[bool] = None
+    symmetric: Optional[bool] = None
+    antisymmetric: Optional[bool] = None
+    asymmetric: Optional[bool] = None
+
+
+def check_endorel_props(
+    tc: TestContext, frp: I.FiniteEndorelationProperties, s: I.FiniteRelation, rp: EndoRelProps
+):
+    def expect(f: Callable[[Any], bool], a: Optional[bool], desc: str) -> None:
+        if a is None:
+            return
+        res = f(s)
+        if res not in (True, False):
+            tc.fail(zh.p("Expected boolean"), f=f.__name__, res=res)
+            return
+        msg = zh.span(f"Checking {desc}")
+        tc.fail_not_equal2(res, a, msg=msg, f=f.__name__)
+
+    expect(frp.is_reflexive, rp.reflexive, "reflexive")
+    expect(frp.is_irreflexive, rp.irreflexive, "irreflexive")
+    expect(frp.is_transitive, rp.transitive, "transitive")
+    expect(frp.is_symmetric, rp.symmetric, "symmetric")
+    expect(frp.is_antisymmetric, rp.antisymmetric, "antisymmetric")
+    expect(frp.is_asymmetric, rp.asymmetric, "asymmetric")
+
+
+def tm_load_relation(tm: TestManagerInterface, name: str, data: TestRef[I.FiniteRelation_desc]):
+    h = IOHelperImp()
+
+    def loadit(
+        c: TestContext, fsr: I.FiniteRelationRepresentation, data1: I.FiniteRelation_desc
+    ) -> I.FiniteRelation:
+        return loadit_(c, fsr, h, data1, I.FiniteRelation)
+
+    fsr_ = tm.impof(I.FiniteRelationRepresentation)
+    return tm.addtest(loadit, fsr_, data, tid0=f"load-relation-{name}")
+
+
+@tfor(I.FiniteRelationOperations)
+def test_FiniteRelationOperations(tm: TestManagerInterface):
+    mks = tm.impof(I.FiniteRelationOperations)
+
+    rels = get_test_relations()
+
+    for name, r in rels.items():
+        r1 = tm_load_relation(tm, name, tm.store(purify_data(r.data)))
+
+        tm.addtest(check_rel_transpose, mks, r1)
+
+
+X = TypeVar("X")
+Y = TypeVar("Y")
+
+
+def make_relation(s: List[X], t: List[Y], data: Set[Tuple[X, Y]]) -> I.FiniteRelation_desc:
+    source = make_set(s)
+    target = make_set(t)
+    values: List[List[I.ConcreteRepr]] = list(cast(List[I.ConcreteRepr], list(_)) for _ in data)
+    res: I.FiniteRelation_desc = {
+        "source": source,
+        "target": target,
+        "values": values,
+    }
+    return res
+
+
+def tm_save_relation(tm: TestManagerInterface, name: str, sgr: TestRef):
+    h = IOHelperImp()
+
+    def dumpit(
+        c: TestContext, fsr: I.FiniteRelationRepresentation, sgr_: I.FiniteRelation
+    ) -> I.FiniteRelation_desc:
+        return dumpit_(c, fsr, h, sgr_)
+
+    fsr_ = tm.impof(I.FiniteRelationRepresentation)
+    return tm.addtest(dumpit, fsr_, sgr, tid0=f"dump-relation-{name}")
+
+
+@tfor(I.FiniteRelationRepresentation)
+def test_FiniteRelationRepresentation(tm: TestManagerInterface):
+    # mks = tm.impof(I.FiniteRelationRepresentation)
+    rels = get_test_relations()
+
+    for name, r in rels.items():
+        r1 = tm_load_relation(tm, name, tm.store(purify_data(r.data)))
+        r1_dumped = tm_save_relation(tm, name, r1)
+        r2 = tm_load_relation(tm, name + "-re", r1_dumped)

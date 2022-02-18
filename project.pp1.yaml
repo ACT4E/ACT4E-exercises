@@ -4,6 +4,7 @@ srcdir: src
 version_file: "1"
 modules:
 - act4e_interfaces
+- act4e_checks
 - act4e_interfaces_tests
 
 install_requires:
