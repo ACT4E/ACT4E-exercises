@@ -7,5 +7,5 @@ __all__ = ["IOHelper"]
 
 class IOHelper(ABC):
     @abstractmethod
-    def loadfile(self, name: str) -> dict:
+    def loadfile(self, name: str) -> Dict[str, object]:
         """ Load from the filesystem. """

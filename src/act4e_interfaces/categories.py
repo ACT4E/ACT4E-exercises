@@ -40,14 +40,18 @@ __all__ = [
 E1 = TypeVar("E1")
 E2 = TypeVar("E2")
 
+A = TypeVar('A')
+B = TypeVar('B')
+C = TypeVar('C')
+
 
 class FiniteMapOperations(ABC):
     @abstractmethod
-    def compose(self, f: FiniteMap, g: FiniteMap) -> FiniteMap:
+    def compose(self, f: I.FiniteMap[A, B], g: I.FiniteMap[B, C]) -> FiniteMap[A, C]:
         """ compose two functions"""
 
     @abstractmethod
-    def as_relation(self, f: FiniteMap) -> FiniteRelation:
+    def as_relation(self, f: FiniteMap[A, B]) -> FiniteRelation[A, B]:
         """ Load the data  """
 
 
