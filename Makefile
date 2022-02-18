@@ -1,11 +1,11 @@
 
 all:
 	@echo
-	 
+
 
 template:
 	zuper-cli template
-	
+
 bump:
 	zuper-cli bump
 
@@ -24,15 +24,15 @@ black:
 	black -l 110 --target-version py38 src
 
 install-deps:
-	pip3 install --user shyaml
+	python3 -m pip install --user shyaml
 	shyaml get-values install_requires < project.pp1.yaml > .requirements.txt
-	pip3 install --user --upgrade -r .requirements.txt
+	python3 -m pip install --user --upgrade -r .requirements.txt
 	rm .requirements.txt
 
 install-testing-deps:
-	pip3 install --user shyaml
+	python3 -m pip install --user shyaml
 	shyaml get-values tests_require < project.pp1.yaml > .requirements_tests.txt
-	pip3 install --user --upgrade -r .requirements_tests.txt
+	python3 -m pip install --user --upgrade -r .requirements_tests.txt
 	rm .requirements_tests.txt
 
 	pip install 		pipdeptree==0.13.2		bumpversion		nose==1.3.7		nose2==0.9.2		nose2-html-report==0.6.0		nose-parallel==0.3.1		nose_xunitmp==0.4.1		pre-commit==2.1.1		rednose==1.3.0		coverage==5.0.3		codecov==2.0.16		sphinx		sphinx-rtd-theme
@@ -64,12 +64,12 @@ clean:
 	coverage erase
 	rm -rf $(out) $(coverage_dir) $(tr)
 
-test:  
+test:
 	mkdir -p  $(tr)
 	DISABLE_CONTRACTS=1 nosetests $(extra) $(coverage)  act4e_interfaces_tests  -v --nologcapture $(xunit)
 
 
-test-parallel:  
+test-parallel:
 	mkdir -p  $(tr)
 	DISABLE_CONTRACTS=1 nosetests $(extra) $(coverage) act4e_interfaces_tests -v --nologcapture $(parallel) $(xunitmp)
 
@@ -84,7 +84,7 @@ coverage-combine:
 
 docs:
 	sphinx-build src $(out)/docs
-	
+
 -include extra.mk
-        
+
 # sigil e7b002d28f19febc3dc7a083d902a275

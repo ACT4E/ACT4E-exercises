@@ -208,11 +208,11 @@ class SetDisjointUnion(Generic[C, E], Setoid[E], ABC):
         """ Injection mapping. """
 
     def unpack(self, e: E) -> Tuple[int, C]:
-        """ Injection mapping. """
+        ...
 
 
 class FiniteSetDisjointUnion(Generic[C, E], FiniteSet[E], SetDisjointUnion[C, E], ABC):
-    """ Specialization of SetProduct where we deal with FiniteSets"""
+    """ Specialization of SetDisjointUnion where we deal with FiniteSets. """
 
     @abstractmethod
     def components(self) -> List[FiniteSet[C]]:

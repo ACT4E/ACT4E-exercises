@@ -170,7 +170,7 @@ class PosetProduct(Generic[C, E], Poset[E], ABC):
         ...
 
 
-class FinitePosetProduct(Generic[C, E], FiniteSet[E], PosetProduct[C, E], ABC):
+class FinitePosetProduct(Generic[C, E], FinitePoset[E], PosetProduct[C, E], ABC):
     """ Specialization of PosetProduct where we deal with FinitePosets"""
 
     @abstractmethod
