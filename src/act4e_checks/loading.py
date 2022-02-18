@@ -3,9 +3,9 @@ from typing import List
 
 
 def get_data_dir() -> str:
-    from act4e_interfaces_tests import __file__
+    from act4e_checks import __file__
 
-    d = os.path.join(os.path.dirname(__file__), "data")
+    d = os.path.join(os.path.dirname(__file__), "thedata")
     return d
 
 

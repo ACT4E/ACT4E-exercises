@@ -53,11 +53,11 @@ class FinitePosetSubsetProperties(ABC):
 
 class FinitePosetMeasurement(ABC):
     @abstractmethod
-    def width(self, fp: FinitePoset[E]) -> int:
+    def width(self, fp: FinitePoset[Any]) -> int:
         """Return the width of the poset."""
 
     @abstractmethod
-    def height(self, fp: FinitePoset[E]) -> int:
+    def height(self, fp: FinitePoset[Any]) -> int:
         """Return the height of the poset."""
 
 

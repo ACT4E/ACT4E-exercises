@@ -278,43 +278,22 @@ class FiniteAdjunctionsOperations(ABC):
 
 
 class Profunctor(ABC):
-    pass
-    #
-    # def source(self) -> Category:
-    #     ...
-    #
-    # def target(self) -> Category:
-    #     ...
-    #
-    # def functor(self) -> Functor:
-    #     ...
+    pass  #  # def source(self) -> Category:  #     ...  #  # def target(self) -> Category:  #     ...  #
+    # def functor(self) -> Functor:  #     ...
 
 
 class FiniteProfunctor(ABC):
-    pass
-    #
-    # def cat1(self) -> FiniteCategory:
-    #     ...
-    #
-    # def cat2(self) -> FiniteCategory:
-    #     ...
-    #
-    # def functor(self) -> FiniteFunctor:
-    #     ...
+    pass  #  # def cat1(self) -> FiniteCategory:  #     ...  #  # def cat2(self) -> FiniteCategory:  #
+    # ...  #  # def functor(self) -> FiniteFunctor:  #     ...
 
 
 class FiniteProfunctorOperations(ABC):
-    pass
-    #
-    # @abstractmethod
-    # def series(self, p1: FiniteProfunctor, p2: FiniteProfunctor) -> FiniteProfunctor:
-    #     ...
+    pass  #  # @abstractmethod  # def series(self, p1: FiniteProfunctor, p2: FiniteProfunctor) ->
+    # FiniteProfunctor:  #     ...
 
 
 class FiniteEnrichedCategory(Generic[Object, Morphism], FiniteCategory[Object, Morphism], ABC):
-    pass
-    # def enrichment(self) -> FiniteMonoidalCategory:
-    #     ...
+    pass  # def enrichment(self) -> FiniteMonoidalCategory:  #     ...
 
 
 class DPCategory(Category[Poset[Any], DP[Any, Any]], ABC):

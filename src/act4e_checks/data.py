@@ -3,17 +3,17 @@ from dataclasses import dataclass
 from datetime import datetime
 from functools import lru_cache
 from io import StringIO
-from typing import Any, Dict, Generic, Protocol, Type, TypeVar
+from typing import Any, Dict, Generic, Protocol, TypeVar
 
-import act4e_interfaces as I
 import ruamel.yaml as yaml
 import zuper_html as zh
-from act4e_interfaces_tests.loading import load_test_data_file
 from ruamel.yaml import RoundTripLoader, YAML
 from zuper_commons.types import ZValueError
 from zuper_testint import ImplementationFail, TestContext
 
+import act4e_interfaces as I
 from . import logger
+from .loading import load_test_data_file
 
 X = TypeVar("X")
 
@@ -199,12 +199,12 @@ def loadit_(tc: TestContext, loader: Loader[Xcov, Rcon], h: I.IOHelper, data: Rc
     try:
         res = loader.load(h, data)
     except I.InvalidFormat as e:
-        msg = f"Implementation of {LN}.load() threw InvalidFormat but the format is valid"
-        tc.fail(zh.span(msg), data=data, tb=traceback.format_exc())
+        msg = f"Implementation of {LN}.load() threw InvalidFormat but the format is valid."
+        tc.fail(zh.span(msg), data=yaml.dump(data), tb=traceback.format_exc())
         raise ImplementationFail() from e
     except BaseException as e:
-        msg = f"Implementation of {LN}.load() threw {type(e).__name__} but the format is valid"
-        tc.fail(zh.span(msg), data=data, tb=traceback.format_exc())
+        msg = f"Implementation of {LN}.load() threw {type(e).__name__} but the format is valid."
+        tc.fail(zh.span(msg), data=yaml.dump(data), tb=traceback.format_exc())
         raise ImplementationFail() from e
     tc.expect_type2(res, K, zh.span(f"Expected that {LN}.load() returns a {K.__name__}"))
     tc.raise_if_failures()
@@ -214,7 +214,7 @@ def loadit_(tc: TestContext, loader: Loader[Xcov, Rcon], h: I.IOHelper, data: Rc
 def check_good_output(tc: TestContext, x: object) -> None:
     OK = (int, float, bool, datetime, dict, list, str)
     if isinstance(x, tuple):
-        msg = "You cannot use tuples for the concrete representation."
+        msg = "You cannot use tuples for the concrete representation because they cannot be serialized in YAML. Try using lists. (You can use tuples for the internal representation.)"
         tc.fail(zh.span(msg), x=x)
         return
     # noinspection PyTypeChecker
@@ -224,8 +224,7 @@ def check_good_output(tc: TestContext, x: object) -> None:
             f"an object of type {type(x).__name__}"
         )
         tc.fail(zh.span(msg), x=x)
-        return
-        # raise ZValueError(msg)
+        return  # raise ZValueError(msg)
     if isinstance(x, list):
         for _ in x:
             check_good_output(tc, _)

@@ -47,8 +47,8 @@ def check_semigroup(tc: TestContext, m: I.FiniteSemigroup[E]) -> None:
     carrier = m.carrier()
     elements = list(carrier.elements())
     for e1, e2 in itertools.product(elements, elements):
-        e = m.compose(e1, e2)  # TODO: wrap
-        inside = carrier.contains(e)
+        e = tc.check_result(m, m.compose, object, e1, e2)
+        inside = tc.check_result(carrier, carrier.contains, object, e)
         if not inside:
             tc.fail(zh.span("composition fails"), e1=e1, e2=e2, e=e, inside=inside)
 

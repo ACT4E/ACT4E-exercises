@@ -1,10 +1,8 @@
-from typing import (
-    TypeVar,
-)
+from typing import TypeVar
 
 from zuper_typing import is_Set
 
-from act4e_solutions_good import MyFiniteSetRepresentation
+from .good import MyFiniteSetRepresentation
 
 X = TypeVar("X")
 E = TypeVar("E")

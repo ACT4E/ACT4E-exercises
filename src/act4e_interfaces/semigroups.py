@@ -3,6 +3,18 @@ from typing import Generic
 
 from .sets import C, E, FiniteSet, Setoid
 
+__all__ = [
+    "Semigroup",
+    "FiniteSemigroup",
+    "Monoid",
+    "Group",
+    "FiniteMonoid",
+    "FiniteSemigroupConstruct",
+    "FiniteFreeGroupConstruct",
+    "FiniteGroup",
+    "FreeSemigroup",
+]
+
 
 class Semigroup(Generic[E], ABC):
     @abstractmethod
@@ -23,13 +35,13 @@ class FiniteSemigroup(Generic[E], Semigroup[E], ABC):
 class FreeSemigroup(Generic[C, E], Semigroup[E], ABC):
     @abstractmethod
     def unit(self, a: C) -> E:
-        """ From an element of the carrier, returns the element of the free semigroup """
+        """From an element of the carrier, returns the element of the free semigroup"""
 
 
 class FiniteSemigroupConstruct(ABC):
     @abstractmethod
     def free(self, fs: FiniteSet[C]) -> FreeSemigroup[C, E]:
-        """ Construct the free semigroup on a set. """
+        """Construct the free semigroup on a set."""
 
 
 class FreeGroup(Generic[C, E], FreeSemigroup[C, E], ABC):
@@ -39,7 +51,7 @@ class FreeGroup(Generic[C, E], FreeSemigroup[C, E], ABC):
 class FiniteFreeGroupConstruct(ABC):
     @abstractmethod
     def free(self, fs: FiniteSet[C]) -> FreeGroup[C, E]:
-        """ Construct the free group on a set. """
+        """Construct the free group on a set."""
 
 
 class Monoid(Generic[E], Semigroup[E], ABC):
@@ -51,7 +63,7 @@ class Monoid(Generic[E], Semigroup[E], ABC):
 class Group(Generic[E], Monoid[E], ABC):
     @abstractmethod
     def inverse(self, e: E) -> E:
-        """ Returns the inverse of an element"""
+        """Returns the inverse of an element"""
 
 
 class FiniteMonoid(Generic[E], Monoid[E], FiniteSemigroup[E], ABC):

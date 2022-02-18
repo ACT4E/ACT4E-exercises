@@ -6,7 +6,7 @@ from typing import (
 )
 
 import zuper_html as zh
-from zuper_testint import find_imp, TestContext, TestManagerInterface, TestRef, tfor
+from zuper_testint import find_imp, TestContext, TestManagerInterface, TestNotImplemented, TestRef, tfor
 
 import act4e_interfaces as I
 from . import logger
@@ -67,11 +67,13 @@ def test_twisted_one(tc: TestContext) -> None:
 @tfor(I.FiniteMonotoneMapProperties)
 def test_FiniteMonotoneMapProperties(tm: TestManagerInterface) -> None:
     mks = tm.impof(I.FiniteMonotoneMapProperties)
+    raise TestNotImplemented()
 
 
 @tfor(I.MonoidalPosetOperations)
 def test_MonoidalPosetOperations(tm: TestManagerInterface) -> None:
     mks = tm.impof(I.MonoidalPosetOperations)
+    raise TestNotImplemented()
 
 
 @tfor(I.FinitePosetRepresentation)
@@ -108,6 +110,7 @@ def test_FinitePosetMeasurements(tm: TestManagerInterface) -> None:
 def test_FinitePosetClosures(tm: TestManagerInterface) -> None:
     mks = tm.impof(I.FinitePosetClosures)
     d = get_test_posets()
+    raise TestNotImplemented()
 
 
 @tfor(I.FinitePosetConstructionOpposite)
@@ -162,8 +165,7 @@ def check_opposite(
         h1 = p_op.holds(b, a)
         tc.fail_not_equal2(h, h1, zh.span("Poset is not opposite"), a=a, b=b)
 
-    # p2 = tc.check_result(frp, frp.opposite, I.FinitePoset, p_op)
-    # check_same_poset(tc, p, p2)
+    # p2 = tc.check_result(frp, frp.opposite, I.FinitePoset, p_op)  # check_same_poset(tc, p, p2)
 
 
 def check_same_poset(tc: TestContext, s1: I.FinitePoset[X], s2: I.FinitePoset[X]) -> None:
@@ -229,54 +231,31 @@ def test_FinitePosetSubsetProperties2(tm: TestManagerInterface) -> None:
 
 
 @tfor(I.FinitePosetConstructionSum)
-def check_set_disjoint_union(tc: TestContext) -> None:
+def check_poset_disjoint_union(tc: TestContext) -> None:
     msd: I.FinitePosetConstructionSum = find_imp(tc, I.FinitePosetConstructionSum)
     poset_empty = load_poset_tc(tc, "poset_empty")
 
     poset2 = tc.check_result(msd, msd.disjoint_union, I.FinitePosetDisjointUnion, [poset_empty, poset_empty])
-    #
-    # check_same_poset(tc, poset2, set_empty)
-    #
-    # set_one: I.FiniteSet[int] = load_set_tc(tc, "set_one")
-    # set_two: I.FiniteSet[int] = load_set_tc(tc, "set_two")
-    #
-    # one_plus_two: I.FiniteSetDisjointUnion[int, Any] = \
-    #     tc.check_result(msd, msd.disjoint_union, I.FiniteSetDisjointUnion, [set_one, set_two])
-    # elements = list(one_plus_two.elements())
-    #
-    # for e in elements:
-    #     i, x = tc.check_result(one_plus_two, one_plus_two.unpack, object, e)
-    #     e2 = tc.check_result(one_plus_two, one_plus_two.pack, object, i, x)
-    #     check_same_element(tc, one_plus_two, e, e2)
-    #
-    # # either exception or in any case not allowing it
-    # try:
-    #     banana = one_plus_two.pack(0, 42)
-    # except ValueError:
-    #     pass
-    # else:
-    #     tc.check_result_value(one_plus_two, one_plus_two.contains, bool, False, banana)
-    #
-    # with tc.description("Checking that bad indexes are not allowed."):
-    #     # either exception or in any case not allowing it
-    #     try:
-    #         banana2 = one_plus_two.pack(-1, 42)
-    #     except ValueError:
-    #         pass
-    #     else:
-    #         tc.fail(zh.span("pack() should not allow negative index"), banana2=banana2)
-    #
-    #     try:
-    #         banana3 = one_plus_two.pack(3, 42)
-    #     except ValueError:
-    #         pass
-    #     else:
-    #         tc.fail(zh.span("pack() should not allow index too high"), banana3=banana3)
-    #
-    # with tc.description('Making sure it works for n = 0 sets.'):
-    #     zero = tc.check_result(msd, msd.disjoint_union, I.FiniteSetDisjointUnion, [])
-    #     elements = list(zero.elements())
-    #     tc.fail_not_equal2(0, len(elements), zh.span("Expected 0 elements"))
+    logger.info(poset2=poset2)
+
+    check_same_poset(tc, poset2, poset_empty)
+
+    set_one: I.FinitePoset[int] = load_poset_tc(tc, "poset_one")
+    set_two: I.FinitePoset[int] = load_poset_tc(tc, "poset_two")
+
+    one_plus_two: I.FinitePosetDisjointUnion[int, Any] = tc.check_result(
+        msd, msd.disjoint_union, I.FinitePosetDisjointUnion, [set_one, set_two]
+    )
+    carrier = tc.check_result(one_plus_two, one_plus_two.carrier, I.FiniteSetDisjointUnion)
+    elements = list(carrier.elements())
+
+    for e in elements:
+        one_plus_two.holds(e, e)
+
+    with tc.description("Making sure it works for n = 0 sets."):
+        zero = tc.check_result(msd, msd.disjoint_union, I.FinitePosetDisjointUnion, [])
+        elements = list(zero.carrier().elements())
+        tc.fail_not_equal2(0, len(elements), zh.span("Expected 0 elements"))
 
 
 def check_is_upperset(

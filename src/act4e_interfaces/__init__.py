@@ -2,6 +2,7 @@ __version__ = "7.3"
 __date__ = ""
 
 from .categories import *
+from .dps import *
 from .exceptions import *
 from .finite_maps import *
 from .intro import *
@@ -12,4 +13,3 @@ from .rope import *
 from .semigroups import *
 from .sets import *
 from .types import *
-from .dps import *

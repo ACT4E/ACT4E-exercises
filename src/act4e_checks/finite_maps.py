@@ -6,7 +6,14 @@ from typing import (
 )
 
 import zuper_html as zh
-from zuper_testint import ImplementationFail, TestContext, TestManagerInterface, TestRef, tfor
+from zuper_testint import (
+    ImplementationFail,
+    TestContext,
+    TestManagerInterface,
+    TestNotImplemented,
+    TestRef,
+    tfor,
+)
 
 import act4e_interfaces as I
 from .data import check_good_output, get_test_data, IOHelperImp, loadit_, purify_data, TestData
@@ -20,6 +27,7 @@ B = TypeVar("B")
 @tfor(I.FiniteMapOperations)
 def test_FiniteMapOperations(tm: TestManagerInterface) -> None:
     mks = tm.impof(I.FiniteMapOperations)
+    raise TestNotImplemented()
 
 
 def check_map(tc: TestContext, m: I.FiniteMap[A, B]) -> None:

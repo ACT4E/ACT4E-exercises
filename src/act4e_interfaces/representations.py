@@ -49,6 +49,7 @@ __all__ = [
     "FiniteDPRepresentation",
     "FiniteMap_desc",
     "FinitePoset_desc",
+    "FiniteDP_desc",
 ]
 
 E = TypeVar("E")
@@ -80,7 +81,7 @@ FiniteSet_desc = Union[
     FiniteSetProduct_desc,
     FiniteSetUnion_desc,
     FiniteSetDisjointUnion_desc,
-]  # type: ignore
+]
 
 
 class FiniteMap_desc(TypedDict):

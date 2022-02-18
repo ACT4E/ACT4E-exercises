@@ -27,14 +27,12 @@ class Elastic(Rope):
 
 @dataclass
 class Brick(Component):
-    pass
-    # add other components / properties
+    pass  # add other components / properties
 
 
 @dataclass
 class Sphere(Component):
-    pass
-    # add other components / properties
+    pass  # add other components / properties
 
 
 @dataclass
@@ -47,10 +45,10 @@ class Solution:
 
 class RupeGoldbergSolver(ABC):
     def hangthem(self, components: List[Component]) -> Solution:
-        """ What if we hang the first component, and let the others hang below it?  """
+        """What if we hang the first component, and let the others hang below it?"""
 
     def push(self, components: List[Component], force: float) -> Solution:
-        """ What if we fix one endpoint, and we compress it? """
+        """What if we fix one endpoint, and we compress it?"""
 
     def pull(self, components: List[Component], force: float) -> Solution:
-        """ What if we fix one endpoint, and we pull the other end? """
+        """What if we fix one endpoint, and we pull the other end?"""

@@ -73,12 +73,10 @@ def check_set_disjoint_union(tc: TestContext) -> None:
 
 
 def check_same_element(tc: TestContext, s1: I.FiniteSet[X], a: X, b: X) -> None:
-    tc.check_result_value(s1, s1.equal, bool, True, a, b)
-    #
-    # if not s1.equal(a, b):
-    #     msg = zh.span("Elements are not the same")
-    #     tc.fail(msg, a=a, b=b)
-    #     raise ImplementationFail()
+    tc.check_result_value(
+        s1, s1.equal, bool, True, a, b
+    )  # # if not s1.equal(a, b):  #     msg = zh.span("Elements are not the same")  #     tc.fail(
+    # msg, a=a, b=b)  #     raise ImplementationFail()
 
 
 def check_same_set(tc: TestContext, s1: I.FiniteSet[X], s2: I.FiniteSet[X]) -> None:
@@ -244,8 +242,9 @@ def test_MakeSetProduct(tm: TestManagerInterface) -> None:
 
 def tm_make_set_product(tm: TestManagerInterface, *args: Any) -> TestRef[I.SetProduct[Any, Any]]:
     def f(tc: TestContext, imp: I.MakeSetProduct, *components: I.FiniteSet[Any]) -> I.SetProduct[Any, Any]:
-        return tc.check_result(imp, imp.product, I.FiniteSetProduct, list(components))
-        # return imp.product(list(components))
+        return tc.check_result(
+            imp, imp.product, I.FiniteSetProduct, list(components)
+        )  # return imp.product(list(components))
 
     i = tm.impof(I.MakeSetProduct)
     return tm.addtest(f, i, *args)
@@ -287,17 +286,12 @@ def check_powerset(tc: TestContext, fsp: I.MakePowerSet, a: I.FiniteSet[X]) -> N
         e = tc.check_result(res, res.construct, object, list(_))
         contained = tc.check_result(res, res.contains, bool, e)
         if not contained:
-            tc.fail(zh.span("element not contained"), e=e)
-    #
-    # logger.info(original=a, expected=b, res=str(res))
-    # check_set(c, res)
-    # check_same_set(c, res, b)
-    # for e in res.elements():
-    #     inside = list(res.contents(e))
-    #     e2 = res.construct(inside)
-    #     equal = res.equal(e2, e)
-    #     if not equal:
-    #         tc.fail(zh.span('Elements should be equal'), e=e, inside=inside, e2=e2, equal=equal)
+            tc.fail(
+                zh.span("element not contained"), e=e
+            )  # # logger.info(original=a, expected=b, res=str(res))  # check_set(c,  # res)  #
+            # check_same_set(c, res, b)  # for e in res.elements():  #     inside = list(  # res.contents(
+            # e))  #     e2 = res.construct(inside)  #     equal = res.equal(e2, e)  #     if  # not equal:
+            #         tc.fail(zh.span('Elements should be equal'), e=e, inside=inside, e2=e2,  # equal=equal)
 
 
 @tfor(I.MakeSetIntersection)
@@ -384,8 +378,7 @@ def check_save_all_elements(tc: TestContext, S: I.FiniteSet[X]) -> None:
         except ZValueError as e:
             msg = zh.span(f"Invalid serialization", html_from_object(e))
             tc.fail(msg, element=a, representation=ra)
-            continue
-            # raise ImplementationFail(msg, element=a, representation=ra) from e
+            continue  # raise ImplementationFail(msg, element=a, representation=ra) from e
         a2 = S.load(h, ra)
         if not S.equal(a, a2):
             msg = zh.span("Saving and reloading gives a different object")
