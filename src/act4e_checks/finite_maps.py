@@ -17,7 +17,7 @@ from zuper_testint import (
 
 import act4e_interfaces as I
 from .data import check_good_output, get_test_data, IOHelperImp, loadit_, purify_data, TestData
-from .sets import check_same_element, check_same_set, check_set
+from .sets_utils import check_same_element, check_same_set, check_set
 
 E = TypeVar("E")
 A = TypeVar("A")

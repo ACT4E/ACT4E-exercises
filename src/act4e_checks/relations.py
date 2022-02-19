@@ -16,7 +16,7 @@ from zuper_testint import TestContext, TestManagerInterface, TestRef, tfor
 
 import act4e_interfaces as I
 from .data import dumpit_, get_test_relations, IOHelperImp, loadit_, purify_data
-from .sets import check_same_set, make_set
+from .sets_utils import check_same_set, make_set
 
 A = TypeVar("A")
 B = TypeVar("B")

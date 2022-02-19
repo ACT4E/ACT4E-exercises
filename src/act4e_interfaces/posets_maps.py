@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Generic, TypeVar
 
-from .finite_maps import FiniteMap, Mapping
+from .maps import FiniteMap, Mapping
 from .posets import FinitePoset, Poset
 
 __all__ = [

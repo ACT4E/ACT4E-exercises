@@ -14,7 +14,7 @@ from zuper_testint import find_imp, ImplementationFail, TestContext, TestManager
 import act4e_interfaces as I
 from .data import dumpit_, get_test_data, IOHelperImp, loadit_, purify_data
 from .finite_maps import check_map_involutive
-from .sets import check_same_set, good_load_set, make_set, make_values
+from .sets_utils import check_same_set, good_load_set, make_set, make_values
 
 E = TypeVar("E")
 X = TypeVar("X")

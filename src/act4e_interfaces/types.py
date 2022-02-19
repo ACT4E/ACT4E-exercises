@@ -1,9 +1,9 @@
-from typing import NewType, TypeVar
+from typing import NewType
 
-__all__ = ["Object", "Morphism", "ConcreteRepr"]
+__all__ = ["ConcreteRepr"]
 
-Object = TypeVar("Object")
-Morphism = TypeVar("Morphism")
+# Object = TypeVar("Object")
+# Morphism = TypeVar("Morphism")
 
 # Element = TypeVar("Element")
 ConcreteRepr = NewType("ConcreteRepr", object)
