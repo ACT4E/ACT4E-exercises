@@ -9,6 +9,31 @@ E1 = TypeVar("E1")
 E2 = TypeVar("E2")
 E3 = TypeVar("E3")
 
+__all__ = [
+    "Setoid",
+    "EnumerableSet",
+    "FiniteSet",
+    "EnumerableSetsOperations",
+    "EnumerableSetUnion",
+    "SetoidOperations",
+    "FiniteSetUnion",
+    "FiniteSetProduct",
+    "FiniteSetOfFiniteSubsets",
+    "FiniteSetProperties",
+    "FiniteSetDisjointUnion",
+    "SetDisjointUnion",
+    "SetOfFiniteSubsets",
+    "SetProduct",
+    "MakeSetDisjointUnion",
+    "MakeSetUnion",
+    "MakeSetProduct",
+    "MakePowerSet",
+    "MakeSetIntersection",
+    "EnumerableSetsOperations",
+    "SetoidOperations",
+    "SetUnion",
+]
+
 
 class Setoid(Generic[E], ABC):
     """
@@ -37,20 +62,6 @@ class Setoid(Generic[E], ABC):
         ...
 
 
-class Mapping(Generic[E1, E2], ABC):
-    @abstractmethod
-    def source(self) -> Setoid[E1]:
-        ...
-
-    @abstractmethod
-    def target(self) -> Setoid[E2]:
-        ...
-
-    @abstractmethod
-    def __call__(self, a: E1) -> E2:
-        ...
-
-
 class EnumerableSet(Setoid[E], ABC):
     @abstractmethod
     def elements(self) -> Iterator[E]:
@@ -63,16 +74,6 @@ class FiniteSet(EnumerableSet[E], ABC):
     @abstractmethod
     def size(self) -> int:
         """Return the size of the finite set."""
-
-
-class FiniteMap(Mapping[E1, E2], ABC):
-    @abstractmethod
-    def source(self) -> FiniteSet[E1]:
-        ...
-
-    @abstractmethod
-    def target(self) -> FiniteSet[E2]:
-        ...
 
 
 class FiniteSetProperties(ABC):

@@ -5,6 +5,7 @@ from .categories import *
 from .dps import *
 from .exceptions import *
 from .finite_maps import *
+from .helper import *
 from .intro import *
 from .posets import *
 from .relations import *

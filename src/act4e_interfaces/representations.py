@@ -12,11 +12,12 @@ from .categories import (
     FiniteProfunctor,
 )
 from .dps import FiniteDP
+from .finite_maps import FiniteMap
 from .helper import IOHelper
 from .posets import FinitePoset
 from .relations import FiniteRelation
 from .semigroups import FiniteGroup, FiniteMonoid, FiniteSemigroup
-from .sets import FiniteMap, FiniteSet
+from .sets import FiniteSet
 from .types import ConcreteRepr
 
 __all__ = [

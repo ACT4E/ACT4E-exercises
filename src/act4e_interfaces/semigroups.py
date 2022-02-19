@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Generic
+from typing import Any, Generic
 
 from .sets import C, E, FiniteSet, Setoid
 
@@ -40,7 +40,7 @@ class FreeSemigroup(Generic[C, E], Semigroup[E], ABC):
 
 class FiniteSemigroupConstruct(ABC):
     @abstractmethod
-    def free(self, fs: FiniteSet[C]) -> FreeSemigroup[C, E]:
+    def free(self, fs: FiniteSet[C]) -> FreeSemigroup[C, Any]:
         """Construct the free semigroup on a set."""
 
 

@@ -1,26 +1,50 @@
 from abc import ABC, abstractmethod
 from typing import Any, Generic, List, Optional, overload, Sequence, Tuple
 
+from .finite_maps import FiniteMap, Mapping
 from .semigroups import FiniteMonoid, Monoid
 from .sets import (
     C,
     E,
     E1,
     E2,
-    FiniteMap,
     FiniteSet,
     FiniteSetDisjointUnion,
     FiniteSetOfFiniteSubsets,
     FiniteSetProduct,
-    Mapping,
     SetDisjointUnion,
     SetOfFiniteSubsets,
     Setoid,
     SetProduct,
 )
 
-
-# __all__ = ['Poset', 'FinitePoset']
+__all__ = [
+    "Poset",
+    "FinitePoset",
+    "FinitePosetConstructionProduct",
+    "FinitePosetConstructionArrow",
+    "FinitePosetConstructionSum",
+    "FiniteLattice",
+    "FiniteMonotoneMap",
+    "FiniteMonoidalPoset",
+    "FiniteMonotoneMapProperties",
+    "FinitePosetConstructionTwisted",
+    "PosetOfIntervals",
+    "FinitePosetClosures",
+    "FinitePosetDisjointUnion",
+    "FinitePosetConstructionDiscrete",
+    "FinitePosetMeasurement",
+    "FinitePosetSubsetProperties",
+    "FinitePosetOfIntervals",
+    "MonoidalPosetOperations",
+    "FinitePosetConstructionOpposite",
+    "FinitePosetSubsetProperties2",
+    "FinitePosetOfIntervals",
+    "MonoidalPosetOperations",
+    "FinitePosetConstructionOpposite",
+    "FinitePosetProduct",
+    "PosetDisjointUnion",
+]
 
 
 class Poset(Generic[E], ABC):
@@ -197,7 +221,7 @@ class FinitePosetProduct(Generic[C, E], FinitePoset[E], PosetProduct[C, E], ABC)
 
 class FinitePosetConstructionProduct(ABC):
     @abstractmethod
-    def product(self, ps: Sequence[FinitePoset[C]]) -> FinitePoset[E]:
+    def product(self, ps: Sequence[FinitePoset[C]]) -> FinitePosetProduct[C, Any]:
         ...
 
 
@@ -216,7 +240,7 @@ class PosetDisjointUnion(Generic[C, E], Poset[E], ABC):
         """Returns the components of the union"""
 
 
-class FinitePosetDisjointUnion(Generic[C, E], PosetDisjointUnion[C, E], ABC):
+class FinitePosetDisjointUnion(Generic[C, E], FinitePoset[E], PosetDisjointUnion[C, E], ABC):
     """Specialization of SetUnion where we deal with FiniteSets"""
 
     @abstractmethod

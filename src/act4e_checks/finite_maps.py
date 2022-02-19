@@ -36,7 +36,7 @@ def check_map(tc: TestContext, m: I.FiniteMap[A, B]) -> None:
     source = m.source()
     target = m.target()
     for a in source.elements():
-        b = m(a)  # TODO: check it does not fail
+        b = m.__call__(a)  # TODO: check it does not fail
         if not target.contains(b):
             tc.fail(zh.span("invalid result"), x=a, y=b)
 
@@ -50,7 +50,9 @@ def check_same_map(tc: TestContext, m1: I.FiniteMap[A, B], m2: I.FiniteMap[A, B]
     check_same_set(tc, m1_source, m2_source)
     check_same_set(tc, m1_target, m2_target)
     for a in m1_source.elements():  # XXX: not wrapped
+        # noinspection PyTypeChecker
         y1 = tc.check_call(m1, object, a)
+        # noinspection PyTypeChecker
         y2 = tc.check_call(m2, object, a)
 
         equal = tc.check_call(m1_target.equal, bool, y1, y2)
@@ -65,8 +67,8 @@ def check_same_function(tc: TestContext, m1: I.FiniteMap[A, B], m2: I.FiniteMap[
     S = m1.source()
     T = m1.target()
     for x1 in S.elements():
-        y1 = m1(x1)
-        y2 = m2(x1)
+        y1 = m1.__call__(x1)
+        y2 = m2.__call__(x1)
         check_same_element(tc, T, y1, y2)
 
 

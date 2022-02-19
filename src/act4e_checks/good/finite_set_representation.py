@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, cast
 
 import act4e_interfaces as I
 from .finite_set import MyFiniteSet
@@ -11,6 +11,7 @@ class MyFiniteSetRepresentation(I.FiniteSetRepresentation):
         if not isinstance(data, dict):
             raise I.InvalidFormat(f"not a dictionary: {data}")
         if "elements" in data:
+            data = cast(I.DirectElements_desc, data)
             elements = data["elements"]
             if not isinstance(elements, list):
                 raise I.InvalidFormat()
@@ -19,5 +20,5 @@ class MyFiniteSetRepresentation(I.FiniteSetRepresentation):
 
     def save(self, h: I.IOHelper, f: I.FiniteSet[Any]) -> I.FiniteSet_desc:
         elements = sorted(f.elements())
-        data = {"elements": elements}
+        data: I.FiniteSet_desc = {"elements": elements}
         return data
