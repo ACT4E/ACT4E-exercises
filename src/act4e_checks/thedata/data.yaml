@@ -727,7 +727,7 @@ poset_empty:
 poset_one:
   tags:
     poset: true
-  data:
+  data: &poset_one
     carrier:
       elements: [a]
     hasse: []
@@ -743,7 +743,7 @@ poset_one:
 poset_two:
   tags:
     poset: true
-  data:
+  data: &poset_two
     carrier:
       elements: [a, b]
     hasse: []
@@ -1082,6 +1082,31 @@ poset_fruit1:
     - [d, b]
     - [e, b]
     - [e, c]
+
+
+poset_product1:
+  tags:
+    poset: true
+  requires:
+    poset_product: true
+  properties: {}
+  data:
+    poset_product:
+    - *poset_one
+    - *poset_two
+
+
+poset_sum1:
+  tags:
+    poset: true
+  requires:
+    poset_sum: true
+  properties: {}
+  data:
+    poset_sum:
+    - *poset_one
+    - *poset_two
+
 
 dp1:
   tags:

@@ -67,6 +67,12 @@ ALLOWED_PROPERTIES = {
     "some_uppersets",
     "some_not_lowersets",
 }
+ALLOWED_REQUIRES = {
+    "set_product",
+    "poset_product",
+    "set_union",
+    "poset_sum",
+}
 
 import os
 
@@ -105,6 +111,11 @@ def get_all_test_data() -> Dict[str, TestData[Any]]:
         if vv:
             msg = "Unknown properties"
             raise ZValueError(msg=msg, v=v, vv=vv)
+
+        extra_requires = set(requires) - set(ALLOWED_REQUIRES)
+        if extra_requires:
+            msg = f'Extra "requires" for entry {k!r}'
+            raise ZValueError(msg, extra_requires=extra_requires, allowed=ALLOWED_REQUIRES)
 
         extra_properties = set(properties) - set(ALLOWED_PROPERTIES)
         if extra_properties:
@@ -214,7 +225,10 @@ def loadit_(tc: TestContext, loader: Loader[Xcov, Rcon], h: I.IOHelper, data: Rc
 def check_good_output(tc: TestContext, x: object) -> None:
     OK = (int, float, bool, datetime, dict, list, str)
     if isinstance(x, tuple):
-        msg = "You cannot use tuples for the concrete representation because they cannot be serialized in YAML. Try using lists. (You can use tuples for the internal representation.)"
+        msg = (
+            "You cannot use tuples for the concrete representation because they cannot be serialized in "
+            "YAML. Try using lists. (You can use tuples for the internal representation.)"
+        )
         tc.fail(zh.span(msg), x=x)
         return
     # noinspection PyTypeChecker
@@ -231,3 +245,13 @@ def check_good_output(tc: TestContext, x: object) -> None:
     if isinstance(x, dict):
         for k, v in x.items():
             check_good_output(tc, v)
+
+
+def filter_reqs(d: Dict[str, TestData[X]], req: str) -> Dict[str, TestData[X]]:
+    res = {}
+    for k, v in d.items():
+        requires = set(v.requires)
+        if requires == {req}:
+            res[k] = v
+
+    return res
