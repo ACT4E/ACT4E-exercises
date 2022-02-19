@@ -6,7 +6,8 @@ from typing import Any, Generic, Tuple, TypeVar
 from .dps import DP
 from .posets import Poset
 from .relations import FiniteRelation
-from .sets import FiniteSet, FiniteSetProduct, Setoid, SetProduct
+from .sets import FiniteSet, Setoid
+from .sets_product import FiniteSetProduct, SetProduct
 from .types import Object
 
 __all__ = [
@@ -278,17 +279,17 @@ class FiniteAdjunctionsOperations(ABC):
 
 
 class Profunctor(ABC):
-    pass  #  # def source(self) -> Category:  #     ...  #  # def target(self) -> Category:  #     ...  #
+    pass  # # def source(self) -> Category:  #     ...  #  # def target(self) -> Category:  #     ...  #
     # def functor(self) -> Functor:  #     ...
 
 
 class FiniteProfunctor(ABC):
-    pass  #  # def cat1(self) -> FiniteCategory:  #     ...  #  # def cat2(self) -> FiniteCategory:  #
+    pass  # # def cat1(self) -> FiniteCategory:  #     ...  #  # def cat2(self) -> FiniteCategory:  #
     # ...  #  # def functor(self) -> FiniteFunctor:  #     ...
 
 
 class FiniteProfunctorOperations(ABC):
-    pass  #  # @abstractmethod  # def series(self, p1: FiniteProfunctor, p2: FiniteProfunctor) ->
+    pass  # # @abstractmethod  # def series(self, p1: FiniteProfunctor, p2: FiniteProfunctor) ->
     # FiniteProfunctor:  #     ...
 
 

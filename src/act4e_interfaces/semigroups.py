@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import Any, Generic
+from typing import Any, Generic, TypeVar
 
-from .sets import C, E, FiniteSet, Setoid
+from .sets import FiniteSet, Setoid
 
 __all__ = [
     "Semigroup",
@@ -14,6 +14,9 @@ __all__ = [
     "FiniteGroup",
     "FreeSemigroup",
 ]
+
+E = TypeVar("E")
+C = TypeVar("C")
 
 
 class Semigroup(Generic[E], ABC):

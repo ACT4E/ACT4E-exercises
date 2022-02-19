@@ -3,7 +3,8 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Generic, TypeVar
 
-from .posets import FinitePoset, MonotoneMap, Poset
+from .posets import FinitePoset, Poset
+from .posets_maps import MonotoneMap
 from .relations import FiniteRelation
 from .sets import FiniteSet, Setoid
 

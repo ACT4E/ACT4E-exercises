@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import Generic
+from typing import Generic, TypeVar
 
-from .sets import E, E1, E2, E3, FiniteSet, Setoid
+from .sets import FiniteSet, Setoid
 
 __all__ = [
     "Relation",
@@ -12,6 +12,11 @@ __all__ = [
     "FiniteEndorelationProperties",
     "FiniteEndorelationOperations",
 ]
+
+E = TypeVar("E")
+E1 = TypeVar("E1")
+E2 = TypeVar("E2")
+E3 = TypeVar("E3")
 
 
 class Relation(Generic[E1, E2], ABC):
