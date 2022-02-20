@@ -1,5 +1,5 @@
 import itertools
-from typing import Any, Callable, cast, List, Sequence, TypeVar
+from typing import Any, Callable, List, Sequence, TypeVar
 
 import zuper_html as zh
 from zuper_testint import find_imp, TestContext

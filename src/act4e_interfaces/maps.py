@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Generic, TypeVar
+from typing import Generic, overload, TypeVar
 
 from .relations import FiniteRelation
 from .sets import FiniteSet, Setoid
@@ -11,16 +11,6 @@ B = TypeVar("B")
 C = TypeVar("C")
 
 __all__ = ["FiniteMapOperations", "FiniteMap", "Mapping"]
-
-
-class FiniteMapOperations(ABC):
-    @abstractmethod
-    def compose(self, f: FiniteMap[A, B], g: FiniteMap[B, C]) -> FiniteMap[A, C]:
-        """compose two functions"""
-
-    @abstractmethod
-    def as_relation(self, f: FiniteMap[A, B]) -> FiniteRelation[A, B]:
-        """Load the data"""
 
 
 class Mapping(Generic[A, B], ABC):
@@ -38,6 +28,8 @@ class Mapping(Generic[A, B], ABC):
 
 
 class FiniteMap(Generic[A, B], Mapping[A, B], ABC):
+    """A finite map is a mapping between two finite sets."""
+
     @abstractmethod
     def source(self) -> FiniteSet[A]:
         ...
@@ -45,3 +37,25 @@ class FiniteMap(Generic[A, B], Mapping[A, B], ABC):
     @abstractmethod
     def target(self) -> FiniteSet[B]:
         ...
+
+
+class FiniteMapOperations(ABC):
+    @overload
+    def identity(self, s: FiniteSet[A]) -> FiniteMap[A, A]:
+        ...
+
+    @overload
+    def identity(self, s: Setoid[A]) -> Mapping[A, A]:
+        ...
+
+    @abstractmethod
+    def identity(self, s: Setoid[A]) -> Mapping[A, A]:
+        """Returns the identity on a set."""
+
+    @abstractmethod
+    def compose(self, f: FiniteMap[A, B], g: FiniteMap[B, C]) -> FiniteMap[A, C]:
+        """Compose two functions."""
+
+    @abstractmethod
+    def as_relation(self, f: FiniteMap[A, B]) -> FiniteRelation[A, B]:
+        """Re-writes a Finite Map as a relation."""

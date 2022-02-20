@@ -14,6 +14,8 @@ map1:
     - [b, 2]
     - [c, 3]
     - [d, 4]
+
+
 map3:
   tags:
     map: true
@@ -26,3 +28,113 @@ map3:
     - [a, 1]
     - [b, 2]
     - [c, 1]
+
+
+
+map_bool_not:
+  tags:
+    map: true
+  data:
+    source:
+      load: set_bool
+    target:
+      load: set_bool
+    values:
+    - [true, false]
+    - [false, true]
+
+
+map_bool_true:
+  tags:
+    map: true
+  data:
+    source:
+      load: set_bool
+    target:
+      load: set_bool
+    values:
+    - [true, true]
+    - [false, true]
+
+
+map_bool_identity:
+  tags:
+    map: true
+  data:
+    source:
+      load: set_bool
+    target:
+      load: set_bool
+    values:
+    - [true, true]
+    - [false, false]
+
+
+map_bool_false:
+  tags:
+    map: true
+  data:
+    source:
+      load: set_bool
+    target:
+      load: set_bool
+    values:
+    - [true, false]
+    - [false, false]
+
+map_bool_and:
+  tags:
+    map: true
+  requires:
+    set_product: true
+  data:
+    source:
+      product:
+      - load: set_bool
+      - load: set_bool
+    target:
+      load: set_bool
+    values:
+    - [[false, false], false]
+    - [[false, true], false]
+    - [[true, false], false]
+    - [[true, true], true]
+
+
+map_bool_or:
+  tags:
+    map: true
+  requires:
+    set_product: true
+  data:
+    source:
+      product:
+      - load: set_bool
+      - load: set_bool
+    target:
+      load: set_bool
+    values:
+    - [[false, false], false]
+    - [[false, true], true]
+    - [[true, false], true]
+    - [[true, true], true]
+
+
+
+map_bool_xor:
+  tags:
+    map: true
+  requires:
+    set_product: true
+  data:
+    source:
+      product:
+      - load: set_bool
+      - load: set_bool
+    target:
+      load: set_bool
+    values:
+    - [[false, false], false]
+    - [[false, true], true]
+    - [[true, false], true]
+    - [[true, true], false]

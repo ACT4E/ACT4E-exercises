@@ -1,12 +1,14 @@
 from typing import (
     Any,
     Callable,
+    cast,
     Dict,
     TypeVar,
 )
 
 import zuper_html as zh
 from zuper_testint import (
+    find_imp,
     ImplementationFail,
     TestContext,
     TestManagerInterface,
@@ -16,8 +18,9 @@ from zuper_testint import (
 )
 
 import act4e_interfaces as I
-from .data import check_good_output, get_test_data, IOHelperImp, loadit_, purify_data, TestData
-from .sets_utils import check_same_element, check_same_set, set_coherence
+from .data import check_good_output, get_test_data, get_test_maps, IOHelperImp, loadit_, purify_data, TestData
+from .relations import check_same_relation, load_relation_tc
+from .sets_utils import check_same_element, check_same_set, load_set_tc, set_coherence
 
 E = TypeVar("E")
 A = TypeVar("A")
@@ -25,8 +28,40 @@ B = TypeVar("B")
 
 
 @tfor(I.FiniteMapOperations)
+def test_FiniteMapOperations_bool(tc: TestContext) -> None:
+    fmo: I.FiniteMapOperations = find_imp(tc, I.FiniteMapOperations)
+
+    with tc.description("Checking that we can create identities."):
+        # Load the Bool set
+        set_bool: I.FiniteSet[Any] = load_set_tc(tc, "set_bool")
+        # Load the identity
+        map_bool_identity_expected = load_map_tc(tc, "map_bool_identity")
+        # Ask to create the identity
+        map_bool_identity = cast(
+            I.FiniteMap[Any, Any], tc.check_result(fmo, fmo.identity, I.FiniteMap, set_bool)
+        )
+        check_map(tc, map_bool_identity)
+        check_same_map(tc, map_bool_identity, map_bool_identity_expected)
+
+    with tc.description("Checking that we can compose maps"):
+        map_bool_not = load_map_tc(tc, "map_bool_not")
+        map_bool_not_twice = tc.check_result(fmo, fmo.compose, I.FiniteMap, map_bool_not, map_bool_not)
+        check_map(tc, map_bool_not_twice)
+
+        check_same_map(tc, map_bool_not_twice, map_bool_identity_expected)
+
+    with tc.description("Checking conversion of map to rel"):
+        map_bool_not = load_map_tc(tc, "map_bool_not")
+        rel_bool_not_expected = load_relation_tc(tc, "rel_bool_not")
+        rel_bool_not = tc.check_result(fmo, fmo.as_relation, I.FiniteRelation, map_bool_not)
+
+        check_same_relation(tc, rel_bool_not_expected, rel_bool_not)
+
+
+@tfor(I.FiniteMapOperations)
 def test_FiniteMapOperations(tm: TestManagerInterface) -> None:
     mks = tm.impof(I.FiniteMapOperations)
+
     raise TestNotImplemented()
 
 
@@ -148,3 +183,16 @@ def tm_load_map(
     _ = tm.impof(I.FiniteMapRepresentation)
 
     return tm.addtest(loadit, _, data, tid0=f"load-map-{name}")
+
+
+def load_map_tc(tc: TestContext, name: str) -> I.FiniteMap[Any, Any]:
+    fsr: I.FiniteMapRepresentation = find_imp(tc, I.FiniteMapRepresentation)
+    data1 = get_map_data(name)
+    h = IOHelperImp()
+    return loadit_(tc, fsr, h, data1, I.FiniteMap)
+
+
+def get_map_data(name: str) -> I.FiniteSet_desc:
+    d = get_test_maps()
+    data1 = purify_data(d[name].data)
+    return data1

@@ -416,3 +416,85 @@ poset_alphabet:
       lower_closure: [a, b, c]
 
 
+
+
+
+
+poset_bool:
+  tags:
+    poset: true
+  data:
+    carrier:
+      load: set_bool
+    hasse:
+    - [false, true]
+
+
+#  G  H   K   L
+#   D   E   F
+#     B   C
+#       A    Z
+poset_grid:
+  tags:
+    poset: true
+
+
+  properties:
+    some_upper_bounds:
+    - S: [E]
+      upper_bounds: [H, K]
+    - S: [C, E]
+      upper_bounds: [H, K]
+    - S: [D, F]
+      upper_bounds:
+    some_lower_bounds:
+    - S: [B, C]
+      lower_bounds: [A]
+    - S: [B, Z]
+      lower_bounds:
+    some_infimum:
+    - S: [B, C]
+      infimum: A
+    - S: [C]
+      infimum:
+    some_supremum:
+    - S: [L]
+      supremum: L
+    - S: [F]
+      supremum:
+    some_minimal:
+    - S: [A, B, C]
+      minimal: [A]
+    - S: [A, Z]
+      minimal: [A, Z]
+    some_maximal:
+    - S: [G, D, B, A]
+      maximal: [G]
+    - S: [G, H]
+      maximal: [G, H]
+
+
+
+
+
+
+
+
+  data:
+    carrier:
+      elements: [A, B, C, D, E, F, G, H, K, L, Z]
+    hasse:
+    - [A, B]
+    - [A, C]
+    - [B, D]
+    - [B, E]
+    - [C, E]
+    - [C, F]
+    - [D, G]
+    - [D, H]
+    - [E, H]
+    - [E, K]
+    - [F, K]
+    - [F, L]
+    - [Z, C]
+

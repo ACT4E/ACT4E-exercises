@@ -217,3 +217,29 @@ ER7:
   properties:
     antisymmetric: false
 
+
+
+rel_bool_not:
+  tags:
+    relation: true
+  data:
+    source:
+      load: set_bool
+    target:
+      load: set_bool
+    values:
+    - [true, false]
+    - [false, true]
+
+
+rel_bool_identity:
+  tags:
+    relation: true
+  data:
+    source:
+      load: set_bool
+    target:
+      load: set_bool
+    values:
+    - [true, true]
+    - [false, false]

@@ -8,6 +8,8 @@ __all__ = [
     "FinitePosetMeasurement",
     "FinitePosetSubsetProperties",
     "FinitePosetSubsetProperties2",
+    "FinitePosetInfSup",
+    "FinitePosetMinMax",
 ]
 
 C = TypeVar("C")
@@ -47,16 +49,16 @@ class FinitePosetMinMax(ABC):
 class FinitePosetInfSup(ABC):
     @abstractmethod
     def lower_bounds(self, fp: FinitePoset[E], s: List[E]) -> List[E]:
-        """Computes the lower bounds for the subset"""
+        """Computes the lower bounds for the subset (possibly empty)."""
+
+    @abstractmethod
+    def upper_bounds(self, fp: FinitePoset[E], s: List[E]) -> Optional[List[E]]:
+        """Computes the upper bounds for the subset (possibly empty)."""
 
     @abstractmethod
     def infimum(self, fp: FinitePoset[E], s: List[E]) -> Optional[E]:
         """Computes the infimum / meet / greatest lower bound
         for the subset, or returns None if one does not exist."""
-
-    @abstractmethod
-    def upper_bounds(self, fp: FinitePoset[E], s: List[E]) -> List[E]:
-        """Computes the upper bounds for the subset."""
 
     @abstractmethod
     def supremum(self, fp: FinitePoset[E], s: List[E]) -> Optional[E]:

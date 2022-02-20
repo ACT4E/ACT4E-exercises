@@ -328,3 +328,17 @@ sm_min3:
       - 1
     - - [2, 2]
       - 2
+
+monoid2:
+  tags:
+    semigroup: true
+    monoid: true
+  data:
+    carrier:
+      elements: [0, 1]
+    composition:
+    - [[0, 0], 0]
+    - [[0, 1], 0]
+    - [[1, 0], 0]
+    - [[1, 1], 1]
+    neutral: 1

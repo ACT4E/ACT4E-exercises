@@ -12,7 +12,7 @@ from typing import (
 )
 
 import zuper_html as zh
-from zuper_testint import TestContext, TestManagerInterface, TestRef, tfor
+from zuper_testint import find_imp, TestContext, TestManagerInterface, TestRef, tfor
 
 import act4e_interfaces as I
 from .data import dumpit_, get_test_relations, IOHelperImp, loadit_, purify_data
@@ -23,17 +23,33 @@ B = TypeVar("B")
 
 
 def check_same_relation(tc: TestContext, m1: I.FiniteRelation[A, B], m2: I.FiniteRelation[A, B]) -> bool:
-    check_same_set(tc, m1.source(), m2.source())
-    check_same_set(tc, m1.target(), m2.target())
-    S = m1.source()
-    T = m1.target()
+    m1_source = tc.check_result(m1, m1.source, I.FiniteSet)
+    m2_source = tc.check_result(m2, m2.source, I.FiniteSet)
+    m1_target = tc.check_result(m1, m1.target, I.FiniteSet)
+    m2_target = tc.check_result(m2, m2.target, I.FiniteSet)
+    check_same_set(tc, m1_source, m2_source)
+    check_same_set(tc, m1_target, m2_target)
+    S = m1_source
+    T = m1_target
     for x, y in itertools.product(S.elements(), T.elements()):
-        a = m1.holds(x, y)  # TODO: wrap
-        b = m2.holds(x, y)
+        a = tc.check_result(m1, m1.holds, bool, x, y)  # TODO: wrap
+        b = tc.check_result(m2, m2.holds, bool, x, y)  # TODO: wrap
         if a != b:
             tc.fail(zh.span("not the same relation"), x=x, y=y, a=a, b=b)
             return False
     return True
+
+
+@tfor(I.FiniteRelationCompose)
+def check_FiniteRelationCompose(tc: TestContext) -> None:
+    frc: I.FiniteRelationCompose = find_imp(tc, I.FiniteRelationCompose)
+
+    with tc.description("Checking that we can compose relations"):
+        rel_bool_not = load_relation_tc(tc, "rel_bool_not")
+        rel_bool_not_twice = tc.check_result(frc, frc.compose, I.FiniteRelation, rel_bool_not, rel_bool_not)
+        rel_bool_identity = load_relation_tc(tc, "rel_bool_identity")
+
+        check_same_relation(tc, rel_bool_not_twice, rel_bool_identity)
 
 
 @tfor(I.FiniteEndorelationProperties)
@@ -233,3 +249,16 @@ def test_FiniteRelationRepresentation(tm: TestManagerInterface) -> None:
         r1 = tm_load_relation(tm, name, tm.store(purify_data(r.data)))
         r1_dumped = tm_save_relation(tm, name, r1)
         r2 = tm_load_relation(tm, name + "-re", r1_dumped)
+
+
+def load_relation_tc(tc: TestContext, name: str) -> I.FiniteRelation[Any, Any]:
+    fsr: I.FiniteRelationRepresentation = find_imp(tc, I.FiniteRelationRepresentation)
+    data1 = get_relation_data(name)
+    h = IOHelperImp()
+    return loadit_(tc, fsr, h, data1, I.FiniteRelation)
+
+
+def get_relation_data(name: str) -> I.FiniteRelation_desc:
+    d = get_test_relations()
+    data1 = purify_data(d[name].data)
+    return data1

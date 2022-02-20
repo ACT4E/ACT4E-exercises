@@ -67,6 +67,12 @@ ALLOWED_PROPERTIES = {
     "some_not_lowersets",
     "some_upper_closures",
     "some_lower_closures",
+    "some_maximal",
+    "some_supremum",
+    "some_upper_bounds",
+    "some_minimal",
+    "some_lower_bounds",
+    "some_infimum",
 }
 ALLOWED_REQUIRES = {
     "set_product",
@@ -89,8 +95,13 @@ def find_yamls(dirnames: List[str]) -> List[str]:
     return res
 
 
+def get_default_data_dir() -> str:
+    dirname = os.path.join(os.path.dirname(__file__), "thedata")
+    return dirname
+
+
 @lru_cache()
-def get_all_test_data() -> Dict[str, TestData[Any]]:
+def get_all_test_data(load: bool = True) -> Dict[str, TestData[Any]]:
     from_env = os.environ.get(ENV_VAR, None)
     if from_env:
         dirname = from_env
@@ -102,7 +113,7 @@ def get_all_test_data() -> Dict[str, TestData[Any]]:
             f"directory. "
         )
         logger.info(msg)
-        dirname = os.path.join(os.path.dirname(__file__), "thedata")
+        dirname = get_default_data_dir()
 
     yamls = find_yamls([dirname])
 
@@ -152,9 +163,10 @@ def get_all_test_data() -> Dict[str, TestData[Any]]:
             res[k] = TestData(tags=tags, requires=requires, data=data, properties=properties)
 
     entries = {k: v.data for k, v in res.items()}
-    for k, v in res.items():
-        with add_context(k=k):
-            res[k].data = substitute(entries, res[k].data)
+    if load:
+        for k, v in res.items():
+            with add_context(k=k):
+                res[k].data = substitute(entries, res[k].data)
 
     return res
 
@@ -200,6 +212,10 @@ def get_test_posets() -> Dict[str, TestData[I.FinitePoset_desc]]:
 
 def get_test_sets() -> Dict[str, TestData[I.FiniteSet_desc]]:
     return get_test_data("set")
+
+
+def get_test_maps() -> Dict[str, TestData[I.FiniteSet_desc]]:
+    return get_test_data("map")
 
 
 def get_test_data(tagname: str) -> Dict[str, TestData[Any]]:

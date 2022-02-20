@@ -1,8 +1,11 @@
 from typing import (
     Any,
     List,
+    Optional,
+    TypeVar,
 )
 
+import zuper_html as zh
 from zuper_testint import find_imp, TestContext, TestManagerInterface, tfor
 
 import act4e_interfaces as I
@@ -135,3 +138,186 @@ def test_FinitePosetSubsetProperties2(tm: TestManagerInterface) -> None:
         some_not_uppersets = get("some_not_lowersets")
         for k, v in some_not_uppersets.items():
             tm.addtest(check_is_lowerset, mks, r1, v, False, tid0=f"check_is_not_lowerset-{rname}-{k}")
+
+
+@tfor(I.FinitePosetInfSup)
+def test_FinitePosetInfSup(tm: TestManagerInterface) -> None:
+    mks = tm.impof(I.FinitePosetInfSup)
+    d = get_test_posets()
+    for rname, rinfo in d.items():
+
+        def get(p: Any) -> Any:
+            return rinfo.properties.get(p, [])
+
+        r1 = tm_load_poset(tm, rname, tm.store(purify_data(rinfo.data)))
+        for i, v in enumerate(get("some_lower_bounds")):
+            tm.addtest(
+                check_lower_bounds, mks, r1, v["S"], v["lower_bounds"], tid0=f"check_lower_bounds-{rname}-{i}"
+            )
+        for i, v in enumerate(get("some_upper_bounds")):
+            tm.addtest(
+                check_lower_bounds, mks, r1, v["S"], v["upper_bounds"], tid0=f"check_upper_bounds-{rname}-{i}"
+            )
+        for i, v in enumerate(get("some_supremum")):
+            tm.addtest(check_supremum, mks, r1, v["S"], v["supremum"], tid0=f"check_supremum-{rname}-{i}")
+        for i, v in enumerate(get("some_infimum")):
+            tm.addtest(check_supremum, mks, r1, v["S"], v["infimum"], tid0=f"check_infimum-{rname}-{i}")
+
+
+@tfor(I.FinitePosetMinMax)
+def test_FinitePosetMinMax(tm: TestManagerInterface) -> None:
+    mks = tm.impof(I.FinitePosetMinMax)
+    d = get_test_posets()
+    for rname, rinfo in d.items():
+
+        def get(p: Any) -> Any:
+            return rinfo.properties.get(p, [])
+
+        r1 = tm_load_poset(tm, rname, tm.store(purify_data(rinfo.data)))
+        for i, v in enumerate(get("some_miminal")):
+            tm.addtest(check_minimal, mks, r1, v["S"], v["minimal"], tid0=f"check_minimal-{rname}-{i}")
+        for i, v in enumerate(get("some_maximal")):
+            tm.addtest(check_maximal, mks, r1, v["S"], v["maximal"], tid0=f"check_maximal-{rname}-{i}")
+
+
+X = TypeVar("X")
+
+
+def check_infimum(
+    tc: TestContext,
+    mks: I.FinitePosetInfSup,
+    p: I.FinitePoset[X],
+    S_raw: List[I.ConcreteRepr],
+    expected_raw: Optional[I.ConcreteRepr],
+) -> None:
+    carrier = p.carrier()
+    S = load_list(tc, carrier, S_raw)
+    result = tc.check_result(mks, mks.infimum, object, p, S)
+    _check(tc, carrier, S, result, expected_raw)
+
+
+def check_supremum(
+    tc: TestContext,
+    mks: I.FinitePosetInfSup,
+    p: I.FinitePoset[X],
+    S_raw: List[I.ConcreteRepr],
+    expected_raw: Optional[I.ConcreteRepr],
+) -> None:
+    carrier = p.carrier()
+    S = load_list(tc, carrier, S_raw)
+    result = tc.check_result(mks, mks.supremum, object, p, S)
+    _check(tc, carrier, S, result, expected_raw)
+
+
+def _check(
+    tc: TestContext, carrier: I.FiniteSet[X], S: List[X], result: X, expected_raw: Optional[I.ConcreteRepr]
+) -> None:
+    expected = load_list(tc, carrier, [expected_raw]) if expected_raw is not None else None
+    if result is None and expected is not None:
+        msg = "Expected infimum but got None"
+        tc.fail(zh.p(msg), S=S, expected=expected, result=result)
+        return
+    if result is not None and expected is None:
+        msg = "Expected not infimum but got some"
+        tc.fail(zh.p(msg), S=S, expected=expected, result=result)
+        return
+
+    same = tc.check_result(carrier, carrier.equal, bool, result, expected)
+    if not same:
+        msg = "mismatch"
+        tc.fail(zh.p(msg), S=S, expected=expected, result=result)
+
+
+def check_maximal(
+    tc: TestContext,
+    mks: I.FinitePosetMinMax,
+    p: I.FinitePoset[X],
+    S_raw: List[I.ConcreteRepr],
+    expected_raw: List[I.ConcreteRepr],
+) -> None:
+    carrier = p.carrier()
+    S = load_list(tc, carrier, S_raw)
+    result = tc.check_result(mks, mks.maximal, Optional[List[Any]], p, S)
+    expected = load_list(tc, carrier, expected_raw)
+    check_lists_same(tc, carrier, result, expected)
+
+
+def check_minimal(
+    tc: TestContext,
+    mks: I.FinitePosetMinMax,
+    p: I.FinitePoset[X],
+    S_raw: List[I.ConcreteRepr],
+    expected_raw: List[I.ConcreteRepr],
+) -> None:
+    carrier = p.carrier()
+    S = load_list(tc, carrier, S_raw)
+    result = tc.check_result(mks, mks.miminal, Optional[List[Any]], p, S)
+    expected = load_list(tc, carrier, expected_raw)
+    check_lists_same(tc, carrier, result, expected)
+
+
+def check_lower_bounds(
+    tc: TestContext,
+    mks: I.FinitePosetInfSup,
+    p: I.FinitePoset[X],
+    S_raw: List[I.ConcreteRepr],
+    expected_raw: List[I.ConcreteRepr],
+) -> None:
+    carrier = p.carrier()
+    S = load_list(tc, carrier, S_raw)
+    result = tc.check_result(mks, mks.lower_bounds, Optional[List[Any]], p, S)
+    expected = load_list(tc, carrier, expected_raw)
+    check_lists_same(tc, carrier, result, expected)
+
+
+def check_upper_bounds(
+    tc: TestContext,
+    mks: I.FinitePosetInfSup,
+    p: I.FinitePoset[X],
+    S_raw: List[I.ConcreteRepr],
+    expected_raw: List[I.ConcreteRepr],
+) -> None:
+    carrier = p.carrier()
+    S = load_list(tc, carrier, S_raw)
+    result = tc.check_result(mks, mks.upper_bounds, List[Any], p, S)
+    expected = load_list(tc, carrier, expected_raw)
+    check_lists_same(tc, carrier, result, expected)
+
+    #
+    # if expected_raw is not None:
+    #
+    #
+    #     if result is None:
+    #         msg = 'Expected lower bounds but got None'
+    #         tc.fail(zh.p(msg), S=S, expected=expected, result=result)
+    #     else:
+    #         check_lists_same(tc, carrier, expected, result)
+    #
+    # else:
+    #     expected = None
+    #     if result is not None:
+    #         msg = 'Expected  no lower bounds but got None'
+    #         tc.fail(zh.p(msg), S=S, expected=expected, result=result)
+    #
+    # pass
+
+
+#
+# class FinitePosetInfSup(ABC):
+#     @abstractmethod
+#     def lower_bounds(self, fp: FinitePoset[E], s: List[E]) -> List[E]:
+#         """Computes the lower bounds for the subset"""
+#
+#     @abstractmethod
+#     def infimum(self, fp: FinitePoset[E], s: List[E]) -> Optional[E]:
+#         """Computes the infimum / meet / greatest lower bound
+#         for the subset, or returns None if one does not exist."""
+#
+#     @abstractmethod
+#     def upper_bounds(self, fp: FinitePoset[E], s: List[E]) -> List[E]:
+#         """Computes the upper bounds for the subset."""
+#
+#     @abstractmethod
+#     def supremum(self, fp: FinitePoset[E], s: List[E]) -> Optional[E]:
+#         """Computes the supremum for the subset if it exists,
+#         or returns None if one does not exist."""
