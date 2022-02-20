@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, List, Union
+from typing import Any, Final, List, Union
 
 from typing_extensions import TypedDict
 
@@ -49,5 +49,5 @@ class FinitePosetRepresentation(ABC):
         """Save the data"""
 
 
-KWD_POSET_SUM = "poset_sum"
-KWD_POSET_PRODUCT = "poset_product"
+KWD_POSET_SUM: Final[str] = "poset_sum"
+KWD_POSET_PRODUCT: Final[str] = "poset_product"

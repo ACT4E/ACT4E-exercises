@@ -4,7 +4,6 @@ import zuper_html as zh
 from zuper_testint import find_imp, TestContext, tfor
 
 import act4e_interfaces as I
-from . import logger
 from .posets_utils import check_same_poset, load_poset_tc
 
 
@@ -14,7 +13,7 @@ def check_poset_disjoint_union(tc: TestContext) -> None:
     poset_empty = load_poset_tc(tc, "poset_empty")
 
     poset2 = tc.check_result(msd, msd.disjoint_union, I.FinitePosetDisjointUnion, [poset_empty, poset_empty])
-    logger.info(poset2=poset2)
+    # logger.info(poset2=poset2)
 
     check_same_poset(tc, poset2, poset_empty)
 

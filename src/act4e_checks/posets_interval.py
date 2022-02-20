@@ -6,7 +6,7 @@ import zuper_html as zh
 from zuper_testint import find_imp, TestContext, TestManagerInterface, tfor
 
 import act4e_interfaces as I
-from act4e_checks.posets_utils import load_poset_tc
+from act4e_checks.posets_utils import load_poset_tc, poset_coherence
 
 
 @tfor(I.FinitePosetConstructionArrow)
@@ -27,12 +27,14 @@ def check_arrow1(tc: TestContext, poset_name: str) -> None:
     mks: I.FinitePosetConstructionArrow = find_imp(tc, I.FinitePosetConstructionArrow)
     p = load_poset_tc(tc, poset_name)
     p_arrow = tc.check_result(mks, mks.arrow, I.PosetOfIntervals, p)
+    poset_coherence(tc, p_arrow)
 
 
 def check_twisted1(tc: TestContext, poset_name: str) -> None:
     mks: I.FinitePosetConstructionArrow = find_imp(tc, I.FinitePosetConstructionArrow)
     p = load_poset_tc(tc, poset_name)
     p_twisted = tc.check_result(mks, mks.arrow, I.PosetOfIntervals, p)
+    poset_coherence(tc, p_twisted)
 
 
 @tfor(I.FinitePosetConstructionArrow)

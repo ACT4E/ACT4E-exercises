@@ -17,7 +17,7 @@ from zuper_testint import (
 
 import act4e_interfaces as I
 from .data import check_good_output, get_test_data, IOHelperImp, loadit_, purify_data, TestData
-from .sets_utils import check_same_element, check_same_set, check_set
+from .sets_utils import check_same_element, check_same_set, set_coherence
 
 E = TypeVar("E")
 A = TypeVar("A")
@@ -31,10 +31,10 @@ def test_FiniteMapOperations(tm: TestManagerInterface) -> None:
 
 
 def check_map(tc: TestContext, m: I.FiniteMap[A, B]) -> None:
-    check_set(tc, m.source())
-    check_set(tc, m.target())
-    source = m.source()
-    target = m.target()
+    source = tc.check_result(m, m.source, I.FiniteSet)
+    target = tc.check_result(m, m.target, I.FiniteSet)
+    set_coherence(tc, source)
+    set_coherence(tc, target)
     for a in source.elements():
         b = m.__call__(a)  # TODO: check it does not fail
         if not target.contains(b):

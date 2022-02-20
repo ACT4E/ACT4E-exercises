@@ -10,6 +10,7 @@ __all__ = [
     "FinitePosetOfIntervals",
     "FinitePosetOfIntervals",
 ]
+
 C = TypeVar("C")
 E = TypeVar("E")
 
@@ -17,9 +18,11 @@ E = TypeVar("E")
 class PosetOfIntervals(Generic[C, E], Poset[E], ABC):
     """A poset of intervals."""
 
+    @abstractmethod
     def construct(self, a: C, b: C) -> E:
         """Constructs an interval given the boundaries."""
 
+    @abstractmethod
     def boundaries(self, interval: E) -> Tuple[C, C]:
         """Returns the boundaries of an interval."""
 

@@ -165,7 +165,7 @@ def substitute(entries: Dict[str, object], a: object) -> object:
                 msg = "Cannot find entry to load"
                 raise ZValueError(msg, a=a)
             else:
-                return entries[loadit]
+                return substitute(entries, entries[loadit])
         else:
             return {k: substitute(entries, v) for k, v in a.items()}
 

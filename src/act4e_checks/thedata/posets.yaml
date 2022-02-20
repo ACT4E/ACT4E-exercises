@@ -17,7 +17,7 @@ poset_one:
     poset: true
   data:
     carrier:
-      elements: [a]
+      load: set_one
     hasse: []
   properties:
     height: 1
@@ -33,7 +33,7 @@ poset_two:
     poset: true
   data:
     carrier:
-      elements: [a, b]
+      load: set_two
     hasse: []
   properties:
     height: 1

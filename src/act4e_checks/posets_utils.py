@@ -159,3 +159,10 @@ def get_poset_data(name: str) -> I.FinitePoset_desc:
     d = get_test_data("poset")
     data1 = purify_data(d[name].data)
     return data1
+
+
+def poset_coherence(tc: TestContext, fi: I.FinitePoset[X]) -> None:
+    carrier = tc.check_result(fi, fi.carrier, I.FiniteSet[X])
+    elements = list(tc.check_result(fi, carrier.elements, object))
+    for a in elements:
+        tc.check_result_value(fi, fi.holds, bool, True, a, a)

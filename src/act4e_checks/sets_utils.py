@@ -34,17 +34,6 @@ def check_same_set(tc: TestContext, s1: I.FiniteSet[X], s2: I.FiniteSet[X]) -> N
             tc.fail(msg, e2=e2)
 
 
-def check_set(tc: TestContext, m: I.FiniteSet[X]) -> None:
-    n = 0
-    for e in m.elements():
-        n += 1
-        if not m.equal(e, e):
-            tc.fail(zh.span("equal is not True"), e=e)
-    size = m.size()
-    if n != size:
-        tc.fail(zh.span("size() is not correct"), size=size, n=n)
-
-
 def set_coherence(tc: TestContext, fi: I.FiniteSet[X]) -> None:
     a = len(list(fi.elements()))
     b = fi.size()
