@@ -9,6 +9,7 @@ __all__ = [
     "FinitePosetConstructionOpposite",
     "PosetOfFiniteSubsets",
     "FinitePosetOfFiniteSubsets",
+    "PosetConstructionPower",
 ]
 
 C = TypeVar("C")
@@ -45,19 +46,16 @@ class FinitePosetOfFiniteSubsets(Generic[C, E], PosetOfFiniteSubsets[C, E], Fini
 
 class PosetConstructionPower(ABC):
     @overload
-    def powerposet(self, s: FinitePoset[C]) -> FinitePosetOfFiniteSubsets[C, Any]:
+    def powerposet(self, s: FiniteSet[C]) -> FinitePosetOfFiniteSubsets[C, Any]:
         ...
 
     @overload
-    def powerposet(self, s: Poset[C]) -> PosetOfFiniteSubsets[C, Any]:
+    def powerposet(self, s: Setoid[C]) -> PosetOfFiniteSubsets[C, Any]:
         ...
 
     @abstractmethod
-    def powerposet(self, s: Poset[C]) -> PosetOfFiniteSubsets[C, Any]:
+    def powerposet(self, s: Setoid[C]) -> PosetOfFiniteSubsets[C, Any]:
         ...
-
-
-### Opposite
 
 
 class FinitePosetConstructionOpposite(ABC):

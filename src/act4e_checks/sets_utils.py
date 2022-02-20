@@ -1,5 +1,5 @@
 import itertools
-from typing import Any, Callable, List, Sequence, TypeVar
+from typing import Any, Callable, cast, List, Sequence, TypeVar
 
 import zuper_html as zh
 from zuper_testint import find_imp, TestContext
@@ -10,6 +10,24 @@ from .data import get_test_sets, IOHelperImp, loadit_, purify_data
 
 E = TypeVar("E")
 X = TypeVar("X")
+
+
+def check_lists_same(tc: TestContext, S: I.FiniteSet[X], s1: List[X], s2: List[X]) -> None:
+    if len(s1) != len(s2):
+        msg = "Lists have different number of elements"
+        tc.fail(zh.span(msg), s1=s1, s2=s2)
+        return
+
+    for a in s1:
+        included = any(tc.check_result(S, S.equal, bool, a, b) for b in s2)
+        if not included:
+            tc.fail(zh.span("Element not in the set"), a=a, s1=s1, s2=s2)
+
+
+def load_list(tc: TestContext, S: I.FiniteSet[X], a: List[I.ConcreteRepr]) -> List[X]:
+    h = IOHelperImp()
+    s2 = [tc.check_result(S, S.load, object, h, _) for _ in a]
+    return s2
 
 
 def check_same_element(tc: TestContext, s1: I.FiniteSet[X], a: X, b: X) -> None:

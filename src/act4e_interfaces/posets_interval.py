@@ -20,7 +20,12 @@ class PosetOfIntervals(Generic[C, E], Poset[E], ABC):
 
     @abstractmethod
     def construct(self, a: C, b: C) -> E:
-        """Constructs an interval given the boundaries."""
+        """
+        Constructs an interval given the boundaries.
+
+        Must throw ValueError if either a or b is not in the poset,
+        or if (a <= b) does not hold.
+        """
 
     @abstractmethod
     def boundaries(self, interval: E) -> Tuple[C, C]:

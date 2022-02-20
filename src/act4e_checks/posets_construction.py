@@ -5,11 +5,13 @@ from typing import (
 )
 
 import zuper_html as zh
-from zuper_testint import TestContext, TestManagerInterface, tfor
+from zuper_testint import find_imp, TestContext, TestManagerInterface, tfor
 
 import act4e_interfaces as I
+from . import logger
 from .data import get_test_posets, purify_data
-from .posets_utils import check_same_poset, tm_load_poset
+from .posets_utils import check_same_poset, poset_coherence, tm_load_poset
+from .sets_utils import load_set_tc
 
 X = TypeVar("X")
 
@@ -48,4 +50,24 @@ def check_opposite(
         h1 = p_op.holds(b, a)
         tc.fail_not_equal2(h, h1, zh.span("Poset is not opposite"), a=a, b=b)
 
-    # p2 = tc.check_result(frp, frp.opposite, I.FinitePoset, p_op)  # check_same_poset(tc, p, p2)
+
+@tfor(I.PosetConstructionPower)
+def check_PosetConstructionPower1(tc: TestContext) -> None:
+    mks: I.PosetConstructionPower = find_imp(tc, I.PosetConstructionPower)
+    s = load_set_tc(tc, "set_two")
+    p: I.FinitePosetOfFiniteSubsets[int, Any]
+    p = tc.check_result(mks, mks.powerposet, I.FinitePosetOfFiniteSubsets, s)
+    poset_coherence(tc, p)
+
+    logger.info(el=list(p.carrier().elements()))
+
+    carrier = tc.check_result(p, p.carrier, object)
+
+    def construct(x: Any) -> Any:
+        return tc.check_result(carrier, carrier.construct, object, x)
+
+    c1 = construct([])
+    c2 = construct([1])
+
+    tc.check_result_value(c1, p.holds, bool, True, c1, c2)
+    tc.check_result_value(c1, p.holds, bool, False, c2, c1)

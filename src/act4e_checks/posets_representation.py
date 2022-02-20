@@ -15,7 +15,7 @@ X = TypeVar("X")
 
 
 @tfor(I.FinitePosetRepresentation)
-def test_FinitePosetRepresentation(tm: TestManagerInterface) -> None:
+def test_FinitePosetRepresentation_basic(tm: TestManagerInterface) -> None:
     mks = tm.impof(I.FinitePosetRepresentation)
     posets = get_test_posets()
 
@@ -26,7 +26,7 @@ def test_FinitePosetRepresentation(tm: TestManagerInterface) -> None:
 
 
 @tfor(I.FinitePosetRepresentation, level="Product")
-def test_FinitePosetRepresentation(tm: TestManagerInterface) -> None:
+def test_FinitePosetRepresentation_Product(tm: TestManagerInterface) -> None:
     d = get_test_posets()
     use = filter_reqs(d, "poset_product")
     for k, v in use.items():

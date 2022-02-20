@@ -65,6 +65,8 @@ ALLOWED_PROPERTIES = {
     "some_lowersets",
     "some_uppersets",
     "some_not_lowersets",
+    "some_upper_closures",
+    "some_lower_closures",
 }
 ALLOWED_REQUIRES = {
     "set_product",

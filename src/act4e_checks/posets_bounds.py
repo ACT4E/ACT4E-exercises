@@ -1,8 +1,9 @@
 from typing import (
     Any,
+    List,
 )
 
-from zuper_testint import TestManagerInterface, TestNotImplemented, tfor
+from zuper_testint import find_imp, TestContext, TestManagerInterface, tfor
 
 import act4e_interfaces as I
 from .data import get_test_posets, purify_data
@@ -13,8 +14,10 @@ from .posets_utils import (
     check_is_upperset,
     check_poset_height,
     check_poset_width,
+    load_poset_tc,
     tm_load_poset,
 )
+from .sets_utils import check_lists_same, load_list
 
 
 @tfor(I.FinitePosetMeasurement)
@@ -39,8 +42,51 @@ def test_FinitePosetMeasurements(tm: TestManagerInterface) -> None:
 @tfor(I.FinitePosetClosures)
 def test_FinitePosetClosures(tm: TestManagerInterface) -> None:
     mks = tm.impof(I.FinitePosetClosures)
+
     d = get_test_posets()
-    raise TestNotImplemented()
+    for rname, rinfo in d.items():
+
+        def get(p: Any) -> Any:
+            return rinfo.properties.get(p, None)
+
+        s = get("some_upper_closures")
+        if s is not None:
+            for i, x in enumerate(s):
+                tid = f"check_upper_closures-{rname}-{i}"
+                tm.addtest(check_upper_closures, rname, x["S"], x["upper_closure"], tid0=tid)
+        s = get("some_lower_closures")
+        if s is not None:
+            for i, x in enumerate(s):
+                tid = f"check_upper_closures-{rname}-{i}"
+                tm.addtest(check_lower_closures, rname, x["S"], x["lower_closure"], tid0=tid)
+
+
+def check_lower_closures(
+    tc: TestContext, poset_name: str, S_raw: List[I.ConcreteRepr], expected_raw: List[I.ConcreteRepr]
+) -> None:
+    P = load_poset_tc(tc, poset_name)
+    carrier = tc.check_result(P, P.carrier, I.FiniteSet)
+    S = load_list(tc, carrier, S_raw)
+    expected = load_list(tc, carrier, expected_raw)
+
+    fpc: I.FinitePosetClosures = find_imp(tc, I.FinitePosetClosures)
+    cl = tc.check_result(fpc, fpc.lower_closure, list, P, S)
+    with tc.description("checking correct lower closure", S=S, expected=expected, obtained=cl):
+        check_lists_same(tc, carrier, expected, cl)
+
+
+def check_upper_closures(
+    tc: TestContext, poset_name: str, S_raw: List[I.ConcreteRepr], expected_raw: List[I.ConcreteRepr]
+) -> None:
+    P = load_poset_tc(tc, poset_name)
+    carrier = tc.check_result(P, P.carrier, I.FiniteSet)
+    S = load_list(tc, carrier, S_raw)
+    expected = load_list(tc, carrier, expected_raw)
+
+    fpc: I.FinitePosetClosures = find_imp(tc, I.FinitePosetClosures)
+    cl = tc.check_result(fpc, fpc.upper_closure, list, P, S)
+    with tc.description("checking correct upper closure", S=S, expected=expected, obtained=cl):
+        check_lists_same(tc, carrier, expected, cl)
 
 
 @tfor(I.FinitePosetSubsetProperties)

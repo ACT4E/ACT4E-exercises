@@ -8,5 +8,5 @@ class InvalidFormat(Exception):
     """Raise this if the input data to parse is invalid."""
 
 
-class InvalidValue(ValueError):
+class InvalidValue(Exception):
     """Raise this if the input does not make sense."""
