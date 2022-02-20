@@ -442,26 +442,28 @@ poset_grid:
   properties:
     some_upper_bounds:
     - S: [E]
-      upper_bounds: [H, K]
+      upper_bounds: [E, H, K]
     - S: [C, E]
-      upper_bounds: [H, K]
+      upper_bounds: [E, H, K]
     - S: [D, F]
-      upper_bounds:
+      upper_bounds: []
     some_lower_bounds:
     - S: [B, C]
       lower_bounds: [A]
     - S: [B, Z]
-      lower_bounds:
+      lower_bounds: []
     some_infimum:
     - S: [B, C]
-      infimum: A
+      infimum: E
     - S: [C]
-      infimum:
+      infimum: C
     some_supremum:
+    - S: [B, C]
+      supremum: A
     - S: [L]
       supremum: L
     - S: [F]
-      supremum:
+      supremum: F
     some_minimal:
     - S: [A, B, C]
       minimal: [A]

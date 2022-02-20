@@ -156,12 +156,12 @@ def test_FinitePosetInfSup(tm: TestManagerInterface) -> None:
             )
         for i, v in enumerate(get("some_upper_bounds")):
             tm.addtest(
-                check_lower_bounds, mks, r1, v["S"], v["upper_bounds"], tid0=f"check_upper_bounds-{rname}-{i}"
+                check_upper_bounds, mks, r1, v["S"], v["upper_bounds"], tid0=f"check_upper_bounds-{rname}-{i}"
             )
         for i, v in enumerate(get("some_supremum")):
             tm.addtest(check_supremum, mks, r1, v["S"], v["supremum"], tid0=f"check_supremum-{rname}-{i}")
         for i, v in enumerate(get("some_infimum")):
-            tm.addtest(check_supremum, mks, r1, v["S"], v["infimum"], tid0=f"check_infimum-{rname}-{i}")
+            tm.addtest(check_infimum, mks, r1, v["S"], v["infimum"], tid0=f"check_infimum-{rname}-{i}")
 
 
 @tfor(I.FinitePosetMinMax)
@@ -212,20 +212,20 @@ def check_supremum(
 def _check(
     tc: TestContext, carrier: I.FiniteSet[X], S: List[X], result: X, expected_raw: Optional[I.ConcreteRepr]
 ) -> None:
-    expected = load_list(tc, carrier, [expected_raw]) if expected_raw is not None else None
+    expected = load_list(tc, carrier, [expected_raw])[0] if expected_raw is not None else None
     if result is None and expected is not None:
-        msg = "Expected infimum but got None"
+        msg = "Expected existing but got None"
         tc.fail(zh.p(msg), S=S, expected=expected, result=result)
         return
     if result is not None and expected is None:
-        msg = "Expected not infimum but got some"
+        msg = "Expected not existing but got some"
         tc.fail(zh.p(msg), S=S, expected=expected, result=result)
         return
 
     same = tc.check_result(carrier, carrier.equal, bool, result, expected)
     if not same:
         msg = "mismatch"
-        tc.fail(zh.p(msg), S=S, expected=expected, result=result)
+        tc.fail(zh.p(msg), S=S, expected=repr(expected), result=repr(result), same=same, carrier=carrier)
 
 
 def check_maximal(
@@ -251,7 +251,7 @@ def check_minimal(
 ) -> None:
     carrier = p.carrier()
     S = load_list(tc, carrier, S_raw)
-    result = tc.check_result(mks, mks.miminal, Optional[List[Any]], p, S)
+    result = tc.check_result(mks, mks.minimal, Optional[List[Any]], p, S)
     expected = load_list(tc, carrier, expected_raw)
     check_lists_same(tc, carrier, result, expected)
 
@@ -282,42 +282,3 @@ def check_upper_bounds(
     result = tc.check_result(mks, mks.upper_bounds, List[Any], p, S)
     expected = load_list(tc, carrier, expected_raw)
     check_lists_same(tc, carrier, result, expected)
-
-    #
-    # if expected_raw is not None:
-    #
-    #
-    #     if result is None:
-    #         msg = 'Expected lower bounds but got None'
-    #         tc.fail(zh.p(msg), S=S, expected=expected, result=result)
-    #     else:
-    #         check_lists_same(tc, carrier, expected, result)
-    #
-    # else:
-    #     expected = None
-    #     if result is not None:
-    #         msg = 'Expected  no lower bounds but got None'
-    #         tc.fail(zh.p(msg), S=S, expected=expected, result=result)
-    #
-    # pass
-
-
-#
-# class FinitePosetInfSup(ABC):
-#     @abstractmethod
-#     def lower_bounds(self, fp: FinitePoset[E], s: List[E]) -> List[E]:
-#         """Computes the lower bounds for the subset"""
-#
-#     @abstractmethod
-#     def infimum(self, fp: FinitePoset[E], s: List[E]) -> Optional[E]:
-#         """Computes the infimum / meet / greatest lower bound
-#         for the subset, or returns None if one does not exist."""
-#
-#     @abstractmethod
-#     def upper_bounds(self, fp: FinitePoset[E], s: List[E]) -> List[E]:
-#         """Computes the upper bounds for the subset."""
-#
-#     @abstractmethod
-#     def supremum(self, fp: FinitePoset[E], s: List[E]) -> Optional[E]:
-#         """Computes the supremum for the subset if it exists,
-#         or returns None if one does not exist."""

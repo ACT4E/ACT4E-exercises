@@ -38,7 +38,7 @@ class FinitePosetMeasurement(ABC):
 
 class FinitePosetMinMax(ABC):
     @abstractmethod
-    def miminal(self, fp: FinitePoset[E], S: List[E]) -> List[E]:
+    def minimal(self, fp: FinitePoset[E], S: List[E]) -> List[E]:
         """Return the minimal elements of S"""
 
     @abstractmethod
