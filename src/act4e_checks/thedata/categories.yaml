@@ -1,0 +1,10 @@
+---
+cat1:
+
+  tags:
+    category: true
+  properties: {}
+
+  data:
+    objects: TODO
+    morphisms: TODO

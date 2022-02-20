@@ -3,17 +3,16 @@ from dataclasses import dataclass
 from datetime import datetime
 from functools import lru_cache
 from io import StringIO
-from typing import Any, Dict, Generic, Protocol, TypeVar
+from typing import Any, Dict, Generic, List, Protocol, TypeVar
 
 import ruamel.yaml as yaml
 import zuper_html as zh
 from ruamel.yaml import RoundTripLoader, YAML
-from zuper_commons.types import ZValueError
+from zuper_commons.types import add_context, ZValueError
 from zuper_testint import ImplementationFail, TestContext
 
 import act4e_interfaces as I
 from . import logger
-from .loading import load_test_data_file
 
 X = TypeVar("X")
 
@@ -79,56 +78,101 @@ import os
 ENV_VAR = "ACT4E_DATA"
 
 
+def find_yamls(dirnames: List[str]) -> List[str]:
+    res = []
+    for dirname in dirnames:
+        for f in os.listdir(dirname):
+            if f.endswith(".yaml"):
+                res.append(os.path.join(dirname, f))
+    return res
+
+
 @lru_cache()
 def get_all_test_data() -> Dict[str, TestData[Any]]:
     from_env = os.environ.get(ENV_VAR, None)
     if from_env:
-        logger.info(f"loading data from environment variable {ENV_VAR} = {from_env}")
-        with open(from_env) as f:
-            data = f.read()
+        dirname = from_env
+        logger.info(f"loading data from environment variable {ENV_VAR} = {dirname}")
+
     else:
         msg = (
-            f"Using embedded data. You can use the environment variable {ENV_VAR} to give a different yaml "
-            "file."
+            f"Using embedded data. You can use the environment variable {ENV_VAR} to give a different "
+            f"directory. "
         )
         logger.info(msg)
-        data = load_test_data_file("data.yaml")
-    d = yaml.load(data, Loader=RoundTripLoader)
+        dirname = os.path.join(os.path.dirname(__file__), "thedata")
+
+    yamls = find_yamls([dirname])
+
     res: Dict[str, TestData[Any]] = {}
-    for k, v in d.items():
 
-        vv = dict(v)
-        tags = vv.pop("tags", {})
+    for fn in yamls:
+        with open(fn) as f:
+            data = f.read()
 
-        try:
-            data = vv.pop("data")
-        except KeyError:
-            raise ZValueError(k=k, v=v)
+        d = yaml.load(data, Loader=RoundTripLoader)
+        for k, v in d.items():
 
-        requires = vv.pop("requires", {})
-        properties = vv.pop("properties", {})
+            if k in res:
+                msg = f"Found duplicate key {k} in {fn}"
+                raise ZValueError(msg)
 
-        if vv:
-            msg = "Unknown properties"
-            raise ZValueError(msg=msg, v=v, vv=vv)
+            vv = dict(v)
+            tags = vv.pop("tags", {})
 
-        extra_requires = set(requires) - set(ALLOWED_REQUIRES)
-        if extra_requires:
-            msg = f'Extra "requires" for entry {k!r}'
-            raise ZValueError(msg, extra_requires=extra_requires, allowed=ALLOWED_REQUIRES)
+            try:
+                data = vv.pop("data")
+            except KeyError:
+                raise ZValueError(k=k, v=v)
 
-        extra_properties = set(properties) - set(ALLOWED_PROPERTIES)
-        if extra_properties:
-            msg = "Extra properties"
-            raise ZValueError(msg, extra_properties=extra_properties)
+            requires = vv.pop("requires", {})
+            properties = vv.pop("properties", {})
 
-        extra_tags = set(tags) - set(ALLOWED_TAGS)
-        if extra_tags:
-            msg = "Extra tags"
-            raise ZValueError(msg, extra_tags=extra_tags)
+            if vv:
+                msg = "Unknown properties"
+                raise ZValueError(msg=msg, v=v, vv=vv)
 
-        res[k] = TestData(tags=tags, requires=requires, data=data, properties=properties)
+            extra_requires = set(requires) - set(ALLOWED_REQUIRES)
+            if extra_requires:
+                msg = f'Extra "requires" for entry {k!r}'
+                raise ZValueError(msg, extra_requires=extra_requires, allowed=ALLOWED_REQUIRES)
+
+            extra_properties = set(properties) - set(ALLOWED_PROPERTIES)
+            if extra_properties:
+                msg = "Extra properties"
+                raise ZValueError(msg, extra_properties=extra_properties)
+
+            extra_tags = set(tags) - set(ALLOWED_TAGS)
+            if extra_tags:
+                msg = "Extra tags"
+                raise ZValueError(msg, extra_tags=extra_tags)
+
+            res[k] = TestData(tags=tags, requires=requires, data=data, properties=properties)
+
+    entries = {k: v.data for k, v in res.items()}
+    for k, v in res.items():
+        with add_context(k=k):
+            res[k].data = substitute(entries, res[k].data)
+
     return res
+
+
+def substitute(entries: Dict[str, object], a: object) -> object:
+    if isinstance(a, dict):
+        if "load" in a:
+            loadit = a["load"]
+            if loadit not in entries:
+                msg = "Cannot find entry to load"
+                raise ZValueError(msg, a=a)
+            else:
+                return entries[loadit]
+        else:
+            return {k: substitute(entries, v) for k, v in a.items()}
+
+    elif isinstance(a, list):
+        return [substitute(entries, x) for x in a]
+    else:
+        return a
 
 
 def purify_data(a: X) -> X:
@@ -209,6 +253,8 @@ def loadit_(tc: TestContext, loader: Loader[Xcov, Rcon], h: I.IOHelper, data: Rc
     LN = type(loader).__name__
     try:
         res = loader.load(h, data)
+    except NotImplementedError:
+        raise
     except I.InvalidFormat as e:
         msg = f"Implementation of {LN}.load() threw InvalidFormat but the format is valid."
         tc.fail(zh.span(msg), data=yaml.dump(data), tb=traceback.format_exc())

@@ -1,0 +1,219 @@
+---
+rel0a:
+  tags:
+    relation: true
+  data:
+    source:
+      load: set_empty
+    target: &ABC
+      elements: [a, b, c]
+    values: []
+
+rel0b:
+  tags:
+    relation: true
+  data:
+    source:
+      load: set_empty
+    target:
+      load: set_empty
+    values: []
+  properties:
+    injective: true
+    surjective: true
+    single_valued: true
+    defined_everywhere: true
+
+rel0: # display in book
+  tags:
+    relation: true
+  data:
+    source:
+      elements: [a, b, c, d]
+    target:
+      elements: [1, 2, 3, 4]
+    values:
+    - [a, 1]
+    - [a, 2]
+    - [c, 3]
+
+rel1:
+  tags:
+    relation: true
+  data:
+    source: &onetwothree
+      elements: [1, 2, 3]
+    target: *ABC
+    values:
+    - [1, a]
+    - [1, b]
+    - [3, c]
+
+R1:
+  tags:
+    relation: true
+  data:
+    source:
+      elements: [1]
+    target:
+      elements: [a]
+    values:
+    - [1, a]
+  properties:
+    injective: true
+    surjective: true
+    single_valued: true
+    defined_everywhere: true
+
+R3:
+  tags:
+    relation: true
+  data:
+    source:
+      elements: [1, 2]
+    target:
+      elements: [a, b]
+    values:
+    - [1, a]
+    - [2, b]
+  properties:
+    injective: true
+    surjective: true
+    single_valued: true
+    defined_everywhere: true
+
+R4:
+  tags:
+    relation: true
+  data:
+    source:
+      elements: [1, 2]
+    target:
+      elements: [a, b]
+    values:
+    - [1, a]
+    - [1, b]
+  properties:
+    injective: true
+    surjective: true
+    single_valued: false
+    defined_everywhere: false
+
+R5:
+  tags:
+    relation: true
+  data:
+    source:
+      elements: [1, 2]
+    target:
+      elements: [a, b]
+    values:
+    - [1, a]
+    - [2, a]
+  properties:
+    injective: false
+    surjective: false
+    single_valued: true
+    defined_everywhere: true
+
+
+ER0:
+  tags:
+    relation: true
+  data:
+    source: *onetwothree
+    target: *onetwothree
+    values:
+    - [1, 1]
+    - [2, 2]
+    - [3, 3]
+  properties:
+    reflexive: true
+    irreflexive: false
+
+ER1:
+  tags:
+    relation: true
+  data:
+    source: *onetwothree
+    target: *onetwothree
+    values: []
+  properties:
+    reflexive: false
+    irreflexive: true
+
+ER2:
+  tags:
+    relation: true
+  data:
+    source: *onetwothree
+    target: *onetwothree
+    values:
+    - [1, 2]
+    - [2, 3]
+  properties:
+    transitive: false
+
+ER3:
+  tags:
+    relation: true
+  data:
+    source: *onetwothree
+    target: *onetwothree
+    values:
+    - [1, 2]
+    - [2, 3]
+    - [1, 3]
+  properties:
+    transitive: true
+
+ER4:
+  tags:
+    relation: true
+  data:
+    source: *onetwothree
+    target: *onetwothree
+    values:
+    - [1, 2]
+    - [2, 1]
+  properties:
+    symmetric: true
+    asymmetric: false
+
+ER5:
+  tags:
+    relation: true
+  data:
+    source: *onetwothree
+    target: *onetwothree
+    values:
+    - [1, 2]
+  properties:
+    symmetric: false
+    asymmetric: true
+
+ER6:
+  tags:
+    relation: true
+  data:
+    source: *onetwothree
+    target: *onetwothree
+    values:
+    - [1, 1]
+    - [2, 3]
+  properties:
+    antisymmetric: true
+
+ER7:
+  tags:
+    relation: true
+  data:
+    source: *onetwothree
+    target: *onetwothree
+    values:
+    - [1, 1]
+    - [2, 1]
+    - [1, 2]
+  properties:
+    antisymmetric: false
+

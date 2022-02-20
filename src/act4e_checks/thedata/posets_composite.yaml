@@ -1,0 +1,24 @@
+---
+
+poset_product1:
+  tags:
+    poset: true
+  requires:
+    poset_product: true
+  properties: {}
+  data:
+    poset_product:
+    - load: poset_one
+    - load: poset_two
+
+
+poset_sum1:
+  tags:
+    poset: true
+  requires:
+    poset_sum: true
+  properties: {}
+  data:
+    poset_sum:
+    - load: poset_one
+    - load: poset_two

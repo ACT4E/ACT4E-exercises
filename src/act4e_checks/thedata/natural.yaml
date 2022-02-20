@@ -1,0 +1,12 @@
+---
+
+
+nat1:
+
+  tags:
+    natural_transform: true
+  properties: {}
+
+  data:
+    objects: TODO
+    morphisms: TODO

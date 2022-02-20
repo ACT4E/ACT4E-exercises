@@ -1,0 +1,87 @@
+---
+set_product:
+  tags:
+    set: true
+  requires:
+    set_product: true
+  data:
+    product:
+    - elements: [a, b]
+    - elements: [1, 2]
+
+set_product10:
+  tags:
+    set: true
+  requires:
+    set_product: true
+  data:
+    product:
+    - load: set_one
+    - load: set_empty
+
+set_ABC:
+  tags:
+    set: true
+  data:
+    elements: [a, b, c]
+  properties:
+    powerset: set_ABC_powerset
+
+set_ABC_powerset:
+  tags:
+    set: true
+  data:
+    elements:
+    - []
+    - [a]
+    - [b]
+    - [c]
+    - [a, b]
+    - [b, c]
+    - [a, c]
+    - [a, b, c]
+
+set_product111:
+  tags:
+    set: true
+  requires:
+    set_product: true
+  data:
+    product:
+    - load: set_one
+    - load: set_one
+    - load: set_one
+set_union:
+  tags:
+    set: true
+  requires:
+    set_union: true
+  data:
+    union:
+    - elements: [1, 2]
+    - elements: [a, b, 1]
+
+set_union_empty1:
+  tags:
+    set: true
+  requires:
+    set_union: true
+  data:
+    union:
+    - load: set_empty
+set_union_empty2:
+  tags:
+    set: true
+  requires:
+    set_union: true
+  data:
+    union:
+    - load: set_empty
+    - load: set_empty
+set_union_zero:
+  tags:
+    set: true
+  requires:
+    set_union: true
+  data:
+    union: []

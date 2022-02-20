@@ -1,0 +1,37 @@
+---
+set1:
+  tags:
+    set: true
+  data:
+    elements: [a, b, c]
+
+set2:
+  tags:
+    set: true
+  data:
+    elements: [a, b, c, d, e]
+
+set3:
+  tags:
+    set: true
+  data:
+    elements: [1, 2, 3]
+
+set_empty:
+  tags:
+    set: true
+  data:
+    elements: []
+
+set_one:
+  tags:
+    set: true
+  data:
+    elements: [1]
+
+set_two:
+  tags:
+    set: true
+  data:
+    elements: [1, 2]
+

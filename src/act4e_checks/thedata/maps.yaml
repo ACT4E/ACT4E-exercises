@@ -1,0 +1,28 @@
+---
+
+
+map1:
+  tags:
+    map: true
+  data:
+    source:
+      elements: [a, b, c, d]
+    target:
+      elements: [1, 2, 3, 4, 5]
+    values:
+    - [a, 1]
+    - [b, 2]
+    - [c, 3]
+    - [d, 4]
+map3:
+  tags:
+    map: true
+  data:
+    source:
+      elements: [a, b, c]
+    target:
+      elements: [1, 2]
+    values:
+    - [a, 1]
+    - [b, 2]
+    - [c, 1]

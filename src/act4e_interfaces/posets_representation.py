@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, List
+from typing import Any, List, Union
 
 from typing_extensions import TypedDict
 
@@ -12,13 +12,31 @@ from .types import ConcreteRepr
 
 __all__ = [
     "FinitePoset_desc",
+    "FinitePoset_sum_desc",
+    "FinitePoset_product_desc",
+    "FinitePoset_simple_desc",
     "FinitePosetRepresentation",
 ]
 
 
-class FinitePoset_desc(TypedDict):
+class FinitePoset_simple_desc(TypedDict):
     carrier: FiniteSet_desc
     hasse: List[List[ConcreteRepr]]
+
+
+class FinitePoset_sum_desc(TypedDict):
+    poset_sum: List[Any]
+
+
+class FinitePoset_product_desc(TypedDict):
+    poset_product: List[Any]
+
+
+FinitePoset_desc = Union[
+    FinitePoset_simple_desc,
+    FinitePoset_sum_desc,
+    FinitePoset_product_desc,
+]
 
 
 class FinitePosetRepresentation(ABC):
@@ -29,3 +47,7 @@ class FinitePosetRepresentation(ABC):
     @abstractmethod
     def save(self, h: IOHelper, m: FinitePoset[Any]) -> FinitePoset_desc:
         """Save the data"""
+
+
+KWD_POSET_SUM = "poset_sum"
+KWD_POSET_PRODUCT = "poset_product"
