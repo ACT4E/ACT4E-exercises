@@ -73,13 +73,11 @@ class FiniteSetProperties(ABC):
 
 
 class EnumerableSetsOperations(ABC):
-    @classmethod
     @abstractmethod
-    def make_set_sequence(cls, f: Callable[[int], E]) -> EnumerableSet[E]:
+    def make_set_sequence(self, f: Callable[[int], E]) -> EnumerableSet[E]:
         """Creates an EnumerableSet from a function that gives the
         i-th element."""
 
-    @classmethod
     @abstractmethod
-    def union_esets(cls, a: EnumerableSet[E], b: EnumerableSet[E]) -> EnumerableSet[E]:
+    def union_esets(self, a: EnumerableSet[E], b: EnumerableSet[E]) -> EnumerableSet[E]:
         """Creates the union of two EnumerableSet."""

@@ -60,6 +60,8 @@ def doit_sets(tm: TestManagerInterface, collection2: Dict[str, TestData[I.Finite
         h = IOHelperImp()
         try:
             res = fsr_.load(h, data)
+        except NotImplementedError:
+            raise
         except I.InvalidFormat:
             pass
         except BaseException as e:
