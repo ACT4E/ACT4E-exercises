@@ -437,8 +437,6 @@ poset_bool:
 poset_grid:
   tags:
     poset: true
-
-
   properties:
     some_upper_bounds:
     - S: [E]
