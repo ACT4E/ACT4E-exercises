@@ -1,6 +1,6 @@
 def test0() -> None:
-    # noinspection PyUnresolvedReferences
     from act4e_interfaces.semigroups import FreeSemigroup
 
-    # noinspection PyUnresolvedReferences
-    from act4e_checks import check_semigroup
+    from act4e_checks.semigroups import check_semigroup
+
+    _ = check_semigroup, FreeSemigroup
