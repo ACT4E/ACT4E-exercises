@@ -18,8 +18,7 @@
     "act4e_checks",
     "act4e_checks.good",
     "act4e_checks.thedata",
-    "act4e_interfaces",
-    "act4e_interfaces_tests"
+    "act4e_interfaces"
   ],
   "version": "7.2",
   "author": "",
