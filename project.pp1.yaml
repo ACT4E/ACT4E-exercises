@@ -9,7 +9,10 @@ modules:
 
 install_requires:
 - typing-extensions
-
+- zuper-testint-z7
+- zuper-commons-z7
+- zuper-html-z7
+- zuper-html-plus-z7
 
 
 tests_require: []
