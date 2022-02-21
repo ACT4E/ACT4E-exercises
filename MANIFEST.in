@@ -22,5 +22,5 @@ prune out
 
 #@ add local below
 
-recursive-include src *.pyc
-#@ add local below
+recursive-include src *.yaml
+

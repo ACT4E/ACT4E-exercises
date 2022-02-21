@@ -115,7 +115,11 @@ def get_all_test_data(load: bool = True) -> Dict[str, TestData[Any]]:
         logger.info(msg)
         dirname = get_default_data_dir()
 
-    yamls = find_yamls([dirname])
+    dirnames = [dirname]
+    yamls = find_yamls(dirnames)
+    if not yamls:
+        msg = "I could not find any YAML file."
+        raise ZValueError(msg, dirnames=dirnames)
 
     res: Dict[str, TestData[Any]] = {}
 
