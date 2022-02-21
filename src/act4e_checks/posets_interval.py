@@ -6,7 +6,7 @@ import zuper_html as zh
 from zuper_testint import find_imp, TestContext, TestManagerInterface, tfor
 
 import act4e_interfaces as I
-from act4e_checks.posets_utils import load_poset_tc, poset_coherence
+from .posets_utils import load_poset_tc, poset_coherence
 
 
 @tfor(I.FinitePosetConstructionArrow)

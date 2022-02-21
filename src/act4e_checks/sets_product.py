@@ -5,8 +5,8 @@ import zuper_html as zh
 from zuper_testint import ImplementationFail, TestContext, TestManagerInterface, TestRef, tfor
 
 import act4e_interfaces as I
-from act4e_checks.sets import check_save_all_elements
-from act4e_checks.sets_utils import good_make_set
+from .sets import check_save_all_elements
+from .sets_utils import good_make_set
 
 E = TypeVar("E")
 X = TypeVar("X")
