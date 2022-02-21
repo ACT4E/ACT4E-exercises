@@ -16,10 +16,11 @@ recursive-exclude src *.rst
 recursive-exclude src *.less
 recursive-include src *.css
 recursive-include src *.sql
+recursive-include src *.pyc
 prune src/**/__pycache__
 prune src/*_tests*
 prune out
 
 #@ add local below
 
-graft src/act4e_checks
+# graft src/act4e_checks/
