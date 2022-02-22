@@ -21,7 +21,7 @@ def test_MakePowerSet(tm: TestManagerInterface) -> None:
     names = ["set_empty", "set_one", "set_two", "set2"]
 
     for name in names:
-        info = d["name"]
+        info = d[name]
         # def get(p):
         #     return info.properties.get(p, None)
 
