@@ -18,7 +18,10 @@ def test_MakePowerSet(tm: TestManagerInterface) -> None:
 
     d = get_test_sets()
 
-    for name, info in d.items():
+    names = ["set_empty", "set_one", "set_two", "set2"]
+
+    for name in names:
+        info = d["name"]
         # def get(p):
         #     return info.properties.get(p, None)
 

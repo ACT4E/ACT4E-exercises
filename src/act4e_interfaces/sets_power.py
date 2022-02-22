@@ -36,4 +36,4 @@ class MakePowerSet(ABC):
 
     @abstractmethod
     def powerset(self, s: Setoid[C]) -> SetOfFiniteSubsets[C, Any]:
-        """Creates the powerset of a finite set."""
+        """Creates the powerset of a setoid. Returns a finite set if s is finite."""

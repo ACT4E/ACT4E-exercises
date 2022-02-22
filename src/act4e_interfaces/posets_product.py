@@ -28,15 +28,6 @@ class PosetProduct(Generic[C, E], Poset[E], ABC):
     def components(self) -> Sequence[Poset[C]]:
         """Returns the components of the product"""
 
-    @abstractmethod
-    def pack(self, args: Sequence[C]) -> E:
-        """Packs an element of each setoid into an element of the mapping"""
-        raise NotImplementedError()
-
-    @abstractmethod
-    def unpack(self, e: E) -> Sequence[C]:
-        raise NotImplementedError()
-
 
 class FinitePosetProduct(Generic[C, E], FinitePoset[E], PosetProduct[C, E], ABC):
     """Specialization of PosetProduct where we deal with FinitePosets"""

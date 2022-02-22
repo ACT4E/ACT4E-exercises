@@ -4,6 +4,7 @@ from typing import Any, Generic, overload, Sequence, Tuple, TypeVar
 from .sets import FiniteSet, Setoid
 
 __all__ = ["SetDisjointUnion", "FiniteSetDisjointUnion", "MakeSetDisjointUnion"]
+
 C = TypeVar("C")
 E = TypeVar("E")
 
@@ -15,12 +16,11 @@ class SetDisjointUnion(Generic[C, E], Setoid[E], ABC):
 
     @abstractmethod
     def pack(self, i: int, e: C) -> E:
-        """Injection mapping."""
-        raise NotImplementedError()
+        """Injection mapping: construct element of the i-th component."""
 
     @abstractmethod
     def unpack(self, e: E) -> Tuple[int, C]:
-        raise NotImplementedError()
+        """Returns the index of the component and the element."""
 
 
 class FiniteSetDisjointUnion(Generic[C, E], FiniteSet[E], SetDisjointUnion[C, E], ABC):
@@ -42,4 +42,5 @@ class MakeSetDisjointUnion(ABC):
 
     @abstractmethod
     def disjoint_union(self, components: Sequence[Setoid[C]]) -> SetDisjointUnion[C, Any]:
-        ...
+        """Returns a disjoint union of the given components.
+        Returns a finite set if all components are finite."""

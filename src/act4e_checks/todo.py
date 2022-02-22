@@ -52,18 +52,6 @@ def test_FiniteProfunctorOperations(tm: TestManagerInterface) -> None:
     raise TestNotImplemented()
 
 
-@tfor(I.SetoidOperations)
-def test_SetoidOperations(tm: TestManagerInterface) -> None:
-    mks = tm.impof(I.SetoidOperations)
-    raise TestNotImplemented()
-
-
-@tfor(I.EnumerableSetsOperations)
-def test_EnumerableSetsOperations(tm: TestManagerInterface) -> None:
-    mks = tm.impof(I.EnumerableSetsOperations)
-    raise TestNotImplemented()
-
-
 @tfor(I.FiniteAdjunctionRepresentation)
 def test_FiniteAdjunctionRepresentation(tm: TestManagerInterface) -> None:
     mks = tm.impof(I.FiniteAdjunctionRepresentation)

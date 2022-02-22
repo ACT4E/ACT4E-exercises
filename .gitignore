@@ -65,3 +65,4 @@ tex/snippets/compmake
 tex/main.pdf
 dist
 __pycache__
+*egg-info
