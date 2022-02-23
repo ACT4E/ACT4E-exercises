@@ -33,8 +33,6 @@ class Poset(Generic[E], Relation[E, E], ABC):
 
 
 class FinitePoset(Generic[E], Poset[E], ABC):
-    """Implementation of finite posets."""
-
     @abstractmethod
     def carrier(self) -> FiniteSet[E]:
         ...

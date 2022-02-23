@@ -14,10 +14,11 @@ set_product10:
     set: true
   requires:
     set_product: true
+  # note: do not change as it is used in the book
   data:
     product:
-    - load: set_one
-    - load: set_empty
+    - elements: [1]
+    - elements: []
 
 set_ABC:
   tags:
@@ -41,16 +42,19 @@ set_ABC_powerset:
     - [a, c]
     - [a, b, c]
 
+
 set_product111:
   tags:
     set: true
   requires:
     set_product: true
+  # note: do not change
   data:
     product:
-    - load: set_one
-    - load: set_one
-    - load: set_one
+    - elements: [1]
+    - elements: [1]
+    - elements: [1]
+
 set_union:
   tags:
     set: true
@@ -66,18 +70,20 @@ set_union_empty1:
     set: true
   requires:
     set_union: true
+  # note: do not change, we use in the books
   data:
     union:
-    - load: set_empty
+    - elements: []
 set_union_empty2:
   tags:
     set: true
   requires:
     set_union: true
+  # note: do not change, we use in the books
   data:
     union:
-    - load: set_empty
-    - load: set_empty
+    - elements: []
+    - elements: []
 set_union_zero:
   tags:
     set: true

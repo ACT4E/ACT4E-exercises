@@ -69,18 +69,18 @@ class FinitePosetInfSup(ABC):
 class FinitePosetSubsetProperties2(ABC):
     @abstractmethod
     def is_lower_set(self, fp: FinitePoset[E], s: List[E]) -> bool:
-        pass
+        ...
 
     @abstractmethod
     def is_upper_set(self, fp: FinitePoset[E], s: List[E]) -> bool:
-        pass
+        ...
 
 
 class FinitePosetClosures(ABC):
     @abstractmethod
     def upper_closure(self, fp: FinitePoset[E], s: List[E]) -> List[E]:
-        pass
+        ...
 
     @abstractmethod
     def lower_closure(self, fp: FinitePoset[E], s: List[E]) -> List[E]:
-        pass
+        ...

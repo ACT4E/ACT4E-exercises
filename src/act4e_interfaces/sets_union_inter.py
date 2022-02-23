@@ -23,15 +23,13 @@ class MakeSetIntersection(ABC):
 
 
 class SetUnion(Generic[C, E], Setoid[E], ABC):
-    """A set product is a setoid that can be factorized."""
-
     @abstractmethod
     def components(self) -> Sequence[Setoid[C]]:
         """Returns the components of the union"""
 
 
 class EnumerableSetUnion(Generic[C, E], EnumerableSet[E], SetUnion[C, E], ABC):
-    """Specialization of SetUnion where we deal with FiniteSets"""
+    """Specialization of SetUnion where we deal with enumerable sets."""
 
     @abstractmethod
     def components(self) -> Sequence[EnumerableSet[C]]:
@@ -61,12 +59,10 @@ class MakeSetUnion(ABC):
 
 
 class SetoidOperations(ABC):
-    @classmethod
     @abstractmethod
-    def union_setoids(cls, a: Setoid[E], b: Setoid[E]) -> Setoid[E]:
+    def union_setoids(self, a: Setoid[E], b: Setoid[E]) -> Setoid[E]:
         """Creates the union of two Setoids."""
 
-    @classmethod
     @abstractmethod
-    def intersection_setoids(cls, a: Setoid[E], b: Setoid[E]) -> Setoid[E]:
+    def intersection_setoids(self, a: Setoid[E], b: Setoid[E]) -> Setoid[E]:
         """Creates the intersection of two Setoids."""

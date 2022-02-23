@@ -50,11 +50,14 @@ def test_FiniteMapOperations_bool(tc: TestContext) -> None:
 
         check_same_map(tc, map_bool_not_twice, map_bool_identity_expected)
 
+
+@tfor(I.FiniteRelationOperations)
+def test_FiniteRelationOperations_bool(tc: TestContext) -> None:
+    fmo: I.FiniteRelationOperations = find_imp(tc, I.FiniteRelationOperations)
     with tc.description("Checking conversion of map to rel"):
         map_bool_not = load_map_tc(tc, "map_bool_not")
         rel_bool_not_expected = load_relation_tc(tc, "rel_bool_not")
         rel_bool_not = tc.check_result(fmo, fmo.as_relation, I.FiniteRelation, map_bool_not)
-
         check_same_relation(tc, rel_bool_not_expected, rel_bool_not)
 
 

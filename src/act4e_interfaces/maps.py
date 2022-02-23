@@ -3,7 +3,6 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Generic, overload, TypeVar
 
-from .relations import FiniteRelation
 from .sets import FiniteSet, Setoid
 
 A = TypeVar("A")
@@ -55,7 +54,3 @@ class FiniteMapOperations(ABC):
     @abstractmethod
     def compose(self, f: FiniteMap[A, B], g: FiniteMap[B, C]) -> FiniteMap[A, C]:
         """Compose two functions."""
-
-    @abstractmethod
-    def as_relation(self, f: FiniteMap[A, B]) -> FiniteRelation[A, B]:
-        """Re-writes a Finite Map as a relation."""

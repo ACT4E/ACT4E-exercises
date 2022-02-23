@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Generic, TypeVar
 
+from .maps import FiniteMap
 from .sets import FiniteSet, Setoid
 
 __all__ = [
@@ -22,11 +23,11 @@ E3 = TypeVar("E3")
 class Relation(Generic[E1, E2], ABC):
     @abstractmethod
     def source(self) -> Setoid[E1]:
-        """Returns a setoid"""
+        ...
 
     @abstractmethod
     def target(self) -> Setoid[E2]:
-        """Returns a setoid"""
+        ...
 
     @abstractmethod
     def holds(self, e1: E1, e2: E2) -> bool:
@@ -36,11 +37,11 @@ class Relation(Generic[E1, E2], ABC):
 class FiniteRelation(Generic[E1, E2], Relation[E1, E2], ABC):
     @abstractmethod
     def source(self) -> FiniteSet[E1]:
-        """Returns a finite set"""
+        ...
 
     @abstractmethod
     def target(self) -> FiniteSet[E2]:
-        """Returns a finite set"""
+        ...
 
 
 class FiniteRelationProperties(ABC):
@@ -71,6 +72,10 @@ class FiniteRelationOperations(ABC):
     @abstractmethod
     def transpose(self, fr: FiniteRelation[E1, E2]) -> FiniteRelation[E2, E1]:
         """Create the transposed of a relation"""
+
+    @abstractmethod
+    def as_relation(self, f: FiniteMap[E1, E2]) -> FiniteRelation[E1, E2]:
+        """Re-writes a Finite Map as a relation."""
 
 
 class FiniteEndorelationProperties(ABC):

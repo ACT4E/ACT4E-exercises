@@ -19,11 +19,11 @@ E = TypeVar("E")
 class FinitePosetConstructionDiscrete(ABC):
     @overload
     def discrete(self, s: FiniteSet[E]) -> FinitePoset[E]:
-        """Creates the discrete poset from any set."""
+        ...
 
     @overload
     def discrete(self, s: Setoid[E]) -> Poset[E]:
-        pass
+        ...
 
     @abstractmethod
     def discrete(self, s: Setoid[E]) -> Poset[E]:

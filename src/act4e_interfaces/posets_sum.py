@@ -18,27 +18,25 @@ C = TypeVar("C")
 
 
 class PosetDisjointUnion(Generic[C, E], Poset[E], ABC):
-    """A set product is a setoid that can be factorized in a sum."""
-
     @abstractmethod
     def carrier(self) -> SetDisjointUnion[C, E]:
-        """Returns the components of the product"""
+        ...
 
     @abstractmethod
     def components(self) -> Sequence[Poset[C]]:
-        """Returns the components of the union"""
+        ...
 
 
 class FinitePosetDisjointUnion(Generic[C, E], FinitePoset[E], PosetDisjointUnion[C, E], ABC):
-    """Specialization of SetUnion where we deal with FiniteSets"""
+    """Specialization of PosetDisjointUnion where we deal with FiniteSets"""
 
     @abstractmethod
     def carrier(self) -> FiniteSetDisjointUnion[C, E]:
-        """Returns the components of the product"""
+        ...
 
     @abstractmethod
     def components(self) -> Sequence[FinitePoset[C]]:
-        """Returns the components of the union"""
+        ...
 
 
 class FinitePosetConstructionSum(ABC):
