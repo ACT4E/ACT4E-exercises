@@ -116,6 +116,14 @@ def test_FiniteRelationProperties(tm: TestManagerInterface) -> None:
         tm.addtest(check_rel_props, mks, r1, rp, tid0=f"check_rel_props-{rname}")
 
 
+@tfor(I.FiniteRelationProperties)
+def check_FiniteRelationProperties_nothashable(tc: TestContext) -> None:
+    frp: I.FiniteRelationProperties = find_imp(tc, I.FiniteRelationProperties)
+
+    # TODO: implement not hashable tests
+    # rp = RelProps(injective=True)
+
+
 @dataclass
 class RelProps:
     injective: Optional[bool]

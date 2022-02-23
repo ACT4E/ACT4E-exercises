@@ -6,41 +6,39 @@ from .categories import Category, FiniteCategory
 __all__ = ["Functor", "FiniteFunctor"]
 
 
-Object1 = TypeVar("Object1")
-Morphism1 = TypeVar("Morphism1")
-Object2 = TypeVar("Object2")
-Morphism2 = TypeVar("Morphism2")
-Object3 = TypeVar("Object3")
-Morphism3 = TypeVar("Morphism3")
+Ob1 = TypeVar("Ob1")
+Mor1 = TypeVar("Mor1")
+Ob2 = TypeVar("Ob2")
+Mor2 = TypeVar("Mor2")
+Ob3 = TypeVar("Ob3")
+Mor3 = TypeVar("Mor3")
 
 
-class Functor(Generic[Object1, Morphism1, Object2, Morphism2], ABC):
+class Functor(Generic[Ob1, Mor1, Ob2, Mor2], ABC):
     @abstractmethod
-    def source(self) -> Category[Object1, Morphism1]:
+    def source(self) -> Category[Ob1, Mor1]:
         ...
 
     @abstractmethod
-    def target(self) -> Category[Object2, Morphism2]:
+    def target(self) -> Category[Ob2, Mor2]:
         ...
 
     @abstractmethod
-    def f_ob(self, ob: Object1) -> Object2:
+    def f_ob(self, ob: Ob1) -> Ob2:
         """Effect on objects"""
 
     @abstractmethod
-    def f_mor(self, m: Morphism1) -> Morphism2:
+    def f_mor(self, m: Mor1) -> Mor2:
         """Effect on morphisms"""
 
 
-class FiniteFunctor(
-    Generic[Object1, Morphism1, Object2, Morphism2], Functor[Object1, Morphism1, Object2, Morphism2], ABC
-):
+class FiniteFunctor(Generic[Ob1, Mor1, Ob2, Mor2], Functor[Ob1, Mor1, Ob2, Mor2], ABC):
     @abstractmethod
-    def source(self) -> FiniteCategory[Object1, Morphism1]:
+    def source(self) -> FiniteCategory[Ob1, Mor1]:
         ...
 
     @abstractmethod
-    def target(self) -> FiniteCategory[Object2, Morphism2]:
+    def target(self) -> FiniteCategory[Ob2, Mor2]:
         ...
 
 

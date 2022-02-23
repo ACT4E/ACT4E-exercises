@@ -128,6 +128,9 @@ def get_all_test_data(load: bool = True) -> Dict[str, TestData[Any]]:
             data = f.read()
 
         d = yaml.load(data, Loader=RoundTripLoader)
+        if not isinstance(d, dict):
+            msg = f"Invalid data file {fn}"
+            raise ZValueError(msg)
         for k, v in d.items():
 
             if k in res:

@@ -36,28 +36,28 @@ class FiniteGroup_desc(FiniteMonoid_desc):
 class FiniteSemigroupRepresentation(ABC):
     @abstractmethod
     def load(self, h: IOHelper, s: FiniteSemigroup_desc) -> FiniteSemigroup[Any]:
-        """Load the data"""
+        ...
 
     @abstractmethod
     def save(self, h: IOHelper, m: FiniteSemigroup[Any]) -> FiniteSemigroup_desc:
-        """Save the data"""
+        ...
 
 
 class FiniteMonoidRepresentation(ABC):
     @abstractmethod
     def load(self, h: IOHelper, s: FiniteMonoid_desc) -> FiniteMonoid[Any]:
-        """Load the data"""
+        ...
 
     @abstractmethod
     def save(self, h: IOHelper, m: FiniteMonoid[Any]) -> FiniteMonoid_desc:
-        """Save the data"""
+        ...
 
 
 class FiniteGroupRepresentation(ABC):
     @abstractmethod
     def load(self, h: IOHelper, s: FiniteGroup_desc) -> FiniteGroup[Any]:
-        """Load the data"""
+        ...
 
     @abstractmethod
     def save(self, h: IOHelper, m: FiniteGroup[Any]) -> FiniteGroup_desc:
-        """Save the data"""
+        ...

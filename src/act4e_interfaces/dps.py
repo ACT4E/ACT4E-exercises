@@ -16,22 +16,11 @@ __all__ = [
     "DPConstructors",
 ]
 
-E1 = TypeVar("E1")
-E2 = TypeVar("E2")
 
 A = TypeVar("A")
 B = TypeVar("B")
 C = TypeVar("C")
 
-O1 = TypeVar("O1")
-O2 = TypeVar("O2")
-
-Morphism = TypeVar("Morphism")
-
-Object1 = TypeVar("Object1")
-Morphism1 = TypeVar("Morphism1")
-Object2 = TypeVar("Object2")
-Morphism2 = TypeVar("Morphism2")
 
 F = TypeVar("F")
 I = TypeVar("I")
@@ -100,11 +89,11 @@ class FiniteDP(Generic[F, R], DP[F, R], ABC):
 
 class DPConstructors(ABC):
     @abstractmethod
-    def companion(self, f: MonotoneMap[E1, E2]) -> DP[E1, E2]:
+    def companion(self, f: MonotoneMap[A, B]) -> DP[A, B]:
         ...
 
     @abstractmethod
-    def conjoint(self, f: MonotoneMap[E1, E2]) -> DP[E1, E2]:
+    def conjoint(self, f: MonotoneMap[A, B]) -> DP[A, B]:
         ...
 
 

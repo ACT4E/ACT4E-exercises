@@ -43,3 +43,4 @@ from .sets_sum import *
 from .sets_union_inter import *
 from .types import *
 from .z_ex_rope import *
+from .semigroups_operations import *

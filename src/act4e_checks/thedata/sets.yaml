@@ -42,3 +42,13 @@ set_bool:
   data:
     elements: [true, false]
 
+
+
+set_dicts:
+  tags:
+    set: true
+  data:
+    elements:
+    - {x: 1, y: 1}
+    - {x: 1, y: 2}
+

@@ -16,7 +16,9 @@ class SetDisjointUnion(Generic[C, E], Setoid[E], ABC):
 
     @abstractmethod
     def pack(self, i: int, e: C) -> E:
-        """Injection mapping: construct element of the i-th component."""
+        """Injection mapping: construct element of the i-th component.
+        Raises InvalidValue if i is not a valid index or e is not an element of the i-th component.
+        """
 
     @abstractmethod
     def unpack(self, e: E) -> Tuple[int, C]:
