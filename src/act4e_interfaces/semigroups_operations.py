@@ -40,19 +40,15 @@ class FiniteSemigroupMorphismsChecks(ABC):
 
 class FiniteSemigroupMorphismsOperations(ABC):
     @abstractmethod
-    def compose_semigroup_morphism(
-        self, f: SemigroupMorphism[A, B], g: SemigroupMorphism[B, C]
-    ) -> SemigroupMorphism[A, C]:
+    def compose_semi(self, f: SemigroupMorphism[A, B], g: SemigroupMorphism[B, C]) -> SemigroupMorphism[A, C]:
         ...
 
     @abstractmethod
-    def compose_monoid_morphism(
-        self, f: MonoidMorphism[A, B], g: MonoidMorphism[B, C]
-    ) -> MonoidMorphism[A, C]:
+    def compose_monoid(self, f: MonoidMorphism[A, B], g: MonoidMorphism[B, C]) -> MonoidMorphism[A, C]:
         ...
 
     @abstractmethod
-    def compose_group_morphism(self, f: GroupMorphism[A, B], g: GroupMorphism[B, C]) -> GroupMorphism[A, C]:
+    def compose_group(self, f: GroupMorphism[A, B], g: GroupMorphism[B, C]) -> GroupMorphism[A, C]:
         ...
 
 
