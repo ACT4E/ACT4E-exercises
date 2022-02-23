@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
 from typing import Any, TypedDict, TypeVar
 
-from . import FiniteGroup_desc, FiniteMap_desc, FiniteMonoid_desc, FiniteSemigroup_desc, IOHelper
+from .helper import IOHelper
 from .maps import FiniteMap
+from .maps_representation import FiniteMap_desc
 from .semigroups import (
     FiniteGroup,
     FiniteGroupMorphism,
@@ -14,6 +15,7 @@ from .semigroups import (
     MonoidMorphism,
     SemigroupMorphism,
 )
+from .semigroups_representation import FiniteGroup_desc, FiniteMonoid_desc, FiniteSemigroup_desc
 
 A = TypeVar("A")
 B = TypeVar("B")
