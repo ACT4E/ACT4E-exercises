@@ -19,12 +19,10 @@ class SetProduct(Generic[C, E], Setoid[E], ABC):
     @abstractmethod
     def pack(self, args: Sequence[C]) -> E:
         """Packs an element of each setoid into an element of the mapping"""
-        raise NotImplementedError()
 
     @abstractmethod
     def unpack(self, args: E) -> Sequence[C]:
         """Packs an element of each setoid into an element of the mapping"""
-        raise NotImplementedError()
 
 
 class FiniteSetProduct(Generic[C, E], FiniteSet[E], SetProduct[C, E], ABC):

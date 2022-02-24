@@ -5,7 +5,7 @@ from typing import Any, List, TypeVar, Union
 
 from typing_extensions import TypedDict
 
-from .helper import IOHelper
+from .helper import IOHelper, Serializer
 from .sets import FiniteSet
 from .types import ConcreteRepr
 
@@ -51,7 +51,7 @@ FiniteSet_desc = Union[
 ]
 
 
-class FiniteSetRepresentation(ABC):
+class FiniteSetRepresentation(Serializer[FiniteSet[Any], FiniteSet_desc], ABC):
     @abstractmethod
     def load(self, h: IOHelper, data: FiniteSet_desc) -> FiniteSet[Any]:
         """Load a finite set from data structure.

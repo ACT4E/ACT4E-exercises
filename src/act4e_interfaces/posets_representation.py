@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
+from abc import ABC
 from typing import Any, Final, List, Union
 
 from typing_extensions import TypedDict
 
-from .helper import IOHelper
+from .helper import Serializer
 from .posets import FinitePoset
 from .sets_representation import FiniteSet_desc
 from .types import ConcreteRepr
@@ -39,14 +39,17 @@ FinitePoset_desc = Union[
 ]
 
 
-class FinitePosetRepresentation(ABC):
-    @abstractmethod
-    def load(self, h: IOHelper, s: FinitePoset_desc) -> FinitePoset[Any]:
-        """Load the data"""
+class FinitePosetRepresentation(Serializer[FinitePoset[Any], FinitePoset_desc], ABC):
+    pass
 
-    @abstractmethod
-    def save(self, h: IOHelper, m: FinitePoset[Any]) -> FinitePoset_desc:
-        """Save the data"""
+
+# @abstractmethod
+# def load(self, h: IOHelper, s: FinitePoset_desc) -> FinitePoset[Any]:
+#     """Load the data"""
+#
+# @abstractmethod
+# def save(self, h: IOHelper, m: FinitePoset[Any]) -> FinitePoset_desc:
+#     """Save the data"""
 
 
 KWD_POSET_SUM: Final[str] = "poset_sum"

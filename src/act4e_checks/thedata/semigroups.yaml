@@ -11,8 +11,9 @@ G1:
     - - [1, 1]
       - 1
     inverse:
-    - [1, 1.0]
+    - [1, 1]
     neutral: 1
+
 G2:
   tags:
     group: true
@@ -34,6 +35,7 @@ G2:
     - [1, 1]
     - [-1, -1]
     neutral: 1
+
 G2_:
   tags:
     group: true

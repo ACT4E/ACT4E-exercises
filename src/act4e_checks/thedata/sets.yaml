@@ -52,3 +52,9 @@ set_dicts:
     - {x: 1, y: 1}
     - {x: 1, y: 2}
 
+
+set_one_minusone:
+  tags:
+    set: true
+  data:
+    elements: [1, -1]

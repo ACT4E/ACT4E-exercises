@@ -46,13 +46,13 @@ class Setoid(Generic[E], ABC):
         ...
 
 
-class EnumerableSet(Setoid[E], ABC):
+class EnumerableSet(Generic[E], Setoid[E], ABC):
     @abstractmethod
     def elements(self) -> Iterator[E]:
         """Note: possibly non-terminating."""
 
 
-class FiniteSet(EnumerableSet[E], ABC):
+class FiniteSet(Generic[E], EnumerableSet[E], ABC):
     """A finite set has a finite size."""
 
     @abstractmethod

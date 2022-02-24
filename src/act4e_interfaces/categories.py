@@ -90,7 +90,7 @@ class CategoryOperations:
     @abstractmethod
     def disjoint_union(
         self, c1: Category[Ob, Mor], c2: Category[Ob, Mor]
-    ) -> Category[SetDisjointUnion[Ob], Any]:  # TODO: better types
+    ) -> Category[SetDisjointUnion[Ob, Any], Any]:  # TODO: better types
         """Disjoint union for the categories"""
 
     @abstractmethod

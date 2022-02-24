@@ -3,18 +3,21 @@ from dataclasses import dataclass
 from datetime import datetime
 from functools import lru_cache
 from io import StringIO
-from typing import Any, Dict, Generic, List, Protocol, TypeVar
+from typing import Any, Dict, Generic, List, Type, TypeVar
 
 import ruamel.yaml as yaml
 import zuper_html as zh
 from ruamel.yaml import RoundTripLoader, YAML
 from zuper_commons.types import add_context, ZValueError
-from zuper_testint import ImplementationFail, TestContext
+from zuper_testint import find_imp, ImplementationFail, TestContext
 
 import act4e_interfaces as I
+from act4e_interfaces.helper import Loader, Saver
 from . import logger
 
 X = TypeVar("X")
+
+R = TypeVar("R")
 
 
 @dataclass
@@ -36,6 +39,9 @@ ALLOWED_TAGS = {
     "dp",
     "category",
     "natural_transform",
+    "semigroup_morphism",
+    "monoid_morphism",
+    "group_morphism",
 }
 ALLOWED_PROPERTIES = {
     "powerset",
@@ -230,9 +236,14 @@ def get_test_data(tagname: str) -> Dict[str, TestData[Any]]:
     res = {}
     for k, v in alldata.items():
 
-        if v.tags.get(tagname, False):
+        if tagname in v.tags:
             res[k] = v
     return res
+
+
+def get_purified_data(name: str) -> Any:
+    d = get_all_test_data()
+    return purify_data(d[name].data)
 
 
 class IOHelperImp(I.IOHelper):
@@ -240,24 +251,7 @@ class IOHelperImp(I.IOHelper):
         raise NotImplementedError(name)
 
 
-Rcov = TypeVar("Rcov", covariant=True)
-Rcon = TypeVar("Rcon", contravariant=True)
-
-Xcov = TypeVar("Xcov", covariant=True)
-Xcon = TypeVar("Xcon", contravariant=True)
-
-
-class Loader(Protocol[Xcov, Rcon]):
-    def load(self, h: I.IOHelper, data: Rcon) -> Xcov:
-        ...
-
-
-class Saver(Protocol[Xcon, Rcov]):
-    def save(self, h: I.IOHelper, ob: Xcon) -> Rcov:
-        ...
-
-
-def dumpit_(tc: TestContext, fsr: Saver[Xcon, Rcov], h: I.IOHelper, ob: Xcon) -> Rcov:
+def dumpit_(tc: TestContext, fsr: Saver[X, R], h: I.IOHelper, ob: X) -> R:
     KN = type(fsr).__name__
 
     try:
@@ -274,7 +268,13 @@ def dumpit_(tc: TestContext, fsr: Saver[Xcon, Rcov], h: I.IOHelper, ob: Xcon) ->
     return res
 
 
-def loadit_(tc: TestContext, loader: Loader[Xcov, Rcon], h: I.IOHelper, data: Rcon, K: type) -> Xcov:
+def dump_using(tc: TestContext, K: Any, x: X) -> R:  # Type[Saver[X, R]]
+    fsr = find_imp(tc, K)
+    h = IOHelperImp()
+    return dumpit_(tc, fsr, h, x)
+
+
+def loadit_(tc: TestContext, loader: Loader[X, R], h: I.IOHelper, data: R, K: type) -> X:
     LN = type(loader).__name__
     try:
         res = loader.load(h, data)
@@ -291,6 +291,13 @@ def loadit_(tc: TestContext, loader: Loader[Xcov, Rcon], h: I.IOHelper, data: Rc
     tc.expect_type2(res, K, zh.span(f"Expected that {LN}.load() returns a {K.__name__}"))
     tc.raise_if_failures()
     return res
+
+
+def load_using(tc: TestContext, name: str, K: Type[Loader[X, R]], T: Type[X]) -> X:
+    fsr = find_imp(tc, K)
+    data1 = get_purified_data(name)
+    h = IOHelperImp()
+    return loadit_(tc, fsr, h, data1, T)
 
 
 def check_good_output(tc: TestContext, x: object) -> None:

@@ -84,81 +84,81 @@ class FiniteGroup(Generic[E], Group[E], FiniteMonoid[E], ABC):
     ...
 
 
-A = TypeVar("A")
-B = TypeVar("B")
+E1 = TypeVar("E1")
+E2 = TypeVar("E2")
 
 
-class SemigroupMorphism(Generic[A, B], ABC):
+class SemigroupMorphism(Generic[E1, E2], ABC):
     @abstractmethod
-    def source(self) -> Semigroup[A]:
+    def source(self) -> Semigroup[E1]:
         ...
 
     @abstractmethod
-    def target(self) -> Semigroup[B]:
+    def target(self) -> Semigroup[E2]:
         ...
 
     @abstractmethod
-    def mapping(self) -> Mapping[A, B]:
+    def mapping(self) -> Mapping[E1, E2]:
         ...
 
 
-class MonoidMorphism(Generic[A, B], SemigroupMorphism[A, B], ABC):
+class MonoidMorphism(Generic[E1, E2], SemigroupMorphism[E1, E2], ABC):
     @abstractmethod
-    def source(self) -> Monoid[A]:
+    def source(self) -> Monoid[E1]:
         ...
 
     @abstractmethod
-    def target(self) -> Monoid[B]:
+    def target(self) -> Monoid[E2]:
         ...
 
 
-class GroupMorphism(Generic[A, B], MonoidMorphism[A, B], ABC):
+class GroupMorphism(Generic[E1, E2], MonoidMorphism[E1, E2], ABC):
     @abstractmethod
-    def source(self) -> Group[A]:
+    def source(self) -> Group[E1]:
         ...
 
     @abstractmethod
-    def target(self) -> Group[B]:
+    def target(self) -> Group[E2]:
         ...
 
 
-class FiniteSemigroupMorphism(Generic[A, B], SemigroupMorphism[A, B], ABC):
+class FiniteSemigroupMorphism(Generic[E1, E2], SemigroupMorphism[E1, E2], ABC):
     @abstractmethod
-    def source(self) -> FiniteSemigroup[A]:
+    def source(self) -> FiniteSemigroup[E1]:
         ...
 
     @abstractmethod
-    def target(self) -> FiniteSemigroup[B]:
+    def target(self) -> FiniteSemigroup[E2]:
         ...
 
     @abstractmethod
-    def mapping(self) -> FiniteMap[A, B]:
+    def mapping(self) -> FiniteMap[E1, E2]:
         ...
 
 
-class FiniteMonoidMorphism(Generic[A, B], MonoidMorphism[A, B], ABC):
+class FiniteMonoidMorphism(Generic[E1, E2], MonoidMorphism[E1, E2], ABC):
     @abstractmethod
-    def source(self) -> FiniteMonoid[A]:
+    def source(self) -> FiniteMonoid[E1]:
         ...
 
     @abstractmethod
-    def target(self) -> FiniteMonoid[B]:
+    def target(self) -> FiniteMonoid[E2]:
         ...
 
     @abstractmethod
-    def mapping(self) -> FiniteMap[A, B]:
+    def mapping(self) -> FiniteMap[E1, E2]:
         ...
 
 
-class FiniteGroupMorphism(Generic[A, B], GroupMorphism[A, B], ABC):
+class FiniteGroupMorphism(Generic[E1, E2], GroupMorphism[E1, E2], ABC):
     @abstractmethod
-    def source(self) -> FiniteGroup[A]:
+    def source(self) -> FiniteGroup[E1]:
         ...
 
     @abstractmethod
-    def target(self) -> FiniteGroup[B]:
+    def target(self) -> FiniteGroup[E2]:
         ...
 
     @abstractmethod
-    def mapping(self) -> FiniteMap[A, B]:
+    def mapping(self) -> FiniteMap[E1, E2]:
         ...

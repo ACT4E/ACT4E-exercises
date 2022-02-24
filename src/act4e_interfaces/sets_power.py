@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Generic, Iterator, overload, Sequence, TypeVar
+from typing import Any, Collection, Generic, Iterator, overload, TypeVar
 
 from .sets import FiniteSet, Setoid
 
@@ -17,7 +17,7 @@ class SetOfFiniteSubsets(Generic[C, E], Setoid[E], ABC):
         """Returns the contents of an element representing a subset."""
 
     @abstractmethod
-    def construct(self, elements: Sequence[C]) -> E:
+    def construct(self, elements: Collection[C]) -> E:
         """Get the element representing the given subset."""
 
 

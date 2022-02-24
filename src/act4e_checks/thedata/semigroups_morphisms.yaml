@@ -1,1 +1,46 @@
---- {}
+---
+mor_G1:
+  tags:
+    semigroup_morphism: true
+    monoid_morphism: true
+    group_morphism: true
+  data:
+    source: {load: G1}
+    target: {load: G1}
+    mapping:
+      source: {load: set_one}
+      target: {load: set_one}
+      values:
+      - [1, 1]
+
+mor_G2_id:
+  tags:
+    semigroup_morphism: true
+    monoid_morphism: true
+    group_morphism: true
+  data:
+    source: {load: G2}
+    target: {load: G2}
+    mapping:
+      source: {load: set_one_minusone}
+      target: {load: set_one_minusone}
+      values:
+      - [1, 1]
+      - [-1, -1]
+
+
+mor_G2_opp:
+  tags:
+    semigroup_morphism: false
+    monoid_morphism: false
+    group_morphism: false
+  data:
+    source: {load: G2}
+    target: {load: G2}
+    mapping:
+      source: {load: set_one_minusone}
+      target: {load: set_one_minusone}
+      values:
+      - [1, -1]
+      - [-1, 1]
+

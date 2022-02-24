@@ -265,7 +265,7 @@ def check_lower_bounds(
 ) -> None:
     carrier = p.carrier()
     S = load_list(tc, carrier, S_raw)
-    result = tc.check_result(mks, mks.lower_bounds, Optional[List[Any]], p, S)
+    result = tc.check_result(mks, mks.lower_bounds, object, p, S)  # Optional[List[Any]]
     expected = load_list(tc, carrier, expected_raw)
     check_lists_same(tc, carrier, result, expected)
 
@@ -279,6 +279,6 @@ def check_upper_bounds(
 ) -> None:
     carrier = p.carrier()
     S = load_list(tc, carrier, S_raw)
-    result = tc.check_result(mks, mks.upper_bounds, List[Any], p, S)
+    result = tc.check_result(mks, mks.upper_bounds, object, p, S)  # List[Any]
     expected = load_list(tc, carrier, expected_raw)
     check_lists_same(tc, carrier, result, expected)

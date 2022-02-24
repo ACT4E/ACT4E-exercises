@@ -44,7 +44,7 @@ class Solution:
 
 
 class RupeGoldbergSolver(ABC):
-    def hangthem(self, components: List[Component]) -> Solution:
+    def hang(self, components: List[Component]) -> Solution:
         """What if we hang the first component, and let the others hang below it?"""
 
     def push(self, components: List[Component], force: float) -> Solution:

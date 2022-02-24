@@ -19,6 +19,6 @@ class MyFiniteSetRepresentation(I.FiniteSetRepresentation):
         raise I.InvalidFormat()
 
     def save(self, h: I.IOHelper, f: I.FiniteSet[Any]) -> I.FiniteSet_desc:
-        elements = sorted(f.elements())
+        elements = sorted(f.elements(), key=str)
         data: I.FiniteSet_desc = {"elements": elements}
         return data
