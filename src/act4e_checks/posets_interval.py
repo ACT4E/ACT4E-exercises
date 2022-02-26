@@ -1,6 +1,4 @@
-from typing import (
-    Any,
-)
+from typing import Any
 
 import zuper_html as zh
 from zuper_testint import find_imp, TestContext, TestManagerInterface, tfor
@@ -91,9 +89,9 @@ def check_twisted_alphabet(tc: TestContext) -> None:
 
 
 def check_twisted1(tc: TestContext, poset_name: str) -> None:
-    mks: I.FinitePosetConstructionArrow = find_imp(tc, I.FinitePosetConstructionArrow)
+    mks: I.FinitePosetConstructionTwisted = find_imp(tc, I.FinitePosetConstructionTwisted)
     p = load_poset_tc(tc, poset_name)
-    p_twisted = tc.check_result(mks, mks.arrow, I.FinitePosetOfIntervals, p)
+    p_twisted = tc.check_result(mks, mks.twisted, I.FinitePosetOfIntervals, p)
     poset_coherence(tc, p_twisted)
 
 
