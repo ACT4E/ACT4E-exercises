@@ -10,32 +10,34 @@ E = TypeVar("E")
 X = TypeVar("X")
 
 
-@tfor(I.MakeSetUnion)
+@tfor(I.FiniteMakeSetUnion)
 def test_MakeSetUnion(tm: TestManagerInterface) -> None:
     A = good_load_set("set1")
     B = good_load_set("set2")
-    msu = tm.impof(I.MakeSetUnion)
+    msu = tm.impof(I.FiniteMakeSetUnion)
     AuB = tm.addtest(set_union, msu, A, B)
     tm.addtest(set_coherence, AuB)
     tm_check_subset(tm, A, AuB, True, "A-union")
     tm_check_subset(tm, B, AuB, True, "B-union")
 
 
-@tfor(I.MakeSetIntersection)
-def test_MakeSetIntersection(tm: TestManagerInterface) -> None:
+@tfor(I.FiniteMakeSetIntersection)
+def test_FiniteMakeSetIntersection(tm: TestManagerInterface) -> None:
     A = good_load_set("set1")
     B = good_load_set("set2")
-    msi = tm.impof(I.MakeSetIntersection)
+    msi = tm.impof(I.FiniteMakeSetIntersection)
     intersection = tm.addtest(set_intersection, msi, A, B)
     tm_check_subset(tm, intersection, A, True, "A-intersection")
     tm_check_subset(tm, intersection, B, True, "B-intersection")
 
 
 def set_intersection(
-    tc: TestContext, fso: I.MakeSetIntersection, a: I.FiniteSet[X], b: I.FiniteSet[X]
+    tc: TestContext, fso: I.FiniteMakeSetIntersection, a: I.FiniteSet[X], b: I.FiniteSet[X]
 ) -> I.FiniteSet[X]:
     return fso.intersection([a, b])  # FIXME: exceptions
 
 
-def set_union(tc: TestContext, fso: I.MakeSetUnion, a: I.FiniteSet[X], b: I.FiniteSet[X]) -> I.FiniteSet[X]:
+def set_union(
+    tc: TestContext, fso: I.FiniteMakeSetUnion, a: I.FiniteSet[X], b: I.FiniteSet[X]
+) -> I.FiniteSet[X]:
     return fso.union([a, b])  # FIXME: exceptions

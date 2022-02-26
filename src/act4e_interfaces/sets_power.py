@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
-from typing import Any, Collection, Generic, Iterator, overload, TypeVar
+from typing import Any, Collection, Generic, Iterator, TypeVar
 
 from .sets import FiniteSet, Setoid
 
-__all__ = ["MakePowerSet", "SetOfFiniteSubsets", "FiniteSetOfFiniteSubsets", "SetOfFiniteSubsets"]
+__all__ = ["FiniteMakePowerSet", "SetOfFiniteSubsets", "FiniteSetOfFiniteSubsets", "SetOfFiniteSubsets"]
 
 C = TypeVar("C")
 E = TypeVar("E")
@@ -25,15 +25,17 @@ class FiniteSetOfFiniteSubsets(Generic[C, E], SetOfFiniteSubsets[C, E], FiniteSe
     pass
 
 
-class MakePowerSet(ABC):
-    @overload
+class FiniteMakePowerSet(ABC):
+    @abstractmethod
     def powerset(self, s: FiniteSet[C]) -> FiniteSetOfFiniteSubsets[C, Any]:
         ...
 
-    @overload
-    def powerset(self, s: Setoid[C]) -> SetOfFiniteSubsets[C, Any]:
-        ...
 
-    @abstractmethod
-    def powerset(self, s: Setoid[C]) -> SetOfFiniteSubsets[C, Any]:
-        """Creates the powerset of a setoid. Returns a finite set if s is finite."""
+#
+# @overload
+# def powerset(self, s: Setoid[C]) -> SetOfFiniteSubsets[C, Any]:
+#     ...
+#
+# @abstractmethod
+# def powerset(self, s: Setoid[C]) -> SetOfFiniteSubsets[C, Any]:
+#     """Creates the powerset of a setoid. Returns a finite set if s is finite."""

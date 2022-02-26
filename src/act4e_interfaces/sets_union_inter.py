@@ -4,8 +4,8 @@ from typing import Any, Generic, overload, Sequence, TypeVar
 from .sets import EnumerableSet, FiniteSet, Setoid
 
 __all__ = [
-    "MakeSetIntersection",
-    "MakeSetUnion",
+    "FiniteMakeSetIntersection",
+    "FiniteMakeSetUnion",
     "SetUnion",
     "FiniteSetUnion",
     "EnumerableSetUnion",
@@ -16,7 +16,7 @@ C = TypeVar("C")
 E = TypeVar("E")
 
 
-class MakeSetIntersection(ABC):
+class FiniteMakeSetIntersection(ABC):
     @abstractmethod
     def intersection(self, components: Sequence[FiniteSet[E]]) -> FiniteSet[E]:
         ...
@@ -44,18 +44,19 @@ class FiniteSetUnion(Generic[C, E], FiniteSet[E], EnumerableSetUnion[C, E], ABC)
         """Returns the components of the union"""
 
 
-class MakeSetUnion(ABC):
-    @overload
+class FiniteMakeSetUnion(ABC):
+    @abstractmethod
     def union(self, components: Sequence[FiniteSet[C]]) -> FiniteSetUnion[C, Any]:
         ...
 
-    @overload
-    def union(self, components: Sequence[EnumerableSet[C]]) -> EnumerableSetUnion[C, Any]:
-        ...
 
-    @abstractmethod
-    def union(self, components: Sequence[Setoid[C]]) -> SetUnion[C, Any]:
-        ...
+# @overload
+# def union(self, components: Sequence[EnumerableSet[C]]) -> EnumerableSetUnion[C, Any]:
+#     ...
+#
+# @abstractmethod
+# def union(self, components: Sequence[Setoid[C]]) -> SetUnion[C, Any]:
+#     ...
 
 
 class SetoidOperations(ABC):

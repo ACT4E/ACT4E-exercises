@@ -51,15 +51,15 @@ def check_opposite(
         tc.fail_not_equal2(h, h1, zh.span("Poset is not opposite"), a=a, b=b)
 
 
-@tfor(I.PosetConstructionPower)
-def check_PosetConstructionPower1(tc: TestContext) -> None:
-    mks: I.PosetConstructionPower = find_imp(tc, I.PosetConstructionPower)
+@tfor(I.FinitePosetConstructionPower)
+def check_FinitePosetConstructionPower1(tc: TestContext) -> None:
+    mks: I.FinitePosetConstructionPower = find_imp(tc, I.FinitePosetConstructionPower)
     s = load_set_tc(tc, "set_two")
     p: I.FinitePosetOfFiniteSubsets[int, Any]
     p = tc.check_result(mks, mks.powerposet, I.FinitePosetOfFiniteSubsets, s)
     poset_coherence(tc, p)
 
-    logger.info(el=list(p.carrier().elements()))
+    # logger.info(el=list(p.carrier().elements()))
 
     carrier = tc.check_result(p, p.carrier, object)
 

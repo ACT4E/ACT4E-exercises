@@ -1,15 +1,15 @@
 from abc import ABC, abstractmethod
-from typing import Any, Generic, overload, TypeVar
+from typing import Any, Generic, TypeVar
 
 from .posets import FinitePoset, Poset
-from .sets import FiniteSet, Setoid
+from .sets import FiniteSet
 from .sets_power import FiniteSetOfFiniteSubsets, SetOfFiniteSubsets
 
 __all__ = [
     "FinitePosetConstructionOpposite",
     "PosetOfFiniteSubsets",
     "FinitePosetOfFiniteSubsets",
-    "PosetConstructionPower",
+    "FinitePosetConstructionPower",
 ]
 
 C = TypeVar("C")
@@ -17,16 +17,8 @@ E = TypeVar("E")
 
 
 class FinitePosetConstructionDiscrete(ABC):
-    @overload
-    def discrete(self, s: FiniteSet[E]) -> FinitePoset[E]:
-        ...
-
-    @overload
-    def discrete(self, s: Setoid[E]) -> Poset[E]:
-        ...
-
     @abstractmethod
-    def discrete(self, s: Setoid[E]) -> Poset[E]:
+    def discrete(self, s: FiniteSet[E]) -> FinitePoset[E]:
         """Creates the discrete poset from any set."""
 
 
@@ -44,29 +36,33 @@ class FinitePosetOfFiniteSubsets(Generic[C, E], PosetOfFiniteSubsets[C, E], Fini
         ...
 
 
-class PosetConstructionPower(ABC):
-    @overload
+class FinitePosetConstructionPower(ABC):
+    @abstractmethod
     def powerposet(self, s: FiniteSet[C]) -> FinitePosetOfFiniteSubsets[C, Any]:
         ...
 
-    @overload
-    def powerposet(self, s: Setoid[C]) -> PosetOfFiniteSubsets[C, Any]:
-        ...
 
-    @abstractmethod
-    def powerposet(self, s: Setoid[C]) -> PosetOfFiniteSubsets[C, Any]:
-        ...
+#
+# @overload
+# def powerposet(self, s: Setoid[C]) -> PosetOfFiniteSubsets[C, Any]:
+#     ...
+#
+# @abstractmethod
+# def powerposet(self, s: Setoid[C]) -> PosetOfFiniteSubsets[C, Any]:
+#     ...
 
 
 class FinitePosetConstructionOpposite(ABC):
-    @overload
+    @abstractmethod
     def opposite(self, p: FinitePoset[E]) -> FinitePoset[E]:
         ...
 
-    @overload
-    def opposite(self, p: Poset[E]) -> Poset[E]:
-        ...
 
-    @abstractmethod
-    def opposite(self, p: Poset[E]) -> Poset[E]:
-        ...
+#
+# @overload
+# def opposite(self, p: Poset[E]) -> Poset[E]:
+#     ...
+#
+# @abstractmethod
+# def opposite(self, p: Poset[E]) -> Poset[E]:
+#     ...

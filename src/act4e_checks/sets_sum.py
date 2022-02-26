@@ -10,14 +10,14 @@ E = TypeVar("E")
 X = TypeVar("X")
 
 
-@tfor(I.MakeSetDisjointUnion)
-def test_MakeSetDisjointUnion(tm: TestManagerInterface) -> None:
+@tfor(I.FiniteMakeSetDisjointUnion)
+def test_FiniteMakeSetDisjointUnion(tm: TestManagerInterface) -> None:
     tm.addtest(check_set_disjoint_union)
 
 
-@tfor(I.MakeSetDisjointUnion)
+@tfor(I.FiniteMakeSetDisjointUnion)
 def check_set_disjoint_union(tc: TestContext) -> None:
-    msd: I.MakeSetDisjointUnion = find_imp(tc, I.MakeSetDisjointUnion)
+    msd: I.FiniteMakeSetDisjointUnion = find_imp(tc, I.FiniteMakeSetDisjointUnion)
     set_empty = load_set_tc(tc, "set_empty")
 
     set2 = tc.check_result(msd, msd.disjoint_union, I.FiniteSetDisjointUnion, [set_empty, set_empty])

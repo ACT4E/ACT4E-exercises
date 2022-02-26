@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
-from typing import Any, Generic, overload, Sequence, Tuple, TypeVar
+from typing import Any, Generic, Sequence, Tuple, TypeVar
 
 from .sets import FiniteSet, Setoid
 
-__all__ = ["SetDisjointUnion", "FiniteSetDisjointUnion", "MakeSetDisjointUnion"]
+__all__ = ["SetDisjointUnion", "FiniteSetDisjointUnion", "FiniteMakeSetDisjointUnion"]
 
 C = TypeVar("C")
 E = TypeVar("E")
@@ -33,16 +33,19 @@ class FiniteSetDisjointUnion(Generic[C, E], FiniteSet[E], SetDisjointUnion[C, E]
         ...
 
 
-class MakeSetDisjointUnion(ABC):
-    @overload
-    def disjoint_union(self, components: Sequence[FiniteSet[C]]) -> FiniteSetDisjointUnion[C, Any]:
-        ...
-
-    @overload
-    def disjoint_union(self, components: Sequence[Setoid[C]]) -> SetDisjointUnion[C, Any]:
-        ...
-
+class FiniteMakeSetDisjointUnion(ABC):
     @abstractmethod
-    def disjoint_union(self, components: Sequence[Setoid[C]]) -> SetDisjointUnion[C, Any]:
-        """Returns a disjoint union of the given components.
-        Returns a finite set if all components are finite."""
+    def disjoint_union(self, components: Sequence[FiniteSet[C]]) -> FiniteSetDisjointUnion[C, Any]:
+        """Returns a disjoint union of the given components."""
+
+
+#
+# #
+# # @overload
+# # def disjoint_union(self, components: Sequence[Setoid[C]]) -> SetDisjointUnion[C, Any]:
+# #     ...
+# #
+# # @abstractmethod
+# # def disjoint_union(self, components: Sequence[Setoid[C]]) -> SetDisjointUnion[C, Any]:
+#     """Returns a disjoint union of the given components.
+#     Returns a finite set if all components are finite."""

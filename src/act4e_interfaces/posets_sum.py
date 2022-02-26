@@ -40,14 +40,15 @@ class FinitePosetDisjointUnion(Generic[C, E], FinitePoset[E], PosetDisjointUnion
 
 
 class FinitePosetConstructionSum(ABC):
-    @overload
+    @abstractmethod
     def disjoint_union(self, ps: Sequence[FinitePoset[C]]) -> FinitePosetDisjointUnion[C, Any]:
         ...
 
-    @overload
-    def disjoint_union(self, ps: Sequence[Poset[C]]) -> PosetDisjointUnion[C, Any]:
-        ...
 
-    @abstractmethod
-    def disjoint_union(self, ps: Sequence[Poset[C]]) -> PosetDisjointUnion[C, Any]:
-        ...
+# @overload
+# def disjoint_union(self, ps: Sequence[Poset[C]]) -> PosetDisjointUnion[C, Any]:
+#     ...
+#
+# @abstractmethod
+# def disjoint_union(self, ps: Sequence[Poset[C]]) -> PosetDisjointUnion[C, Any]:
+#     ...

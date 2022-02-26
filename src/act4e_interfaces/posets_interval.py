@@ -37,28 +37,30 @@ class FinitePosetOfIntervals(Generic[C, E], PosetOfIntervals[C, E], FinitePoset[
 
 
 class FinitePosetConstructionTwisted(ABC):
-    @overload
+    @abstractmethod
     def twisted(self, s: FinitePoset[C]) -> FinitePosetOfIntervals[C, Any]:
         ...
 
-    @overload
-    def twisted(self, s: Poset[C]) -> PosetOfIntervals[C, Any]:
-        ...
 
-    @abstractmethod
-    def twisted(self, s: Poset[C]) -> PosetOfIntervals[C, Any]:
-        ...
+# @overload
+# def twisted(self, s: Poset[C]) -> PosetOfIntervals[C, Any]:
+#     ...
+#
+# @abstractmethod
+# def twisted(self, s: Poset[C]) -> PosetOfIntervals[C, Any]:
+#     ...
 
 
 class FinitePosetConstructionArrow(ABC):
-    @overload
+    @abstractmethod
     def arrow(self, s: FinitePoset[C]) -> FinitePosetOfIntervals[C, Any]:
         ...
 
-    @overload
-    def arrow(self, s: Poset[C]) -> PosetOfIntervals[C, Any]:
-        ...
 
-    @abstractmethod
-    def arrow(self, s: Poset[C]) -> PosetOfIntervals[C, Any]:
-        ...
+# @overload
+# def arrow(self, s: Poset[C]) -> PosetOfIntervals[C, Any]:
+#     ...
+#
+# @abstractmethod
+# def arrow(self, s: Poset[C]) -> PosetOfIntervals[C, Any]:
+#     ...

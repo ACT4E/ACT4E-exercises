@@ -12,9 +12,9 @@ E = TypeVar("E")
 X = TypeVar("X")
 
 
-@tfor(I.MakePowerSet)
-def test_MakePowerSet(tm: TestManagerInterface) -> None:
-    mps = tm.impof(I.MakePowerSet)
+@tfor(I.FiniteMakePowerSet)
+def test_FiniteMakePowerSet(tm: TestManagerInterface) -> None:
+    mps = tm.impof(I.FiniteMakePowerSet)
 
     d = get_test_sets()
 
@@ -40,7 +40,7 @@ def powerset(iterable: Iterable[X]) -> Iterator[Tuple[X, ...]]:
     return itertools.chain.from_iterable(itertools.combinations(s, r) for r in range(len(s) + 1))
 
 
-def check_powerset(tc: TestContext, fsp: I.MakePowerSet, a: I.FiniteSet[X]) -> None:
+def check_powerset(tc: TestContext, fsp: I.FiniteMakePowerSet, a: I.FiniteSet[X]) -> None:
     if a.size() > 5:
         return
 

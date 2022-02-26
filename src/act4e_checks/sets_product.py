@@ -12,8 +12,8 @@ E = TypeVar("E")
 X = TypeVar("X")
 
 
-@tfor(I.MakeSetProduct)
-def test_MakeSetProduct(tm: TestManagerInterface) -> None:
+@tfor(I.FiniteMakeSetProduct)
+def test_FiniteMakeSetProduct(tm: TestManagerInterface) -> None:
     A: I.FiniteSet[int] = good_make_set([1, 2])
     B: I.FiniteSet[str] = good_make_set(["a", "b"])
 
@@ -24,12 +24,14 @@ def test_MakeSetProduct(tm: TestManagerInterface) -> None:
 
 
 def tm_make_set_product(tm: TestManagerInterface, *args: Any) -> TestRef[I.SetProduct[Any, Any]]:
-    def f(tc: TestContext, imp: I.MakeSetProduct, *components: I.FiniteSet[Any]) -> I.SetProduct[Any, Any]:
+    def f(
+        tc: TestContext, imp: I.FiniteMakeSetProduct, *components: I.FiniteSet[Any]
+    ) -> I.SetProduct[Any, Any]:
         return tc.check_result(
             imp, imp.product, I.FiniteSetProduct, list(components)
         )  # return imp.product(list(components))
 
-    i = tm.impof(I.MakeSetProduct)
+    i = tm.impof(I.FiniteMakeSetProduct)
     return tm.addtest(f, i, *args)
 
 

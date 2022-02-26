@@ -6,7 +6,7 @@ from .sets import FiniteSet, Setoid
 C = TypeVar("C")  # composite
 E = TypeVar("E")  # composite
 
-__all__ = ["SetProduct", "FiniteSetProduct", "MakeSetProduct"]
+__all__ = ["SetProduct", "FiniteSetProduct", "FiniteMakeSetProduct"]
 
 
 class SetProduct(Generic[C, E], Setoid[E], ABC):
@@ -33,15 +33,16 @@ class FiniteSetProduct(Generic[C, E], FiniteSet[E], SetProduct[C, E], ABC):
         """Returns the components"""
 
 
-class MakeSetProduct(ABC):
-    @overload
+class FiniteMakeSetProduct(ABC):
+    @abstractmethod
     def product(self, components: Sequence[FiniteSet[C]]) -> FiniteSetProduct[C, Any]:
         ...
 
-    @overload
-    def product(self, components: Sequence[Setoid[C]]) -> SetProduct[C, Any]:
-        ...
 
-    @abstractmethod
-    def product(self, components: Sequence[Setoid[C]]) -> SetProduct[C, Any]:
-        ...
+# @overload
+# def product(self, components: Sequence[Setoid[C]]) -> SetProduct[C, Any]:
+#     ...
+#
+# @abstractmethod
+# def product(self, components: Sequence[Setoid[C]]) -> SetProduct[C, Any]:
+#     ...

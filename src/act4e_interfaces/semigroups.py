@@ -84,8 +84,8 @@ class FiniteGroup(Generic[E], Group[E], FiniteMonoid[E], ABC):
     ...
 
 
-E1 = TypeVar("E1")
-E2 = TypeVar("E2")
+E1 = TypeVar("E1", contravariant=True)
+E2 = TypeVar("E2", covariant=True)
 
 
 class SemigroupMorphism(Generic[E1, E2], ABC):
