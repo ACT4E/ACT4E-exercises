@@ -93,7 +93,7 @@ def check_is_chain(
     res = tc.check_result(frp, frp.is_chain, bool, s, elements)
 
     if res != expect:
-        msg = zh.span(f"Expected is_antichain = {expect}, obtained {res}.")
+        msg = zh.span(f"Expected is_chain = {expect}, obtained {res}.")
         tc.fail(msg)
 
 
