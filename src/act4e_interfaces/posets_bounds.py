@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, List, Optional, TypeVar
+from typing import Any, Collection, List, Optional, TypeVar
 
 from .posets import FinitePoset
 
@@ -18,11 +18,13 @@ E = TypeVar("E")
 
 class FinitePosetSubsetProperties(ABC):
     @abstractmethod
-    def is_chain(self, fp: FinitePoset[E], s: List[E]) -> bool:
-        """True if the given elements form a chain."""
+    def is_chain(self, fp: FinitePoset[E], s: Collection[E]) -> bool:
+        """True if the given elements form a chain.
+        Note: s can be any collection, not necessarily ordered.
+        """
 
     @abstractmethod
-    def is_antichain(self, fp: FinitePoset[E], s: List[E]) -> bool:
+    def is_antichain(self, fp: FinitePoset[E], s: Collection[E]) -> bool:
         """True if the given elements form an antichain."""
 
 

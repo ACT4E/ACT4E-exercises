@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Generic, overload, Sequence, TypeVar
+from typing import Any, Generic, Sequence, TypeVar
 
 from .sets import FiniteSet, Setoid
 
@@ -14,15 +14,15 @@ class SetProduct(Generic[C, E], Setoid[E], ABC):
 
     @abstractmethod
     def components(self) -> Sequence[Setoid[C]]:
-        """Returns the components of the product"""
+        """Returns the components of the product."""
 
     @abstractmethod
     def pack(self, args: Sequence[C]) -> E:
-        """Packs an element of each setoid into an element of the mapping"""
+        """Packs an element of each setoid into an element of the product."""
 
     @abstractmethod
     def unpack(self, args: E) -> Sequence[C]:
-        """Packs an element of each setoid into an element of the mapping"""
+        """Unpacks an element of the product to the constituents."""
 
 
 class FiniteSetProduct(Generic[C, E], FiniteSet[E], SetProduct[C, E], ABC):

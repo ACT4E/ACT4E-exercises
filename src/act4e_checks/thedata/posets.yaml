@@ -452,12 +452,12 @@ poset_grid:
       lower_bounds: []
     some_infimum:
     - S: [B, C]
-      infimum: E
+      infimum: A
     - S: [C]
       infimum: C
     some_supremum:
     - S: [B, C]
-      supremum: A
+      supremum: E
     - S: [L]
       supremum: L
     - S: [F]
