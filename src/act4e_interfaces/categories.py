@@ -1,20 +1,18 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, Generic, Tuple, TypeVar
+from typing import Any, Generic, List, NoReturn, TypeVar, Union
 
-from .sets import FiniteSet, Setoid
-from .sets_product import FiniteSetProduct, SetProduct
-from .sets_sum import SetDisjointUnion
+from .sets import EnumerableSet, FiniteSet, Setoid
+from .sets_product import FiniteSetProduct
+from .sets_sum import FiniteSetDisjointUnion
 
 __all__ = [
     "FiniteCategory",
     "FiniteSemiCategory",
     "FiniteCategoryOperations",
     "SemiCategory",
-    "SemiBiCategory",
     "Category",
-    "CategoryOperations",
 ]
 
 E1 = TypeVar("E1")
@@ -38,32 +36,32 @@ Ob3 = TypeVar("Ob3")
 Mor3 = TypeVar("Mor3")
 
 
-class SemiBiCategory(Generic[Ob, Mor], ABC):
+class SemiCategory(Generic[Ob, Mor], ABC):
     @abstractmethod
-    def objects(self) -> Setoid[Ob]:
+    def objects(self) -> EnumerableSet[Ob]:
         ...
 
     @abstractmethod
-    def hom(self, ob1: Ob, ob2: Ob) -> Setoid[Mor]:
+    def hom(self, ob1: Ob, ob2: Ob) -> EnumerableSet[Mor]:
         ...
 
     @abstractmethod
-    def compose(self, m1: Mor, m2: Mor) -> Mor:
+    def compose(self, ob1: Ob, ob2: Ob, ob3: Ob, m1: Mor, m2: Mor) -> Mor:
         ...
 
     @abstractmethod
-    def legs(self, m: Mor) -> Tuple[Ob, Ob]:
-        """Return source and target of the Mor"""
+    def identity(self, ob: Ob) -> Union[Mor, NoReturn]:
+        """Identity for the object. Raises ValueError if there is no identity."""
 
-
-class SemiCategory(Generic[Ob, Mor], SemiBiCategory[Ob, Mor], ABC):
-    ...
+    # @abstractmethod
+    # def legs(self, m: Mor) -> Tuple[Ob, Ob]:
+    #     """Return source and target of a morphism"""
 
 
 class Category(Generic[Ob, Mor], SemiCategory[Ob, Mor], ABC):
     @abstractmethod
     def identity(self, ob: Ob) -> Mor:
-        """Identity for the Ob"""
+        """Identity for the object. Guaranteed to exist."""
 
 
 class FiniteSemiCategory(Generic[Ob, Mor], SemiCategory[Ob, Mor], ABC):
@@ -80,46 +78,53 @@ class FiniteCategory(Generic[Ob, Mor], FiniteSemiCategory[Ob, Mor], Category[Ob,
     ...
 
 
-class CategoryOperations:
-    @abstractmethod
-    def product(
-        self, c1: Category[Ob, Mor], c2: Category[Ob, Mor]
-    ) -> Category[SetProduct[Ob, Any], SetProduct[Mor, Any]]:
-        """Product of two categories."""
-
-    @abstractmethod
-    def disjoint_union(
-        self, c1: Category[Ob, Mor], c2: Category[Ob, Mor]
-    ) -> Category[SetDisjointUnion[Ob, Any], Any]:  # TODO: better types
-        """Disjoint union for the categories"""
-
-    @abstractmethod
-    def arrow(self, c1: Category[Ob, Mor]) -> Category[Mor, Any]:  # TODO: better types
-        """Computes the arrow category"""
-
-    @abstractmethod
-    def twisted(self, c1: Category[Ob, Mor]) -> Category[Mor, Any]:  # TODO: better types
-        """Computes the twisted arrow category"""
+#
+# class CategoryOperations:
+#     @abstractmethod
+#     def product(
+#         self, c1: Category[Ob, Mor], c2: Category[Ob, Mor]
+#     ) -> Category[SetProduct[Ob, Any], SetProduct[Mor, Any]]:
+#         """Product of two categories."""
+#
+#     @abstractmethod
+#     def disjoint_union(
+#         self, c1: Category[Ob, Mor], c2: Category[Ob, Mor]
+#     ) -> Category[SetDisjointUnion[Ob, Any], Any]:  # TODO: better types
+#         """Disjoint union for the categories"""
+#
+#     @abstractmethod
+#     def arrow(self, c1: Category[Ob, Mor]) -> Category[Mor, Any]:  # TODO: better types
+#         """Computes the arrow category"""
+#
+#     @abstractmethod
+#     def twisted(self, c1: Category[Ob, Mor]) -> Category[Mor, Any]:  # TODO: better types
+#         """Computes the twisted arrow category"""
 
 
 class FiniteCategoryOperations:
     @abstractmethod
     def product(
-        self, c1: Category[Ob, Mor], c2: Category[Ob, Mor]
-    ) -> Category[FiniteSetProduct[Any, Ob], FiniteSetProduct[Any, Mor]]:
-        """Product of two categories."""
+        self, components: List[FiniteSemiCategory[Ob, Mor]]
+    ) -> FiniteSemiCategory[FiniteSetProduct[Any, Ob], FiniteSetProduct[Any, Mor]]:
+        """Product of categories."""
 
     @abstractmethod
     def disjoint_union(
-        self, c1: FiniteCategory[Ob, Mor], c2: FiniteCategory[Ob, Mor]
-    ) -> FiniteCategory[Any, Any]:  # TODO: better types
+        self, c1: FiniteSemiCategory[Ob, Mor], c2: FiniteSemiCategory[Ob, Mor]
+    ) -> FiniteSemiCategory[
+        FiniteSetDisjointUnion[Ob, Any], FiniteSetDisjointUnion[Ob, Any]
+    ]:  # TODO: better types
 
-        """Disjoint union for the categories"""
+        """Disjoint union of the categories"""
 
     @abstractmethod
-    def arrow(self, c1: FiniteCategory[Ob, Mor]) -> FiniteCategory[Any, Any]:  # TODO: better types
+    def arrow(
+        self, c1: FiniteSemiCategory[Ob, Mor]
+    ) -> FiniteSemiCategory[Mor, FiniteSetProduct[Mor]]:  # TODO: better types
         """Computes the arrow category"""
 
     @abstractmethod
-    def twisted_arrow(self, c1: FiniteCategory[Ob, Mor]) -> FiniteCategory[Any, Any]:  # TODO: better types
+    def twisted_arrow(
+        self, c1: FiniteSemiCategory[Ob, Mor]
+    ) -> FiniteSemiCategory[Mor, FiniteSetProduct[Mor]]:  # TODO: better types
         """Computes the twisted arrow category"""

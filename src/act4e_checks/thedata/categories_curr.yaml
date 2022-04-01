@@ -1,0 +1,104 @@
+---
+cat_cur1:
+
+  tags:
+    category: true
+  properties:
+    optimal_paths:
+      test1:
+        source: USD
+        target: USD
+        amount: 10
+        path: [id_USD]
+      test2:
+        source: CHF
+        target: CHF
+        amount: 10
+        path: [id_CHF]
+
+  data:
+    objects:
+      USD:
+        data:
+        identity:
+          mordata:
+            rate: 1.0
+            commission: 0.0
+      CHF:
+        data:
+        identity:
+          mordata:
+            rate: 1.0
+            commission: 0.0
+      SGD:
+        data:
+        identity:
+          mordata:
+            rate: 1.0
+            commission: 0.0
+    morphisms:
+      A:
+        data:
+          rate: 0.95
+          commission: 2.0
+        source: USD
+        target: CHF
+      B:
+        data:
+          rate: 1.05
+          commission: 1.5
+        source: CHF
+        target: USD
+      C:
+        data:
+          rate: 0.95
+          commission: 2.0
+        source: USD
+        target: CHF
+
+
+cat_cur_commission:
+
+  tags:
+    category: true
+  properties:
+    optimal_paths:
+      test1:
+        source: USD
+        target: USD
+        amount: 10
+        path: [id_USD]
+      test2:
+        source: CHF
+        target: CHF
+        amount: 10
+        path: [id_CHF]
+
+  data:
+    objects:
+      CHF:
+        data:
+        identity:
+          mordata:
+            rate: 1.0
+            commission: 0.0
+      USD:
+        data:
+        identity:
+          mordata:
+            rate: 1.0
+            commission: 0.0
+    morphisms:
+      A:
+        source: USD
+        target: CHF
+        data:
+          rate: 0.92
+          commission: 5.0
+      B:
+        source: CHF
+        target: USD
+        data:
+          rate: 1.08
+          commission: 5.0
+

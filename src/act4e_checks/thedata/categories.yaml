@@ -1,10 +1,348 @@
 ---
-cat1:
+cat_XfYgZ:
 
   tags:
-    category: true
-  properties: {}
+    abstract_category: true
+
+  properties:
+    homsets:
+      X:
+        X:
+          id_X:
+        Y:
+          f:
+        Z:
+          f;g:
+      Y:
+        X: {}
+        Y:
+          id_Y:
+        Z:
+          g:
+      Z:
+        X: {}
+        Y: {}
+        Z:
+          id_Z:
 
   data:
-    objects: TODO
-    morphisms: TODO
+    objects:
+      X:
+        obdata:
+        identity:
+          mordata:
+      Y:
+        obdata:
+        identity:
+          mordata:
+      Z:
+        obdata:
+        identity:
+          mordata:
+    morphisms:
+      f:
+        mordata:
+        source: X
+        target: Y
+      g:
+        mordata:
+        source: Y
+        target: Z
+
+    equations: {}
+
+
+#cat_monoid:
+#
+#  tags:
+#    abstract_category: true
+#
+#  properties:
+#    homsets:
+#      X:
+#        X: [id_X]
+#        Y: [f]
+#        Z: [f;g]
+#      Y:
+#        X: []
+#        Y: []
+#        Z: [g]
+#      Z:
+#        X: []
+#        Y: []
+#        Z: [id_Z]
+#
+#  data:
+#    objects:
+#      N:
+#        obdata:
+#        identity:
+#          mordata:
+#    morphisms:
+#      f:
+#        mordata:
+#        source: X
+#        target: Y
+#      g:
+#        mordata:
+#        source: Y
+#        target: Z
+#    equations: {}
+
+cat_fgh_notsame:
+  tags:
+    abstract_category: true
+  properties:
+    homsets:
+      X:
+        Z:
+          f;g:
+          h:
+
+  data:
+    objects:
+      X:
+        obdata:
+        identity:
+          mordata:
+      Y:
+        obdata:
+        identity:
+          mordata:
+      Z:
+        obdata:
+        identity:
+          mordata:
+    morphisms:
+      f:
+        mordata:
+        source: X
+        target: Y
+      g:
+        mordata:
+        source: Y
+        target: Z
+      h:
+        mordata:
+        source: X
+        target: Z
+
+    equations: {}
+
+
+cat_fgh_same:
+  tags:
+    abstract_category: true
+  requires:
+    equational_reasoning: true
+  properties:
+    homsets:
+      X:
+        Z:
+          h:
+
+  data:
+    objects:
+      X:
+        obdata:
+        identity:
+          mordata:
+      Y:
+        obdata:
+        identity:
+          mordata:
+      Z:
+        obdata:
+        identity:
+          mordata:
+    morphisms:
+      f:
+        mordata:
+        source: X
+        target: Y
+      g:
+        mordata:
+        source: Y
+        target: Z
+      h:
+        mordata:
+        source: X
+        target: Z
+
+    equations:
+      eq1: "f;g=h"
+
+
+cat_natural_numbers:
+  tags:
+    abstract_category: true
+  properties:
+    homsets:
+      X:
+        X:
+          id_X:
+          f:
+          f;f:
+          f;f;f:
+          '...':
+  data:
+    objects:
+      X:
+        obdata:
+        identity:
+          mordata:
+    morphisms:
+      f:
+        mordata:
+        source: X
+        target: X
+
+    equations: {}
+
+
+cat_natmod4:
+  tags:
+    abstract_category: true
+  requires:
+    equational_reasoning: true
+  properties:
+    homsets:
+      X:
+        X:
+          id_X:
+          f:
+          f;f:
+          f;f;f:
+
+  data:
+    objects:
+      X:
+        obdata:
+        identity:
+          mordata:
+    morphisms:
+      f:
+        mordata:
+        source: X
+        target: X
+
+    equations:
+      eq1: "f;f;f;f=id_X"
+
+
+cat_zero1:
+  tags:
+    category: true
+    abstract_category: true
+  requires:
+    equational_reasoning: true
+  properties:
+    homsets:
+      X:
+        X:
+          id_X:
+          f:
+  data:
+    objects:
+      X:
+        obdata:
+        identity:
+          mordata:
+    morphisms:
+      f:
+        mordata:
+        source: X
+        target: X
+
+    equations:
+      eq1: "f;f=f"
+
+
+
+cat_Zero:
+  tags:
+    abstract_category: true
+  requires: {}
+  properties:
+    homsets: {}
+  data:
+    objects: {}
+    morphisms: {}
+    equations: {}
+
+cat_One:
+  tags:
+    abstract_category: true
+  requires: {}
+  properties:
+    homsets:
+      ob1:
+        ob1:
+          id_ob1:
+  data:
+    objects:
+      ob1:
+        obdata:
+        identity:
+          mordata:
+    morphisms: {}
+    equations: {}
+
+
+cat_OnePlusOne:
+  tags:
+    abstract_category: true
+  requires: {}
+  properties:
+    homsets:
+      ob1:
+        ob1:
+          id_ob1:
+      ob2:
+        ob2:
+          id_ob2:
+  data:
+    objects:
+      ob1:
+        obdata:
+        identity:
+          mordata:
+      ob2:
+        obdata:
+        identity:
+          mordata:
+    morphisms: {}
+    equations: {}
+
+cat_Two:
+  tags:
+    abstract_category: true
+  requires: {}
+  properties:
+    homsets:
+      ob1:
+        ob1:
+          id_ob1:
+        ob2:
+          f:
+      ob2:
+        ob1: {}
+        ob2:
+          id_ob2:
+
+  data:
+    objects:
+      ob1:
+        obdata:
+        identity:
+          mordata:
+      ob2:
+        obdata:
+        identity:
+          mordata:
+    morphisms:
+      f:
+        mordata:
+        source: ob1
+        target: ob2
+    equations: {}

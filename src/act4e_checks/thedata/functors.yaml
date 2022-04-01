@@ -1,1 +1,24 @@
---- {}
+---
+fun1:
+
+  tags:
+    semifunctor: true
+  properties: {}
+  data:
+    source:
+      load: cat_XfYgZ
+    target:
+      load: cat_XfYgZ
+    on_objects:
+      X: X
+      Y: Y
+      Z: Z
+    on_morphism:
+      f: f
+      g: g
+      idX: idX
+      idY: idY
+      idZ: idZ
+
+
+
