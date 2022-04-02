@@ -28,66 +28,29 @@ cat_XfYgZ:
   data:
     objects:
       X:
-        obdata:
+        obdata: 1
         identity:
-          mordata:
+          mordata: ""
       Y:
-        obdata:
+        obdata: 2
         identity:
-          mordata:
+          mordata: ""
       Z:
-        obdata:
+        obdata: 3
         identity:
-          mordata:
+          mordata: ""
     morphisms:
       f:
-        mordata:
+        mordata: df
         source: X
         target: Y
       g:
-        mordata:
+        mordata: dg
         source: Y
         target: Z
 
     equations: {}
 
-
-#cat_monoid:
-#
-#  tags:
-#    abstract_category: true
-#
-#  properties:
-#    homsets:
-#      X:
-#        X: [id_X]
-#        Y: [f]
-#        Z: [f;g]
-#      Y:
-#        X: []
-#        Y: []
-#        Z: [g]
-#      Z:
-#        X: []
-#        Y: []
-#        Z: [id_Z]
-#
-#  data:
-#    objects:
-#      N:
-#        obdata:
-#        identity:
-#          mordata:
-#    morphisms:
-#      f:
-#        mordata:
-#        source: X
-#        target: Y
-#      g:
-#        mordata:
-#        source: Y
-#        target: Z
-#    equations: {}
 
 cat_fgh_notsame:
   tags:
@@ -102,28 +65,28 @@ cat_fgh_notsame:
   data:
     objects:
       X:
-        obdata:
+        obdata: 1
         identity:
-          mordata:
+          mordata: ""
       Y:
-        obdata:
+        obdata: 2
         identity:
-          mordata:
+          mordata: ""
       Z:
-        obdata:
+        obdata: 3
         identity:
-          mordata:
+          mordata: ""
     morphisms:
       f:
-        mordata:
+        mordata: df
         source: X
         target: Y
       g:
-        mordata:
+        mordata: dg
         source: Y
         target: Z
       h:
-        mordata:
+        mordata: dh
         source: X
         target: Z
 
@@ -144,34 +107,49 @@ cat_fgh_same:
   data:
     objects:
       X:
-        obdata:
+        obdata: 1
         identity:
-          mordata:
+          mordata: ""
       Y:
-        obdata:
+        obdata: 2
         identity:
-          mordata:
+          mordata: ""
       Z:
-        obdata:
+        obdata: 3
         identity:
-          mordata:
+          mordata: ""
     morphisms:
       f:
-        mordata:
+        mordata: df
         source: X
         target: Y
       g:
-        mordata:
+        mordata: dg
         source: Y
         target: Z
       h:
-        mordata:
+        mordata: dh
         source: X
         target: Z
 
     equations:
       eq1: "f;g=h"
 
+
+cat_example1:
+  data:
+    objects:
+      X:
+        obdata: 1
+        identity:
+          mordata: ""
+    morphisms:
+      f:
+        mordata: df
+        source: X
+        target: X
+    equations:
+      eq1: "f;f;f=f"
 
 cat_natural_numbers:
   tags:
@@ -188,17 +166,41 @@ cat_natural_numbers:
   data:
     objects:
       X:
-        obdata:
+        obdata: 1
         identity:
-          mordata:
+          mordata: ""
     morphisms:
       f:
-        mordata:
+        mordata: df
         source: X
         target: X
 
     equations: {}
 
+
+cat_natnotzero:
+  tags:
+    abstract_category: true
+  properties:
+    homsets:
+      X:
+        X:
+          f:
+          f;f:
+          f;f;f:
+          '...':
+  data:
+    objects:
+      X:
+        obdata: 1
+        identity:
+    morphisms:
+      f:
+        mordata: df
+        source: X
+        target: X
+
+    equations: {}
 
 cat_natmod4:
   tags:
@@ -217,12 +219,12 @@ cat_natmod4:
   data:
     objects:
       X:
-        obdata:
+        obdata: 1
         identity:
-          mordata:
+          mordata: ""
     morphisms:
       f:
-        mordata:
+        mordata: df
         source: X
         target: X
 
@@ -245,12 +247,12 @@ cat_zero1:
   data:
     objects:
       X:
-        obdata:
+        obdata: 1
         identity:
-          mordata:
+          mordata: ""
     morphisms:
       f:
-        mordata:
+        mordata: dd
         source: X
         target: X
 
@@ -276,18 +278,34 @@ cat_One:
   requires: {}
   properties:
     homsets:
-      ob1:
-        ob1:
-          id_ob1:
+      X:
+        X:
+          id_X:
   data:
     objects:
-      ob1:
-        obdata:
+      X:
+        obdata: 1
         identity:
-          mordata:
+          mordata: ""
     morphisms: {}
     equations: {}
 
+
+cat_single:
+  tags:
+    abstract_category: true
+  requires: {}
+  properties:
+    homsets:
+      X:
+        X: {}
+  data:
+    objects:
+      X:
+        obdata: 1
+        identity:
+    morphisms: {}
+    equations: {}
 
 cat_OnePlusOne:
   tags:
@@ -295,22 +313,22 @@ cat_OnePlusOne:
   requires: {}
   properties:
     homsets:
-      ob1:
-        ob1:
-          id_ob1:
-      ob2:
-        ob2:
-          id_ob2:
+      X:
+        X:
+          id_X:
+      Y:
+        Y:
+          id_Y:
   data:
     objects:
-      ob1:
-        obdata:
+      X:
+        obdata: 1
         identity:
-          mordata:
-      ob2:
-        obdata:
+          mordata: ""
+      Y:
+        obdata: 2
         identity:
-          mordata:
+          mordata: ""
     morphisms: {}
     equations: {}
 
@@ -320,29 +338,29 @@ cat_Two:
   requires: {}
   properties:
     homsets:
-      ob1:
-        ob1:
-          id_ob1:
-        ob2:
+      X:
+        X:
+          id_X:
+        Y:
           f:
-      ob2:
-        ob1: {}
-        ob2:
-          id_ob2:
+      Y:
+        X: {}
+        Y:
+          id_Y:
 
   data:
     objects:
-      ob1:
-        obdata:
+      X:
+        obdata: 1
         identity:
-          mordata:
-      ob2:
-        obdata:
+          mordata: ""
+      Y:
+        obdata: 2
         identity:
-          mordata:
+          mordata: ""
     morphisms:
       f:
-        mordata:
-        source: ob1
-        target: ob2
+        mordata: df
+        source: X
+        target: Y
     equations: {}

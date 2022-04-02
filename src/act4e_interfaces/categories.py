@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, Generic, List, NoReturn, TypeVar, Union
+from typing import Any, Generic, Iterator, List, NoReturn, TypeVar, Union
 
 from .sets import EnumerableSet, FiniteSet, Setoid
 from .sets_product import FiniteSetProduct
@@ -50,12 +50,13 @@ class SemiCategory(Generic[Ob, Mor], ABC):
         ...
 
     @abstractmethod
-    def identity(self, ob: Ob) -> Union[Mor, NoReturn]:
-        """Identity for the object. Raises ValueError if there is no identity."""
+    def identity(self, ob: Ob) -> Mor:
+        """Identity for the object. Raises I.InvalidValue if there is no identity for ob."""
 
-    # @abstractmethod
-    # def legs(self, m: Mor) -> Tuple[Ob, Ob]:
-    #     """Return source and target of a morphism"""
+
+# @abstractmethod
+# def legs(self, m: Mor) -> Tuple[Ob, Ob]:
+#     """Return source and target of a morphism"""
 
 
 class Category(Generic[Ob, Mor], SemiCategory[Ob, Mor], ABC):

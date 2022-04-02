@@ -3,12 +3,11 @@ from typing import Any, Dict
 import yaml
 import zuper_html as zh
 from zuper_commons.types import ZValueError
-from zuper_testint import find_imp, TestContext, TestManagerInterface, tfor, tgroup
+from zuper_testint import find_imp, TestContext, TestManagerInterface, tfor
 
 import act4e_interfaces as I
-from act4e_checks.data import get_test_abstract_categories, purify_data, TestData
-from act4e_interfaces.categories_representation import RichMorphism, RichObject
-from act4e_interfaces.currency_ex import compose_none, NoneSetoid
+from act4e_checks.data import get_test_abstract_categories, IOHelperImp, purify_data, TestData
+from act4e_interfaces.categories_representation import IntegerSetoid, RichMorphism, RichObject, StringSetoid
 from . import logger
 
 
@@ -18,22 +17,23 @@ def test_semicat(tm: TestManagerInterface) -> None:
     # cases = get_test_data("abstract_category")
 
     for name, tdata in get_test_abstract_categories().items():
-        if "equational_reasoning" in tdata.requires:
-            continue
+        # if "equational_reasoning" in tdata.requires:
+        #     continue
         logger.info(name=name, tdata=tdata)
         tm.addtest(check_semicat_repr, name, tdata, tid0=f"test_semicat_repr-{name}")
 
 
-@tgroup("TestSemiCategoryRepresentationEquational")
-def test_semicat_hard(tm: TestManagerInterface) -> None:
-    tm.impof(I.SemiCategoryRepresentation)
-    # cases = get_test_data("abstract_category")
-
-    for name, tdata in get_test_abstract_categories().items():
-        if "equational_reasoning" not in tdata.requires:
-            continue
-        logger.info(name=name, tdata=tdata)
-        tm.addtest(check_semicat_repr, name, tdata, tid0=f"test_semicat_repr-{name}")
+#
+# @tgroup("TestSemiCategoryRepresentationEquational")
+# def test_semicat_hard(tm: TestManagerInterface) -> None:
+#     tm.impof(I.SemiCategoryRepresentation)
+#     # cases = get_test_data("abstract_category")
+#
+#     for name, tdata in get_test_abstract_categories().items():
+#         if "equational_reasoning" not in tdata.requires:
+#             continue
+#         logger.info(name=name, tdata=tdata)
+#         tm.addtest(check_semicat_repr, name, tdata, tid0=f"test_semicat_repr-{name}")
 
 
 def check_semicat_repr(tc: TestContext, name: str, tdata: TestData[I.FiniteSemiCategory_desc]) -> None:
@@ -46,12 +46,15 @@ def check_semicat_repr(tc: TestContext, name: str, tdata: TestData[I.FiniteSemiC
             return tdata.properties.get(p, {})
 
         with tc.description("checking loading of abstract category", data=yaml.dump(data)):
-            setoid_none = NoneSetoid()
-            sc1: I.SemiCategory[RichObject[None], RichMorphism[None]]
-            helper = None  # XXX
-            sc1 = tc.check_result(
-                f, f.load, I.SemiCategory, helper, data, setoid_none, setoid_none, compose_none
-            )
+            obsetoid = IntegerSetoid()
+            morsetoid = StringSetoid()
+
+            def compose_str(_ob1: int, _ob2: int, _ob3: int, mor1: str, mor2: str) -> str:
+                return mor1 + mor2
+
+            sc1: I.SemiCategory[RichObject[int], RichMorphism[str]]
+            helper = IOHelperImp()
+            sc1 = tc.check_result(f, f.load, I.SemiCategory, helper, data, obsetoid, morsetoid, compose_str)
 
             obsetoid = tc.check_result(sc1, sc1.objects, I.Setoid)
             obnames2ob: Dict[str, RichObject] = {}
