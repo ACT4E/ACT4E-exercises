@@ -67,57 +67,84 @@ def check_semicat_repr(tc: TestContext, name: str, tdata: TestData[I.FiniteSemiC
                 if ob1 not in obnames2ob:
                     raise ZValueError(f"object {ob1} not in objects", obnames=obnames2ob)
 
-                contents0: Dict[str, Any]
-                for ob2, contents0 in d.items():
-                    contents0 = dict(contents0)
+                for ob2, generations in d.items():
                     if ob2 not in obnames2ob:
                         raise ZValueError(f"object {ob2} not in objects", obnames=obnames2ob)
 
-                    if not isinstance(contents0, dict):
-                        msg = "contents must be a dict"
-                        raise ZValueError(msg, contents0=contents0)
+                    if not isinstance(generations, dict):
+                        msg = "generations must be a dict"
+                        raise ZValueError(msg, generations=generations)
 
-                    # contents: List[str] = list(contents0)
+                    gens = sorted(generations)
+                    for gen in gens:
+                        if not isinstance(gen, int):
+                            msg = "generations must be a dict of ints"
+                            raise ZValueError(msg, generations=generations)
 
-                    with tc.description(f"Checking homset Hom({ob1};{ob2})", expected=contents0):
+                    tocheck = {}
+                    for i, x in enumerate(gens):
+                        expected = {}
+                        for k in range(0, i):
+                            expected.update(generations[k] or {})
+                        expected.update(generations[x] or {})
+                        tocheck[x] = expected
 
-                        if "..." in contents0:
-                            exhaustive = False
-                            # contents.remove('...')
-                            contents0.pop("...")
-                        else:
-                            exhaustive = True
-                        MAX = 40
-                        hom_setoid = tc.check_result(
-                            sc1, sc1.hom, I.EnumerableSet, obnames2ob[ob1], obnames2ob[ob2]
-                        )
-
-                        need_to_find = set(contents0)
-                        generated = {}
-                        for i, x in enumerate(hom_setoid.elements()):
-                            logger.info(ob1=ob1, ob2=ob2, i=i, x=x)
-                            if x.label in generated:
-                                msg = f"Generated double element {x.label!r}"
-                                tc.fail(zh.p(msg), generated=generated)
-                                continue
-
-                            generated[x.label] = x
-                            if x.label in need_to_find:
-                                need_to_find.remove(x.label)
-                            if not need_to_find:
+                    with tc.description(f"Checking homset Hom({ob1};{ob2})", tocheck_atlevels=tocheck):
+                        for k, v in tocheck.items():
+                            logger.info(f"Expected for generation {i}", expected=expected)
+                            ok = go_check(tc, sc1, obnames2ob, ob1, ob2, v, k)
+                            if not ok:
                                 break
 
-                            if i > MAX:
-                                msg = f"Over {MAX} iterations, cannot find elements"
-                                tc.fail(zh.p(msg), need_to_find=need_to_find, generated=generated)
-                                break
-                        if need_to_find:
-                            msg = "Could not find some expected morphism"
-                            tc.fail(zh.p(msg), need_to_find=need_to_find, generated=generated)
-                        if exhaustive:
-                            more = set(generated) - set(contents0)
-                            if more:
-                                msg = "Generated unexpected morphisms"
-                                tc.fail(
-                                    zh.p(msg), need_to_find=need_to_find, generated=generated, unexpected=more
-                                )
+
+def go_check(tc: TestContext, sc1, obnames2ob, ob1, ob2, contents0: Dict[str, str], level: int) -> bool:
+    contents0 = dict(contents0)
+
+    if not isinstance(contents0, dict):
+        msg = "contents must be a dict"
+        raise ZValueError(msg, contents0=contents0)
+
+    # contents: List[str] = list(contents0)
+    ok = True
+    with tc.description(f"Checking homset Hom({ob1};{ob2}) for uptolevel = {level}", expected=contents0):
+
+        if "..." in contents0:
+            exhaustive = False
+            # contents.remove('...')
+            contents0.pop("...")
+        else:
+            exhaustive = True
+        MAX = 40
+        hom_setoid = tc.check_result(sc1, sc1.hom, I.EnumerableSet, obnames2ob[ob1], obnames2ob[ob2], level)
+
+        need_to_find = set(contents0)
+        generated = {}
+        for i, x in enumerate(hom_setoid.elements()):
+            logger.info("enumerating", ob1=ob1, ob2=ob2, i=i, x=x)
+            if x.label in generated:
+                msg = f"Generated double element {x.label!r}"
+                tc.fail(zh.p(msg), generated=generated)
+                continue
+
+            generated[x.label] = x
+            if x.label in need_to_find:
+                need_to_find.remove(x.label)
+            if not need_to_find:
+                break
+
+            if i > MAX:
+                msg = f"Over {MAX} iterations, cannot find elements"
+                tc.fail(zh.p(msg), missing=need_to_find, generated=generated)
+                break
+
+        if need_to_find:
+            msg = "Could not find some expected morphism"
+            tc.fail(zh.p(msg), missing=need_to_find, generated=generated)
+            ok = False
+        if exhaustive:
+            more = set(generated) - set(contents0)
+            if more:
+                msg = "Generated unexpected morphisms"
+                tc.fail(zh.p(msg), need_to_find=need_to_find, generated=generated, unexpected=more)
+                ok = False
+    return ok

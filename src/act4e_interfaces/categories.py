@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, Generic, Iterator, List, NoReturn, TypeVar, Union
+from typing import Any, Generic, List, Optional, TypeVar
 
-from .sets import EnumerableSet, FiniteSet, Setoid
+from .sets import EnumerableSet, FiniteSet
 from .sets_product import FiniteSetProduct
 from .sets_sum import FiniteSetDisjointUnion
 
@@ -38,25 +38,21 @@ Mor3 = TypeVar("Mor3")
 
 class SemiCategory(Generic[Ob, Mor], ABC):
     @abstractmethod
-    def objects(self) -> EnumerableSet[Ob]:
-        ...
+    def objects(self, uptolevel: Optional[int] = None) -> EnumerableSet[Ob]:
+        """Returns the set of objects up to given level (if given)."""
 
     @abstractmethod
-    def hom(self, ob1: Ob, ob2: Ob) -> EnumerableSet[Mor]:
-        ...
+    def hom(self, ob1: Ob, ob2: Ob, uptolevel: Optional[int] = None) -> EnumerableSet[Mor]:
+        """Returns the homset of up to given level (if given)."""
 
     @abstractmethod
     def compose(self, ob1: Ob, ob2: Ob, ob3: Ob, m1: Mor, m2: Mor) -> Mor:
+        """Equivalent to the ; operator."""
         ...
 
     @abstractmethod
     def identity(self, ob: Ob) -> Mor:
         """Identity for the object. Raises I.InvalidValue if there is no identity for ob."""
-
-
-# @abstractmethod
-# def legs(self, m: Mor) -> Tuple[Ob, Ob]:
-#     """Return source and target of a morphism"""
 
 
 class Category(Generic[Ob, Mor], SemiCategory[Ob, Mor], ABC):
@@ -67,11 +63,11 @@ class Category(Generic[Ob, Mor], SemiCategory[Ob, Mor], ABC):
 
 class FiniteSemiCategory(Generic[Ob, Mor], SemiCategory[Ob, Mor], ABC):
     @abstractmethod
-    def objects(self) -> FiniteSet[Ob]:
+    def objects(self, uptolevel: Optional[int] = None) -> FiniteSet[Ob]:
         ...
 
     @abstractmethod
-    def hom(self, ob1: Ob, ob2: Ob) -> FiniteSet[Mor]:
+    def hom(self, ob1: Ob, ob2: Ob, uptolevel: Optional[int] = None) -> FiniteSet[Mor]:
         ...
 
 

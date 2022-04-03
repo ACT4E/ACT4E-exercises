@@ -5,25 +5,37 @@ cat_XfYgZ:
     abstract_category: true
 
   properties:
+#    identities:
+#      X: id_X
+#      Y: id_Y
+#      Z: id_Z
     homsets:
       X:
         X:
-          id_X:
+          0:
+            id_X:
         Y:
-          f:
+          0:
+            f:
         Z:
-          f;g:
+          0: {}
+          1:
+            f;g:
       Y:
-        X: {}
+        X:
+          0:
         Y:
-          id_Y:
+          0:
+            id_Y:
         Z:
-          g:
+          0:
+            g:
       Z:
         X: {}
         Y: {}
         Z:
-          id_Z:
+          0:
+            id_Z:
 
   data:
     objects:
@@ -59,8 +71,10 @@ cat_fgh_notsame:
     homsets:
       X:
         Z:
-          f;g:
-          h:
+          0:
+            h:
+          1:
+            f;g:
 
   data:
     objects:
@@ -102,7 +116,8 @@ cat_fgh_same:
     homsets:
       X:
         Z:
-          h:
+          0:
+            h:
 
   data:
     objects:
@@ -158,11 +173,16 @@ cat_natural_numbers:
     homsets:
       X:
         X:
-          id_X:
-          f:
-          f;f:
-          f;f;f:
-          '...':
+          0:
+            id_X:
+            f:
+          1:
+            f;f:
+          2:
+            f;f;f:
+          3:
+            f;f;f;f:
+
   data:
     objects:
       X:
@@ -185,10 +205,15 @@ cat_natnotzero:
     homsets:
       X:
         X:
-          f:
-          f;f:
-          f;f;f:
-          '...':
+          0:
+            f:
+          1:
+            f;f:
+          2:
+            f;f;f:
+          3:
+            f;f;f;f:
+
   data:
     objects:
       X:
@@ -211,10 +236,14 @@ cat_natmod4:
     homsets:
       X:
         X:
-          id_X:
-          f:
-          f;f:
-          f;f;f:
+          0:
+            id_X:
+            f:
+          1:
+            f;f:
+          2:
+            f;f;f:
+          3: {}
 
   data:
     objects:
@@ -242,8 +271,9 @@ cat_zero1:
     homsets:
       X:
         X:
-          id_X:
-          f:
+          0:
+            id_X:
+            f:
   data:
     objects:
       X:
@@ -280,7 +310,8 @@ cat_One:
     homsets:
       X:
         X:
-          id_X:
+          0:
+            id_X:
   data:
     objects:
       X:
@@ -298,7 +329,8 @@ cat_single:
   properties:
     homsets:
       X:
-        X: {}
+        X:
+          0: {}
   data:
     objects:
       X:
@@ -315,10 +347,12 @@ cat_OnePlusOne:
     homsets:
       X:
         X:
-          id_X:
+          0:
+            id_X:
       Y:
         Y:
-          id_Y:
+          0:
+            id_Y:
   data:
     objects:
       X:
@@ -340,13 +374,17 @@ cat_Two:
     homsets:
       X:
         X:
-          id_X:
+          0:
+            id_X:
         Y:
-          f:
+          0:
+            f:
       Y:
-        X: {}
+        X:
+          0: {}
         Y:
-          id_Y:
+          0:
+            id_Y:
 
   data:
     objects:
