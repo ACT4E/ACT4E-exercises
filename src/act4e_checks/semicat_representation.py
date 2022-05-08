@@ -6,9 +6,9 @@ from zuper_commons.types import ZValueError
 from zuper_testint import find_imp, TestContext, TestManagerInterface, tfor
 
 import act4e_interfaces as I
-from act4e_checks.data import get_test_abstract_categories, IOHelperImp, purify_data, TestData
-from act4e_interfaces.categories_representation import IntegerSetoid, RichMorphism, RichObject, StringSetoid
+from act4e_interfaces import IntegerSetoid, RichMorphism, RichObject, StringSetoid
 from . import logger
+from .data import get_test_abstract_categories, IOHelperImp, purify_data, TestData
 
 
 @tfor(I.SemiCategoryRepresentation)
@@ -19,7 +19,7 @@ def test_semicat(tm: TestManagerInterface) -> None:
     for name, tdata in get_test_abstract_categories().items():
         # if "equational_reasoning" in tdata.requires:
         #     continue
-        logger.info(name=name, tdata=tdata)
+        # logger.info(name=name, tdata=tdata)
         tm.addtest(check_semicat_repr, name, tdata, tid0=f"test_semicat_repr-{name}")
 
 

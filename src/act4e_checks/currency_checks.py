@@ -22,7 +22,7 @@ def test_currency_optimization(tm: TestManagerInterface) -> None:
     for name, tdata in get_test_currency_categories().items():
         # if "equational_reasoning" in tdata.requires:
         #     continue
-        logger.info(name=name, tdata=tdata)
+        # logger.info(name=name, tdata=tdata)
         tm.addtest(check_currency_cat, name, tdata, tid0=f"check_currency_cat-{name}")
 
 
