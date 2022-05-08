@@ -8,7 +8,6 @@ import zuper_html as zh
 from zuper_testint import find_imp, TestContext, TestManagerInterface, tfor
 
 import act4e_interfaces as I
-from . import logger
 from .data import get_test_posets, purify_data
 from .posets_utils import check_same_poset, poset_coherence, tm_load_poset
 from .sets_utils import load_set_tc

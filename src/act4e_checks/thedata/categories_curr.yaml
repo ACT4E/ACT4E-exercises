@@ -1,0 +1,223 @@
+---
+cat_cur1:
+
+  tags:
+    currency_category: true
+  properties:
+    optimal_paths:
+      test1:
+        source: USD
+        target: USD
+        amount: 10
+        path: [id_USD]
+        result: 10
+      test2:
+        source: CHF
+        target: CHF
+        amount: 10
+        path: [id_CHF]
+        result: 10
+
+  data:
+    objects:
+      USD:
+        obdata: USD
+        identity:
+          mordata:
+            rate: 1.0
+            commission: 0.0
+      CHF:
+        obdata: CHF
+        identity:
+          mordata:
+            rate: 1.0
+            commission: 0.0
+      SGD:
+        obdata: SGD
+        identity:
+          mordata:
+            rate: 1.0
+            commission: 0.0
+    morphisms:
+      A:
+        mordata:
+          rate: 0.95
+          commission: 2.0
+        source: USD
+        target: CHF
+      B:
+        mordata:
+          rate: 1.05
+          commission: 1.5
+        source: CHF
+        target: USD
+      C:
+        mordata:
+          rate: 0.95
+          commission: 2.0
+        source: USD
+        target: SGD
+    equations: {}
+
+cat_cur_commission:
+
+  tags:
+    currency_category: true
+  properties:
+    optimal_paths:
+      test1:
+        source: USD
+        target: USD
+        amount: 10
+        path: [id_USD]
+        result: 10
+      test2:
+        source: CHF
+        target: CHF
+        amount: 10
+        path: [id_CHF]
+        result: 10
+      test3:
+        source: USD
+        target: CHF
+        amount: 10
+        path: [A]
+        result: 4.2
+      test4:
+        source: CHF
+        target: USD
+        amount: 10
+        path: [B]
+        result: 5.8
+
+  data:
+    objects:
+      CHF:
+        obdata: CHF
+        identity:
+          mordata:
+            rate: 1.0
+            commission: 0.0
+      USD:
+        obdata: USD
+        identity:
+          mordata:
+            rate: 1.0
+            commission: 0.0
+    morphisms:
+      A:
+        source: USD
+        target: CHF
+        mordata:
+          rate: 0.92
+          commission: 5.0
+      B:
+        source: CHF
+        target: USD
+        mordata:
+          rate: 1.08
+          commission: 5.0
+    equations: {}
+
+cat_cur_example1:
+
+  tags:
+    currency_category: true
+  properties:
+    optimal_paths:
+      test1:
+        source: USD
+        target: USD
+        amount: 10
+        path: [id_USD]
+        result: 10
+      test2:
+        source: CHF
+        target: CHF
+        amount: 10
+        path: [id_CHF]
+        result: 10
+
+  data:
+    objects:
+      USD:
+        obdata: USD
+        identity:
+          mordata:
+            rate: 1.0
+            commission: 0.0
+      CHF:
+        obdata: CHF
+        identity:
+          mordata:
+            rate: 1.0
+            commission: 0.0
+    morphisms:
+      f:
+        mordata:
+          rate: 0.95
+          commission: 2.0
+        source: USD
+        target: CHF
+    equations: {}
+
+
+cat_cur_choice1:
+
+  tags:
+    currency_category: true
+  properties:
+    optimal_paths:
+      test1:
+        source: USD
+        target: CHF
+        amount: 20
+        path: [A]
+        result: 17.4
+      test2:
+        source: USD
+        target: CHF
+        amount: 2000
+        path: [B, C]
+        result: 1970.3
+
+  data:
+    objects:
+      USD:
+        obdata: USD
+        identity:
+          mordata:
+            rate: 1.0
+            commission: 0.0
+      CHF:
+        obdata: CHF
+        identity:
+          mordata:
+            rate: 1.0
+            commission: 0.0
+      SGD:
+        obdata: SGD
+        identity:
+          mordata:
+            rate: 1.0
+            commission: 0.0
+    morphisms:
+      A:
+        mordata:
+          rate: 0.92
+          commission: 1.0
+        source: USD
+        target: CHF
+      B:
+        mordata:
+          rate: 1.36
+          commission: 10.0
+        source: USD
+        target: SGD
+      C:
+        mordata:
+          rate: 0.73
+          commission: 8.0
+        source: SGD
+        target: CHF
+    equations: {}

@@ -1,19 +1,18 @@
 from abc import ABC, abstractmethod
-from typing import Any, TypedDict
+from typing import Any, Dict, TypedDict
 
-from .categories_representation import FiniteCategory_desc
+from .categories_representation import FiniteSemiCategory_desc
 from .functors import FiniteFunctor
 from .helper import IOHelper
-from .maps_representation import FiniteMap_desc
 
 __all__ = ["FiniteFunctor_desc", "FiniteFunctorRepresentation"]
 
 
 class FiniteFunctor_desc(TypedDict):
-    source: FiniteCategory_desc
-    target: FiniteCategory_desc
-    f_ob: FiniteMap_desc
-    f_mor: FiniteMap_desc
+    source: FiniteSemiCategory_desc
+    target: FiniteSemiCategory_desc
+    f_ob: Dict[str, str]
+    f_mor: Dict[str, str]
 
 
 class FiniteFunctorRepresentation(ABC):

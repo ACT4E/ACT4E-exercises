@@ -28,10 +28,11 @@ def test_FiniteDPRepresentation(tm: TestManagerInterface) -> None:
     raise TestNotImplemented()
 
 
-@tfor(I.CategoryOperations)
-def test_CategoryOperations(tm: TestManagerInterface) -> None:
-    mks = tm.impof(I.CategoryOperations)
-    raise TestNotImplemented()
+#
+# @tfor(I.CategoryOperations)
+# def test_CategoryOperations(tm: TestManagerInterface) -> None:
+#     mks = tm.impof(I.CategoryOperations)
+#     raise TestNotImplemented()
 
 
 @tfor(I.FiniteAdjunctionsOperations)

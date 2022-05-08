@@ -42,7 +42,13 @@ ALLOWED_TAGS = {
     "semigroup_morphism",
     "monoid_morphism",
     "group_morphism",
+    "semifunctor",
+    "functor",
+    "semicategory",
+    "abstract_category",
+    "currency_category",
 }
+
 ALLOWED_PROPERTIES = {
     "powerset",
     "some_antichains",
@@ -79,12 +85,15 @@ ALLOWED_PROPERTIES = {
     "some_minimal",
     "some_lower_bounds",
     "some_infimum",
+    "homsets",
+    "optimal_paths",
 }
 ALLOWED_REQUIRES = {
     "set_product",
     "poset_product",
     "set_union",
     "poset_sum",
+    "equational_reasoning",
 }
 
 import os
@@ -229,6 +238,14 @@ def get_test_sets() -> Dict[str, TestData[I.FiniteSet_desc]]:
 
 def get_test_maps() -> Dict[str, TestData[I.FiniteSet_desc]]:
     return get_test_data("map")
+
+
+def get_test_abstract_categories() -> Dict[str, TestData[I.FiniteSemiCategory_desc]]:
+    return get_test_data("abstract_category")
+
+
+def get_test_currency_categories() -> Dict[str, TestData[I.FiniteSemiCategory_desc]]:
+    return get_test_data("currency_category")
 
 
 def get_test_data(tagname: str) -> Dict[str, TestData[Any]]:
