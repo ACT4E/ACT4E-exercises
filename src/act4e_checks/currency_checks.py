@@ -2,15 +2,14 @@ import math
 import traceback
 from typing import Any
 
-import yaml
 import zuper_html as zh
+from ruamel import yaml
 from zuper_testint import find_imp, TestContext, TestManagerInterface, tfor
 
 import act4e_interfaces as I
-from act4e_checks.data import get_test_currency_categories, IOHelperImp, purify_data, TestData
 from act4e_interfaces import AllCurrencyExchangers, currency_exchange_compose, CurrencyExchanger
 from act4e_interfaces.categories_representation import RichMorphism, RichObject, StringSetoid
-from . import logger
+from .data import get_test_currency_categories, IOHelperImp, purify_data, TestData
 
 
 @tfor(I.CurrencyOptimization)

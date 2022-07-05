@@ -1,19 +1,16 @@
 from abc import abstractmethod
 from dataclasses import dataclass
-from typing import Iterator, List, Tuple, TypedDict
+from typing import Iterator, List, TypedDict
 
-from act4e_interfaces import (
-    ConcreteRepr,
-    FiniteSemiCategory,
-    InvalidValue,
-    IOHelper,
+from .categories import SemiCategory
+from .categories_representation import (
     RichMorphism,
     RichObject,
-    SemiCategory,
-    Setoid,
 )
-from .exceptions import InvalidFormat
-from .sets import FiniteSet
+from .exceptions import InvalidFormat, InvalidValue
+from .helper import IOHelper
+from .sets import FiniteSet, Setoid
+from .types import ConcreteRepr
 
 __all__ = [
     "AllCurrencyExchangers",

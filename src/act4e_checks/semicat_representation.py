@@ -1,7 +1,7 @@
 from typing import Any, Dict
 
-import yaml
 import zuper_html as zh
+from ruamel import yaml
 from zuper_commons.types import ZValueError
 from zuper_testint import find_imp, TestContext, TestManagerInterface, tfor
 
