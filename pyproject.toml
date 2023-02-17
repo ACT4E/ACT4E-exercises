@@ -1,0 +1,35 @@
+[project]
+name = "ACT4E-exercises"
+version = "7.2"
+authors = [{name = "", email = ""}]
+dependencies = [
+    "ruamel.yaml",
+    "typing_extensions",
+    "zuper-commons-z7",
+    "zuper-html-plus-z7",
+    "zuper-html-z7",
+    "zuper-testint-z7",
+    "zuper-typing-z7",
+    ]
+
+[tool]
+[tool.poetry]
+name = "ACT4E-exercises"
+version = "7.2"
+description = ""
+authors = [" <>"]
+packages = [
+    {from = "src", include = "act4e_checks"},
+    {from = "src", include = "act4e_checks/good"},
+    {from = "src", include = "act4e_checks/thedata"},
+    {from = "src", include = "act4e_interfaces"},
+    ]
+
+[tool.setuptools]
+packages = [
+    "act4e_checks",
+    "act4e_checks.good",
+    "act4e_checks.thedata",
+    "act4e_interfaces",
+    ]
+package-dir = {"" = "src"}
