@@ -29,13 +29,12 @@ pypi:
 
 circleci:
   active: true
-  test_python_versions:
-  - '3.8'
+  test_python_versions: ['3.8', '3.10', '3.11']
 
 python_syntax_version: '3.8'
 
 url: ''
-author: ''
-author_email: ''
+author: 'Andrea Censi'
+author_email: 'acensi@ethz.ch'
 short_description: ''
 full_description: ''

@@ -1,7 +1,7 @@
 [project]
 name = "ACT4E-exercises"
 version = "7.2"
-authors = [{name = "", email = ""}]
+authors = [{name = "Andrea Censi", email = "acensi@ethz.ch"}]
 dependencies = [
     "ruamel.yaml",
     "typing_extensions",
@@ -17,7 +17,7 @@ dependencies = [
 name = "ACT4E-exercises"
 version = "7.2"
 description = ""
-authors = [" <>"]
+authors = ["Andrea Censi <acensi@ethz.ch>"]
 packages = [
     {from = "src", include = "act4e_checks"},
     {from = "src", include = "act4e_checks/good"},
