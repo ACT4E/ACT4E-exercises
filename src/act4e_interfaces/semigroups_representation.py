@@ -11,12 +11,12 @@ from .sets_representation import FiniteSet_desc
 from .types import ConcreteRepr
 
 __all__ = [
-    "FiniteSemigroup_desc",
-    "FiniteGroup_desc",
-    "FiniteMonoid_desc",
     "FiniteGroupRepresentation",
+    "FiniteGroup_desc",
     "FiniteMonoidRepresentation",
+    "FiniteMonoid_desc",
     "FiniteSemigroupRepresentation",
+    "FiniteSemigroup_desc",
 ]
 
 
@@ -37,36 +37,9 @@ class FiniteSemigroupRepresentation(Serializer[FiniteSemigroup[Any], FiniteSemig
     pass
 
 
-# @abstractmethod
-# def load(self, h: IOHelper, s: FiniteSemigroup_desc) -> FiniteSemigroup[Any]:
-#     ...
-#
-# @abstractmethod
-# def save(self, h: IOHelper, m: FiniteSemigroup[Any]) -> FiniteSemigroup_desc:
-#     ...
-
-
 class FiniteMonoidRepresentation(Serializer[FiniteMonoid[Any], FiniteMonoid_desc], ABC):
     ...
 
 
-# @abstractmethod
-# def load(self, h: IOHelper, s: FiniteMonoid_desc) -> FiniteMonoid[Any]:
-#     ...
-#
-# @abstractmethod
-# def save(self, h: IOHelper, m: FiniteMonoid[Any]) -> FiniteMonoid_desc:
-#     ...
-
-
 class FiniteGroupRepresentation(Serializer[FiniteGroup[Any], FiniteGroup_desc], ABC):
     ...
-
-
-# @abstractmethod
-# def load(self, h: IOHelper, s: FiniteGroup_desc) -> FiniteGroup[Any]:
-#     ...
-#
-# @abstractmethod
-# def save(self, h: IOHelper, m: FiniteGroup[Any]) -> FiniteGroup_desc:
-#     ...
