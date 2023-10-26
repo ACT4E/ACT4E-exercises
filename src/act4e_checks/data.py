@@ -5,9 +5,8 @@ from functools import lru_cache
 from io import StringIO
 from typing import Any, Dict, Generic, List, Type, TypeVar
 
-import ruamel.yaml as yaml
 import zuper_html as zh
-from ruamel.yaml import RoundTripLoader, YAML
+from ruamel.yaml import YAML
 from zuper_commons.types import add_context, ZValueError
 from zuper_testint import find_imp, ImplementationFail, TestContext
 
@@ -123,10 +122,7 @@ def get_all_test_data(load: bool = True) -> Dict[str, TestData[Any]]:
         logger.info(f"loading data from environment variable {ENV_VAR} = {dirname}")
 
     else:
-        msg = (
-            f"Using embedded data. You can use the environment variable {ENV_VAR} to give a different "
-            f"directory. "
-        )
+        msg = f"Using embedded data. You can use the environment variable {ENV_VAR} to give a different " f"directory. "
         logger.info(msg)
         dirname = get_default_data_dir()
 
@@ -142,12 +138,12 @@ def get_all_test_data(load: bool = True) -> Dict[str, TestData[Any]]:
         with open(fn) as f:
             data = f.read()
 
-        d = yaml.load(data, Loader=RoundTripLoader)
+        yaml = YAML(typ="rt")
+        d = yaml.load(data)
         if not isinstance(d, dict):
             msg = f"Invalid data file {fn}"
             raise ZValueError(msg)
         for k, v in d.items():
-
             if k in res:
                 msg = f"Found duplicate key {k} in {fn}"
                 raise ZValueError(msg)
@@ -215,13 +211,23 @@ def purify_data(a: X) -> X:
     """Strip comments etc."""
     loader = YAML()
     loader.indent(mapping=4, sequence=4, offset=2)
-    loader.preserve_quotes = True  # type: ignore
+    loader.preserve_quotes = True
     loader.default_flow_style = False
     i = StringIO()
-    loader.dump(a, i)
+    loader.dump(a, i)  # ok
     s = i.getvalue()
-    res = yaml.load(s, Loader=yaml.Loader)
+    res = loader.load(s)
     return res
+
+
+def dump_to_yaml_string(a: object) -> str:
+    loader = YAML()
+    loader.indent(mapping=4, sequence=4, offset=2)
+    loader.preserve_quotes = True
+    loader.default_flow_style = False
+    i = StringIO()
+    loader.dump(a, i)  # ok
+    return i.getvalue()
 
 
 def get_test_relations() -> Dict[str, TestData[I.FiniteRelation_desc]]:
@@ -252,7 +258,6 @@ def get_test_data(tagname: str) -> Dict[str, TestData[Any]]:
     alldata = get_all_test_data()
     res = {}
     for k, v in alldata.items():
-
         if tagname in v.tags:
             res[k] = v
     return res
@@ -292,6 +297,8 @@ def dump_using(tc: TestContext, K: Any, x: X) -> R:  # Type[Saver[X, R]]
 
 
 def loadit_(tc: TestContext, loader: Loader[X, R], h: I.IOHelper, data: R, K: type) -> X:
+    yaml = YAML(typ="rt")
+
     LN = type(loader).__name__
     try:
         res = loader.load(h, data)
@@ -299,11 +306,11 @@ def loadit_(tc: TestContext, loader: Loader[X, R], h: I.IOHelper, data: R, K: ty
         raise
     except I.InvalidFormat as e:
         msg = f"Implementation of {LN}.load() threw InvalidFormat but the format is valid."
-        tc.fail(zh.span(msg), data=yaml.dump(data), tb=traceback.format_exc())
+        tc.fail(zh.span(msg), data=dump_to_yaml_string(data), tb=traceback.format_exc())
         raise ImplementationFail() from e
     except BaseException as e:
         msg = f"Implementation of {LN}.load() threw {type(e).__name__} but the format is valid."
-        tc.fail(zh.span(msg), data=yaml.dump(data), tb=traceback.format_exc())
+        tc.fail(zh.span(msg), data=dump_to_yaml_string(data), tb=traceback.format_exc())
         raise ImplementationFail() from e
     tc.expect_type2(res, K, zh.span(f"Expected that {LN}.load() returns a {K.__name__}"))
     tc.raise_if_failures()

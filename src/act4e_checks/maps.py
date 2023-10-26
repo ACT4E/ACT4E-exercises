@@ -37,9 +37,7 @@ def test_FiniteMapOperations_bool(tc: TestContext) -> None:
         # Load the identity
         map_bool_identity_expected = load_map_tc(tc, "map_bool_identity")
         # Ask to create the identity
-        map_bool_identity = cast(
-            I.FiniteMap[Any, Any], tc.check_result(fmo, fmo.identity, I.FiniteMap, set_bool)
-        )
+        map_bool_identity = cast(I.FiniteMap[Any, Any], tc.check_result(fmo, fmo.identity, I.FiniteMap, set_bool))
         check_map(tc, map_bool_identity)
         check_same_map(tc, map_bool_identity, map_bool_identity_expected)
 
@@ -68,7 +66,7 @@ def test_FiniteMapOperations(tm: TestManagerInterface) -> None:
     raise TestNotImplemented()
 
 
-def check_map(tc: TestContext, m: I.FiniteMap[A, B]) -> None:
+def check_map(tc: TestContext, m: I.FiniteMap[Any, Any]) -> None:
     source = tc.check_result(m, m.source, I.FiniteSet)
     target = tc.check_result(m, m.target, I.FiniteSet)
     set_coherence(tc, source)
@@ -141,9 +139,7 @@ def check_map_involutive(tc: TestContext, fs: I.FiniteSet[A], m: Callable[[A], A
 
 
 def doit_maps(tm: TestManagerInterface, collection: Dict[str, TestData[I.FiniteMap_desc]]) -> None:
-    def dump(
-        tc: TestContext, fmr: I.FiniteMapRepresentation, fi: I.FiniteMap[A, B], keys: Dict[str, Any]
-    ) -> I.FiniteMap_desc:
+    def dump(tc: TestContext, fmr: I.FiniteMapRepresentation, fi: I.FiniteMap[A, B], keys: Dict[str, Any]) -> I.FiniteMap_desc:
         h = IOHelperImp()
         try:
             res = fmr.save(h, fi)
@@ -153,9 +149,7 @@ def doit_maps(tm: TestManagerInterface, collection: Dict[str, TestData[I.FiniteM
         check_good_output(tc, res)
         return res
 
-    def load(
-        tc: TestContext, fmr: I.FiniteMapRepresentation, data: I.FiniteMap_desc, keys: Dict[str, Any]
-    ) -> I.FiniteMap[A, B]:
+    def load(tc: TestContext, fmr: I.FiniteMapRepresentation, data: I.FiniteMap_desc, keys: Dict[str, Any]) -> I.FiniteMap[A, B]:
         h = IOHelperImp()
         try:
             return fmr.load(h, data)
@@ -175,9 +169,7 @@ def doit_maps(tm: TestManagerInterface, collection: Dict[str, TestData[I.FiniteM
         tm.addtest(check_same_map, m, m2)
 
 
-def tm_load_map(
-    tm: TestManagerInterface, name: str, data: TestRef[I.FiniteMap_desc]
-) -> TestRef[I.FiniteMap[A, B]]:
+def tm_load_map(tm: TestManagerInterface, name: str, data: TestRef[I.FiniteMap_desc]) -> TestRef[I.FiniteMap[Any, Any]]:
     h = IOHelperImp()
 
     def loadit(tc: TestContext, fsr: I.FiniteMapRepresentation, data1: I.FiniteMap_desc) -> I.FiniteMap[A, B]:

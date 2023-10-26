@@ -3,7 +3,8 @@ import traceback
 from typing import Any
 
 import zuper_html as zh
-from ruamel import yaml
+from ruamel.yaml import YAML
+
 from zuper_testint import find_imp, TestContext, TestManagerInterface, tfor
 
 import act4e_interfaces as I
@@ -33,7 +34,9 @@ def check_currency_cat(tc: TestContext, name: str, tdata: TestData[I.FiniteSemiC
     def get(p: Any) -> Any:
         return tdata.properties.get(p, {})
 
-    with tc.description(f"check_currency_cat {name}", name=name, data=yaml.dump(data)):
+    yaml = YAML(typ=["rt", "string"])
+    the_data_s = yaml.dump_to_string(data)
+    with tc.description(f"check_currency_cat {name}", name=name, data=the_data_s):
         obsetoid = StringSetoid()
         morsetoid = AllCurrencyExchangers()
 
@@ -42,9 +45,7 @@ def check_currency_cat(tc: TestContext, name: str, tdata: TestData[I.FiniteSemiC
 
         sc1: I.SemiCategory[RichObject[str], RichMorphism[CurrencyExchanger]]
         helper = IOHelperImp()
-        sc1 = tc.check_result(
-            f, f.load, I.SemiCategory, helper, data, obsetoid, morsetoid, currency_exchange_compose
-        )
+        sc1 = tc.check_result(f, f.load, I.SemiCategory, helper, data, obsetoid, morsetoid, currency_exchange_compose)
 
         optimal_paths = get("optimal_paths")
         for testname, testdata in optimal_paths.items():
@@ -55,9 +56,7 @@ def check_currency_cat(tc: TestContext, name: str, tdata: TestData[I.FiniteSemiC
             result = testdata["result"]
 
             try:
-                obtained = tc.check_result(
-                    opt, opt.compute_optimal_conversion, I.OptimalSolution, sc1, source, amount, target
-                )
+                obtained = tc.check_result(opt, opt.compute_optimal_conversion, I.OptimalSolution, sc1, source, amount, target)
             except I.InvalidValue:
                 if path is not None:
                     msg = "Expected result but no solution was found"

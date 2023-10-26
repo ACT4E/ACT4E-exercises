@@ -58,21 +58,15 @@ class FiniteSemigroupMorphismsChecks(ABC):
 
 class FiniteSemigroupMorphismsOperations(ABC):
     @abstractmethod
-    def compose_semi(
-        self, f: FiniteSemigroupMorphism[A, B], g: FiniteSemigroupMorphism[B, C]
-    ) -> FiniteSemigroupMorphism[A, C]:
+    def compose_semi(self, f: FiniteSemigroupMorphism[A, B], g: FiniteSemigroupMorphism[B, C]) -> FiniteSemigroupMorphism[A, C]:
         ...
 
     @abstractmethod
-    def compose_monoid(
-        self, f: FiniteMonoidMorphism[A, B], g: FiniteMonoidMorphism[B, C]
-    ) -> FiniteMonoidMorphism[A, C]:
+    def compose_monoid(self, f: FiniteMonoidMorphism[A, B], g: FiniteMonoidMorphism[B, C]) -> FiniteMonoidMorphism[A, C]:
         ...
 
     @abstractmethod
-    def compose_group(
-        self, f: FiniteGroupMorphism[A, B], g: FiniteGroupMorphism[B, C]
-    ) -> FiniteGroupMorphism[A, C]:
+    def compose_group(self, f: FiniteGroupMorphism[A, B], g: FiniteGroupMorphism[B, C]) -> FiniteGroupMorphism[A, C]:
         ...
 
 
@@ -94,47 +88,13 @@ class FiniteGroupMorphism_desc(TypedDict):
     mapping: FiniteMap_desc
 
 
-class FiniteSemigroupMorphismRepresentation(
-    Serializer[FiniteSemigroupMorphism[Any, Any], FiniteSemigroupMorphism_desc], ABC
-):
-    ...
-
-
-# @abstractmethod
-# def load(self, h: IOHelper, s: FiniteSemigroupMorphism_desc) -> FiniteSemigroupMorphism[Any, Any]:
-#     """Load the data"""
-#
-# @abstractmethod
-# def save(self, h: IOHelper, m: FiniteSemigroupMorphism[Any, Any]) -> FiniteSemigroupMorphism_desc:
-#     """Save the data"""
-
-
-class FiniteMonoidMorphismRepresentation(
-    Serializer[FiniteMonoidMorphism[Any, Any], FiniteMonoidMorphism_desc], ABC
-):
+class FiniteSemigroupMorphismRepresentation(Serializer[FiniteSemigroupMorphism[Any, Any], FiniteSemigroupMorphism_desc], ABC):
     pass
 
 
-# @abstractmethod
-# def load(self, h: IOHelper, s: FiniteMonoidMorphism_desc) -> FiniteMonoidMorphism[Any, Any]:
-#     """Load the data"""
-#
-# @abstractmethod
-# def save(self, h: IOHelper, m: FiniteMonoidMorphism[Any, Any]) -> FiniteMonoidMorphism_desc:
-#     """Save the data"""
+class FiniteMonoidMorphismRepresentation(Serializer[FiniteMonoidMorphism[Any, Any], FiniteMonoidMorphism_desc], ABC):
+    pass
 
 
-class FiniteGroupMorphismRepresentation(
-    Serializer[FiniteGroupMorphism[Any, Any], FiniteGroupMorphism_desc], ABC
-):
-    ...
-
-
-#
-# @abstractmethod
-# def load(self, h: IOHelper, s: FiniteGroupMorphism_desc) -> FiniteGroupMorphism[Any, Any]:
-#     """Load the data"""
-#
-# @abstractmethod
-# def save(self, h: IOHelper, m: FiniteGroupMorphism[Any, Any]) -> FiniteGroupMorphism_desc:
-#     """Save the data"""
+class FiniteGroupMorphismRepresentation(Serializer[FiniteGroupMorphism[Any, Any], FiniteGroupMorphism_desc], ABC):
+    pass

@@ -1,4 +1,3 @@
-
 all:
 	@echo
 
@@ -12,32 +11,36 @@ bump:
 upload:
 	zuper-cli upload
 
-upload-old:
-	rm -f dist/*
-	rm -rf src/*.egg-info
-	python3 setup.py sdist
-	devpi use $(TWINE_REPOSITORY_URL)
-	devpi login $(TWINE_USERNAME) --password $(TWINE_PASSWORD)
-	devpi upload --verbose dist/*
-
 black:
-	black -l 110 --target-version py38 src
+	black -l 110 --target-version py310 src
 
 install-deps:
-	python3 -m pip install --user shyaml
+	pip3 install --user shyaml
 	shyaml get-values install_requires < project.pp1.yaml > .requirements.txt
-	python3 -m pip install --user --upgrade -r .requirements.txt
+	pip3 install --user --upgrade -r .requirements.txt
 	rm .requirements.txt
 
 install-testing-deps:
-	python3 -m pip install --user shyaml
+	pip3 install --user shyaml
 	shyaml get-values tests_require < project.pp1.yaml > .requirements_tests.txt
-	python3 -m pip install --user --upgrade -r .requirements_tests.txt
+	pip3 install --user --upgrade -r .requirements_tests.txt
 	rm .requirements_tests.txt
 
-	pip install 		pipdeptree==0.13.2		bumpversion		nose==1.3.7		nose2==0.9.2		nose2-html-report==0.6.0		nose-parallel==0.3.1		nose_xunitmp==0.4.1		pre-commit==2.1.1		rednose==1.3.0		coverage==5.0.3		codecov==2.0.16		sphinx		sphinx-rtd-theme
-
-cover_packages=act4e_interfaces,act4e_interfaces_tests,act4e_interfaces_tests.data
+	pip install \
+		pipdeptree\
+		bumpversion\
+		nose\
+		nose2\
+		nose2-html-report\
+		nose-parallel\
+		nose_xunitmp\
+		pre-commit\
+		rednose\
+		coverage\
+		codecov\
+		sphinx\
+		sphinx-rtd-theme
+cover_packages=act4e_checks,act4e_checks.good,act4e_checks.thedata,act4e_interfaces,act4e_interfaces_tests,act4e_interfaces_tests.test1
 
 # PROJECT_ROOT ?= /project
 # REGISTRY ?= docker.io
@@ -76,7 +79,10 @@ test-parallel:
 
 test-parallel-circle:
 	mkdir -p  $(tr)
-	DISABLE_CONTRACTS=1 	NODE_TOTAL=$(CIRCLE_NODE_TOTAL) 	NODE_INDEX=$(CIRCLE_NODE_INDEX) 	nosetests $(coverage) $(xunitmp) act4e_interfaces_tests  -v  $(parallel)
+	DISABLE_CONTRACTS=1 \
+	NODE_TOTAL=$(CIRCLE_NODE_TOTAL) \
+	NODE_INDEX=$(CIRCLE_NODE_INDEX) \
+	nosetests $(coverage) $(xunitmp) act4e_interfaces_tests  -v  $(parallel)
 
 
 coverage-combine:
@@ -87,4 +93,4 @@ docs:
 
 -include extra.mk
 
-# sigil e7b002d28f19febc3dc7a083d902a275
+# sigil 8a1ceef67895c7b66f82e008d5ca11df

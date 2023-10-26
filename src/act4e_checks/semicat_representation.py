@@ -1,14 +1,15 @@
 from typing import Any, Dict
 
 import zuper_html as zh
-from ruamel import yaml
+from ruamel.yaml import YAML
+
 from zuper_commons.types import ZValueError
 from zuper_testint import find_imp, TestContext, TestManagerInterface, tfor
 
 import act4e_interfaces as I
 from act4e_interfaces import IntegerSetoid, RichMorphism, RichObject, StringSetoid
 from . import logger
-from .data import get_test_abstract_categories, IOHelperImp, purify_data, TestData
+from .data import dump_to_yaml_string, get_test_abstract_categories, IOHelperImp, purify_data, TestData
 
 
 @tfor(I.SemiCategoryRepresentation)
@@ -45,7 +46,10 @@ def check_semicat_repr(tc: TestContext, name: str, tdata: TestData[I.FiniteSemiC
         def get(p: Any) -> Any:
             return tdata.properties.get(p, {})
 
-        with tc.description("checking loading of abstract category", data=yaml.dump(data)):
+        yaml = YAML(typ="rt")
+        data_s: str = dump_to_yaml_string(data)
+
+        with tc.description("checking loading of abstract category", data=data_s):
             obsetoid = IntegerSetoid()
             morsetoid = StringSetoid()
 
@@ -57,7 +61,7 @@ def check_semicat_repr(tc: TestContext, name: str, tdata: TestData[I.FiniteSemiC
             sc1 = tc.check_result(f, f.load, I.SemiCategory, helper, data, obsetoid, morsetoid, compose_str)
 
             obsetoid = tc.check_result(sc1, sc1.objects, I.Setoid)
-            obnames2ob: Dict[str, RichObject] = {}
+            obnames2ob: Dict[str, RichObject[Any]] = {}
             for ob in obsetoid.elements():
                 obnames2ob[ob.label] = ob
 
@@ -81,7 +85,7 @@ def check_semicat_repr(tc: TestContext, name: str, tdata: TestData[I.FiniteSemiC
                             msg = "generations must be a dict of ints"
                             raise ZValueError(msg, generations=generations)
 
-                    tocheck = {}
+                    tocheck: Dict[int, Any] = {}
                     for i, x in enumerate(gens):
                         expected = {}
                         for k in range(0, i):
@@ -100,14 +104,13 @@ def check_semicat_repr(tc: TestContext, name: str, tdata: TestData[I.FiniteSemiC
 def go_check(tc: TestContext, sc1, obnames2ob, ob1, ob2, contents0: Dict[str, str], level: int) -> bool:
     contents0 = dict(contents0)
 
-    if not isinstance(contents0, dict):
+    if not isinstance(contents0, dict):  # type: ignore
         msg = "contents must be a dict"
         raise ZValueError(msg, contents0=contents0)
 
     # contents: List[str] = list(contents0)
     ok = True
     with tc.description(f"Checking homset Hom({ob1};{ob2}) for uptolevel = {level}", expected=contents0):
-
         if "..." in contents0:
             exhaustive = False
             # contents.remove('...')

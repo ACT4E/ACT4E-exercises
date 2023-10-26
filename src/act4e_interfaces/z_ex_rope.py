@@ -2,7 +2,15 @@ from abc import ABC
 from dataclasses import dataclass
 from typing import List
 
-__all__ = ["Component", "Rope", "Elastic", "Brick", "Sphere", "Solution", "RupeGoldbergSolver"]
+__all__ = [
+    "Brick",
+    "Component",
+    "Elastic",
+    "Rope",
+    "RupeGoldbergSolver",
+    "Solution",
+    "Sphere",
+]
 
 
 @dataclass

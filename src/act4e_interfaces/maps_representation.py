@@ -11,8 +11,8 @@ from .sets_representation import FiniteSet_desc
 from .types import ConcreteRepr
 
 __all__ = [
-    "FiniteMap_desc",
     "FiniteMapRepresentation",
+    "FiniteMap_desc",
 ]
 
 
@@ -24,12 +24,3 @@ class FiniteMap_desc(TypedDict):
 
 class FiniteMapRepresentation(Serializer[FiniteMap[Any, Any], FiniteMap_desc], ABC):
     pass
-
-
-# @abstractmethod
-# def load(self, h: IOHelper, s: FiniteMap_desc) -> FiniteMap[Any, Any]:
-#     ...
-#
-# @abstractmethod
-# def save(self, h: IOHelper, m: FiniteMap[Any, Any]) -> FiniteMap_desc:
-#     ...
