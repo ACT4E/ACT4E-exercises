@@ -3,14 +3,12 @@ import traceback
 from typing import Any
 
 import zuper_html as zh
-from ruamel.yaml import YAML
-
 from zuper_testint import find_imp, TestContext, TestManagerInterface, tfor
 
 import act4e_interfaces as I
 from act4e_interfaces import AllCurrencyExchangers, currency_exchange_compose, CurrencyExchanger
 from act4e_interfaces.categories_representation import RichMorphism, RichObject, StringSetoid
-from .data import get_test_currency_categories, IOHelperImp, purify_data, TestData
+from .data import dump_to_yaml_string, get_test_currency_categories, IOHelperImp, purify_data, TestData
 
 
 @tfor(I.CurrencyOptimization)
@@ -34,8 +32,7 @@ def check_currency_cat(tc: TestContext, name: str, tdata: TestData[I.FiniteSemiC
     def get(p: Any) -> Any:
         return tdata.properties.get(p, {})
 
-    yaml = YAML(typ=["rt", "string"])
-    the_data_s = yaml.dump_to_string(data)
+    the_data_s = dump_to_yaml_string(data)
     with tc.description(f"check_currency_cat {name}", name=name, data=the_data_s):
         obsetoid = StringSetoid()
         morsetoid = AllCurrencyExchangers()
