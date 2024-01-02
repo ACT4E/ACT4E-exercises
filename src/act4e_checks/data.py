@@ -246,9 +246,11 @@ def get_test_maps() -> Dict[str, TestData[I.FiniteSet_desc]]:
     return get_test_data("map")
 
 
+def get_test_abstract_semicategories() -> Dict[str, TestData[I.FiniteSemiCategory_desc]]:
+    return get_test_data("abstract_semicategory")
+
 def get_test_abstract_categories() -> Dict[str, TestData[I.FiniteSemiCategory_desc]]:
     return get_test_data("abstract_category")
-
 
 def get_test_currency_categories() -> Dict[str, TestData[I.FiniteSemiCategory_desc]]:
     return get_test_data("currency_category")

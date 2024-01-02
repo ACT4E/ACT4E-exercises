@@ -1,0 +1,51 @@
+---
+abstract_semicat_no_identities:
+  tags:
+    abstract_semicategory: true
+    abstract_category: false
+
+  properties:
+    homsets:
+      X:
+        X:
+          0: {}
+        Y:
+          0:
+            f:
+        Z:
+          0: {}
+          1:
+            f;g:
+      Y:
+        X:
+          0: {}
+        Y:
+          0: {}
+        Z:
+          0:
+            g:
+      Z:
+        X: {}
+        Y: {}
+        Z:
+          0: {}
+
+  data:
+    objects:
+      X:
+        obdata: 1
+      Y:
+        obdata: 2
+      Z:
+        obdata: 3
+    morphisms:
+      f:
+        mordata: df
+        source: X
+        target: Y
+      g:
+        mordata: dg
+        source: Y
+        target: Z
+
+  equations: {}

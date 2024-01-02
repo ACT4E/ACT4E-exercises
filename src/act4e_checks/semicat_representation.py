@@ -9,7 +9,7 @@ from zuper_testint import find_imp, TestContext, TestManagerInterface, tfor
 import act4e_interfaces as I
 from act4e_interfaces import IntegerSetoid, RichMorphism, RichObject, StringSetoid
 from . import logger
-from .data import dump_to_yaml_string, get_test_abstract_categories, IOHelperImp, purify_data, TestData
+from .data import dump_to_yaml_string, get_test_abstract_semicategories, IOHelperImp, purify_data, TestData
 
 
 @tfor(I.SemiCategoryRepresentation)
@@ -17,11 +17,12 @@ def test_semicat(tm: TestManagerInterface) -> None:
     tm.impof(I.SemiCategoryRepresentation)
     # cases = get_test_data("abstract_category")
 
-    for name, tdata in get_test_abstract_categories().items():
+    for name, tdata in get_test_abstract_semicategories().items():
         # if "equational_reasoning" in tdata.requires:
         #     continue
         # logger.info(name=name, tdata=tdata)
         tm.addtest(check_semicat_repr, name, tdata, tid0=f"test_semicat_repr-{name}")
+        tm.addtest(check_cat_repr, name, tdata, tid0=f"test_cat_repr-{name}")
 
 
 #
@@ -35,6 +36,59 @@ def test_semicat(tm: TestManagerInterface) -> None:
 #             continue
 #         logger.info(name=name, tdata=tdata)
 #         tm.addtest(check_semicat_repr, name, tdata, tid0=f"test_semicat_repr-{name}")
+
+def check_cat_repr(tc: TestContext, name: str, tdata: TestData[I.FiniteSemiCategory_desc]) -> None:
+    f: I.SemiCategoryRepresentation = find_imp(tc, I.SemiCategoryRepresentation)
+
+    with tc.description(f"checking {name}"):
+        data = purify_data(tdata.data)
+
+        def get(p: Any) -> Any:
+            return tdata.properties.get(p, {})
+
+        yaml = YAML(typ='rt')
+        data_s: str = dump_to_yaml_string(data)
+
+        with tc.description("checking loading of abstract category", data=data_s):
+            obsetoid = IntegerSetoid()
+            morsetoid = StringSetoid()
+
+            def compose_str(_ob1: int, _ob2: int, _ob3: int, mor1: str, mor2: str) -> str:
+                return mor1 + mor2
+
+            sc1: I.FiniteCategory[int, str]
+            helper = IOHelperImp()
+            sc1 = tc.check_result(f, f.load, I.FiniteCategory, helper, data, obsetoid, morsetoid, compose_str)
+
+            # Check existence of identity morphisms for each object
+            with tc.description("checking existence of identity morphisms"):
+                for obname, ob in sc1.objects().items():
+                    try:
+                        identity = sc1.identity(ob)
+                        tc.assertTrue(identity in sc1.hom(ob, ob).contains(identity),
+                                      f"identity morphism for object {obname} not found in its hom-set")
+                    except I.InvalidValue:
+                        tc.fail(f"no identity morphism found for object {obname}")
+
+            # Check associativity of composition
+            # with tc.description(f"checking associativity of composition"):
+              #  objects = sc1.objects().elements
+               # for ob1 in objects():
+                #    for ob2 in objects():
+                 #       for ob3 in objects():
+                  #          for ob4 in objects():
+                   ###             for m1 in sc1.hom(ob1, ob2).elements():
+                      ##              for m2 in sc1.hom(ob2, ob3).elements():
+                        #                for m3 in sc1.hom(ob3, ob4).elements():
+                         #                   try:
+                          #                      left_compose = sc1.compose(ob1, ob2, ob3, m1, m2)
+                           #                     right_compose = sc1.compose(ob2, ob3, ob4, m2, m3)
+                            #                    res1 = sc1.compose(ob1, ob3, ob4, left_compose, m3)
+                             #                   res2 = sc1.compose(ob1, ob2, ob4, m1, right_compose)
+                              #                  tc.assertEqual(res1, res2,
+                               #                                 f"associativity failed at {ob1}-{ob2}-{ob3}-{ob4} for morphisms {m1}, {m2}, {m3}")
+                                #            except Exception as e:
+                                 #               tc.fail(f"unexpected error during associativity check for morphisms {m1}, {m2}, {m3}: {str(e)}")
 
 
 def check_semicat_repr(tc: TestContext, name: str, tdata: TestData[I.FiniteSemiCategory_desc]) -> None:

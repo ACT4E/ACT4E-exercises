@@ -2,7 +2,10 @@
 cat_XfYgZ:
 
   tags:
+    abstract_semicategory: true
     abstract_category: true
+
+
 
   properties:
 #    identities:
@@ -66,7 +69,10 @@ cat_XfYgZ:
 
 cat_fgh_notsame:
   tags:
+    abstract_semicategory: true
     abstract_category: true
+
+
   properties:
     homsets:
       X:
@@ -109,7 +115,12 @@ cat_fgh_notsame:
 
 cat_fgh_same:
   tags:
+    abstract_semicategory: true
     abstract_category: true
+
+
+
+    
   requires:
     equational_reasoning: true
   properties:
@@ -168,7 +179,12 @@ cat_example1:
 
 cat_natural_numbers:
   tags:
+    abstract_semicategory: true
     abstract_category: true
+
+
+
+
   properties:
     homsets:
       X:
@@ -201,7 +217,10 @@ cat_natural_numbers:
 
 cat_natnotzero:
   tags:
+    abstract_semicategory: true
     abstract_category: true
+
+
   properties:
     homsets:
       X:
@@ -230,7 +249,10 @@ cat_natnotzero:
 
 cat_natmod4:
   tags:
+    abstract_semicategory: true
     abstract_category: true
+
+
   requires:
     equational_reasoning: true
   properties:
@@ -265,7 +287,10 @@ cat_natmod4:
 cat_zero1:
   tags:
     category: true
+    abstract_semicategory: true
     abstract_category: true
+
+
   requires:
     equational_reasoning: true
   properties:
@@ -294,7 +319,10 @@ cat_zero1:
 
 cat_Zero:
   tags:
+    abstract_semicategory: true
     abstract_category: true
+
+
   requires: {}
   properties:
     homsets: {}
@@ -305,7 +333,10 @@ cat_Zero:
 
 cat_One:
   tags:
+    abstract_semicategory: true
     abstract_category: true
+
+
   requires: {}
   properties:
     homsets:
@@ -325,7 +356,10 @@ cat_One:
 
 cat_single:
   tags:
+    abstract_semicategory: true
     abstract_category: true
+
+
   requires: {}
   properties:
     homsets:
@@ -342,7 +376,10 @@ cat_single:
 
 cat_OnePlusOne:
   tags:
+    abstract_semicategory: true
     abstract_category: true
+
+
   requires: {}
   properties:
     homsets:
@@ -369,7 +406,10 @@ cat_OnePlusOne:
 
 cat_Two:
   tags:
+    abstract_semicategory: true
     abstract_category: true
+
+
   requires: {}
   properties:
     homsets:
